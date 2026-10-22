@@ -1,0 +1,31 @@
+button {
+  background-color: var(--bg-panel);
+  color: var(--accent);
+  border: solid 1px var(--accent);
+  padding: 6px;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: inset 3px 3px 3px #eef, inset -3px -3px 3px #559, 0px 0px 3px var(--accent);
+}
+
+button:hover {
+  box-shadow: inset 3px 3px 3px #ffa, inset -3px -3px 3px #995, 0px 0px 3px yellow;
+  color: yellow;
+}
+
+input, select {
+  background-color: white;
+  color: black;
+  border: solid 1px var(--accent);
+  padding: 6px;
+  border-radius: 5px;
+  box-shadow: inset -2px -2px 2px #eef, inset 2px 2px 2px #559, 0px 0px 3px var(--accent);
+}
+
+input:hover, select:hover {
+  box-shadow: inset -2px -2px 2px #ffa, inset 2px 2px 2px #550, 0px 0px 3px yellow;
+}
+
+input:focus, select:focus {
+  background-color: #ff8;
+}

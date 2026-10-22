@@ -1,0 +1,54 @@
+
+.icon {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  
+  vertical-align: middle;
+}
+
+.icon64 {
+  width: 64px;
+  height: 64px;
+}
+
+.icon16 {
+  width: 16px;
+  height: 16px;
+}
+
+.icondiv {
+  width: 54px;
+  height: 54px;
+  
+  display: inline-block;
+  align-items: center;
+  margin-right: 5px;
+  text-align: center;
+  border-radius: 4px;
+  
+  cursor: pointer;
+}
+.icondiv:hover {
+  background-color: var(--accent-hover);
+}
+.icondiv span {
+  font-size: 12px;
+  max-width: 54px;
+  overflow: hidden;
+  display: inline-block;
+  text-overflow: ellipsis;
+  color: var(--text-main);
+}
+
+.icon[data-icon="sheep"] { content: url("../icons/sheep.png"); }
+.icon[data-icon="fileopen"]   { content: url("../icons/fileopen.png"); }
+.icon[data-icon="filenew"]   { content: url("../icons/filenew.png"); }
+.icon[data-icon="filesave"]   { content: url("../icons/filesave.png"); }
+.icon[data-icon="filesaveas"]   { content: url("../icons/filesaveas.png"); }
+.icon[data-icon="folderopen"]   { content: url("../icons/folderopen.png"); }

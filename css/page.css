@@ -1,0 +1,60 @@
+:root {
+  --bg-dark: #1e1e2e;
+  --bg-panel: #2a2a3c;
+  --bg-sidebar: #181825;
+  --text-main: #cdd6f4;
+  --text-muted: #a6adc8;
+  --accent: #89b4fa;
+  --accent-hover: #74c7ec;
+  --border: #45475a;
+  --success: #a6e3a1;
+  --danger: #f38ba8;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.infobox {
+  display: block;
+  width: 98%;
+  margin-left: 1%;
+  min-height: 2vh;
+  height: fit-content;
+  border: 2px ridge var(--border);
+  border-radius: 5px;
+  padding: 3px;
+}
+
+.tabcollection {
+  height: calc(100vh - 32px - 54px - 54px - 32px); /*-title-menu-console-statusbar*/
+  text-align: center;
+  display: block;
+  position: relative;
+  border: none;
+}
+
+.tabdiv {
+  height: 97%;
+  margin:0 auto;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0px);
+  transition: all 0.5s linear;
+  overflow:auto;
+}
+
+.console {
+  font-size: 12px;
+  transition: all 0.2s linear;
+}
