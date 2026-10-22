@@ -1,10 +1,10 @@
 class XMLAnimationsSequence
 {
-  #repeatfrom = 0;
-  #repeat = "";
+  #repeatfrom;
+  #repeat;
   frame = [];
   next = [];
-  #action = "none";
+  #action;
   
   constructor(xml)
   {    
@@ -27,6 +27,7 @@ class XMLAnimationsSequence
   set repeatfrom(value) { this.#repeatfrom.value = value; }
   
   get repeat() { return this.#repeat.value; }
+  get repeatOriginal() { return this.#repeat.original; }
   set repeat(value) { this.#repeat.value = value; }
   
   get action() { return this.#action.value; }

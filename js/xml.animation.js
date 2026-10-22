@@ -33,8 +33,8 @@ class XMLAnimationsAnimationPos
 
 class XMLAnimationsAnimation
 {
-  #id = 1;
-  #name = "";
+  #id;
+  #name;
   
   start = null;
   end = null;

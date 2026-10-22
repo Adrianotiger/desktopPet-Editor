@@ -29,3 +29,7 @@ input:hover, select:hover {
 input:focus, select:focus {
   background-color: #ff8;
 }
+
+input[type="number"] {
+  width: 70px;
+}

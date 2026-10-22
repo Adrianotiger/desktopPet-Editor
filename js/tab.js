@@ -23,7 +23,7 @@ class TabClass
     this.div.style.zIndex = Tabs.index++;
     this.div.style.opacity = 1;
     this.div.style.pointerEvents = "inherit";
-    this.div.style.backgroundColor = "rgba(0,30,50,0.8)";
+    this.div.style.backgroundColor = "rgba(0,30,50,0.6)";
   }
 };
 
@@ -32,7 +32,7 @@ var Tabs = new class
   #div = null;
   #tabItems = ["open", "animations", "animation"];
   #tabs = [];
-  static index = 0;
+  index = 0;
   
   constructor()
   {
@@ -58,6 +58,11 @@ var Tabs = new class
     this.#tabs.forEach(t => { t.hide() });
     if(tab)
       tab.show(params);
+    if(Tabs.index > 500)
+    {
+      this.#tabs.forEach(t => { t.div.style.zIndex = parseInt(t.div.style.zIndex) - 500; });
+      Tabs.index -= 500;
+    }
   }
 };
 

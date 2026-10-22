@@ -87,4 +87,15 @@ const Menu = new class
   }
 };
 
-window.addEventListener("load", ()=>{Menu.init();});
+window.addEventListener("load", ()=>{
+  Menu.init();
+  setTimeout(()=>{
+    document.body.dispatchEvent(
+      new CustomEvent("menu", {
+        detail: { action:"open" }, 
+        bubbles: true,
+        cancelable: true
+      })
+    );
+  }, 500);
+});

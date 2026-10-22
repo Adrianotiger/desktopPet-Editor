@@ -2,6 +2,7 @@ let aniCanvasLetAnimate = false;
 
 class AniCanvasClass
 {
+  #ani;
   #canvas;
   #ctx;
   #seq = [];
@@ -10,38 +11,14 @@ class AniCanvasClass
   #lastTimestamp;
   #forceAni;
   constructor(ani, w, h)
-  {
-    const seq = ani.sequence;
-    const start = ani.start;
-    const end = ani.end;
-    
+  {    
+    this.#ani = ani;
     this.#canvas = _CN("canvas", {width:w, height:h});
     this.#seq = [];
     this.#frameIndex = 0;
-    let totFrames = seq.frame.length;
-    if(seq.repeat.value > 0)
-      totFrames += seq.repeat.value * (seq.frame.length - seq.repeatfrom);
-    
-    seq.frame.forEach(f=>{
-      const frame = {
-        f:f.value, 
-        i:parseInt(start.interval + (end.interval-start.interval) * this.#seq.length / totFrames), 
-        o:start.opacity + (end.opacity-start.opacity) * this.#seq.length / totFrames
-      };
-      this.#seq.push(frame);
-      this.#frames.push(frame);
-    });
-    
-    let ind = this.#seq.length;
-    while(this.#seq.length < totFrames)
-    {
-      if(++ind >= this.#seq.length) ind = seq.repeatfrom;
-      this.#seq.push({
-        f:seq.frame[ind].value, 
-        i:parseInt(start.interval + (end.interval-start.interval) * this.#seq.length / totFrames), 
-        o:start.opacity + (end.opacity-start.opacity) * this.#seq.length / totFrames
-      });
-    }
+
+    this.#calcFrames(ani.sequence);
+
     this.#forceAni = false;
   }
   
@@ -61,6 +38,44 @@ class AniCanvasClass
       requestAnimationFrame((timestamp) => {
         this.#lastTimestamp = timestamp;
         this.#_animate(timestamp);
+      });
+    }
+  }
+
+  updateFrames(seq)
+  {
+    this.#frames = [];
+    this.#calcFrames(seq)
+  }
+
+  #calcFrames(seq)
+  {
+    const start = this.#ani.start;
+    const end = this.#ani.end;
+    let totFrames = seq.frame.length;
+    if(seq.repeat > 0)
+      totFrames += seq.repeat * (seq.frame.length - seq.repeatfrom);
+
+    this.#seq = [];
+    
+    seq.frame.forEach(f=>{
+      const frame = {
+        f:f.value, 
+        i:parseInt(start.interval + (end.interval-start.interval) * this.#seq.length / totFrames), 
+        o:start.opacity + (end.opacity-start.opacity) * this.#seq.length / totFrames
+      };
+      this.#seq.push(frame);
+      this.#frames.push(frame);
+    });
+    
+    let ind = this.#seq.length;
+    while(this.#seq.length < totFrames)
+    {
+      if(++ind >= seq.frame.length) ind = seq.repeatfrom;
+      this.#seq.push({
+        f:seq.frame[ind].value, 
+        i:parseInt(start.interval + (end.interval-start.interval) * this.#seq.length / totFrames), 
+        o:start.opacity + (end.opacity-start.opacity) * this.#seq.length / totFrames
       });
     }
   }

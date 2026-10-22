@@ -1,0 +1,56 @@
+.messageoverlay
+{
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  display: block;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.6);
+  transition: opacity 0.3s linear;
+  z-index: 1000;
+}
+
+.messagebox
+{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: block;
+  min-width: 400px;
+  min-height: 20px;
+  transform: translate(-50%, -50%) scale(1);
+  background-color: var(--bg-panel);
+  border: ridge 2px var(--border);
+  border-radius: 10px;
+  box-shadow: 3px 3px 8px #000;
+  text-align:center;
+  padding-bottom: 40px;
+  transition: transform 0.5s ease-in-out;
+}
+
+.messagebox h2
+{
+  background-color: rgba(200,200,0,0.2);
+}
+
+.messagebox p
+{
+  padding: 10px;
+  margin: 10px;
+}
+
+.messageboxbuttons
+{
+  display: block;
+  position: absolute;
+  bottom: 10px;
+  width: 80%;
+  left: 10%;
+  margin:0 auto;
+}
+
+.messageboxbuttons button
+{
+    width: 35%;
+}

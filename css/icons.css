@@ -52,3 +52,9 @@
 .icon[data-icon="filesave"]   { content: url("../icons/filesave.png"); }
 .icon[data-icon="filesaveas"]   { content: url("../icons/filesaveas.png"); }
 .icon[data-icon="folderopen"]   { content: url("../icons/folderopen.png"); }
+.icon[data-icon="editheader"]   { content: url("../icons/editheader.png"); }
+.icon[data-icon="editspritesheet"]   { content: url("../icons/editspritesheet.png"); }
+.icon[data-icon="editspawns"]   { content: url("../icons/editspawns.png"); }
+.icon[data-icon="editanimations"]   { content: url("../icons/editanimations.png"); }
+.icon[data-icon="editchilds"]   { content: url("../icons/editchilds.png"); }
+.icon[data-icon="cancel"]   { content: url("../icons/cancel.png"); }

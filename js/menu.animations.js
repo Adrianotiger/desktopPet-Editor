@@ -4,23 +4,23 @@ class AniMenuClass extends Submenu
   {
     super("Anim.", "sheep");
     
-    this.icons.push(new SubmenuIcon("sheep", "Header", ()=>{
+    this.icons.push(new SubmenuIcon("editheader", "Header", ()=>{
       
     }));
     
-    this.icons.push(new SubmenuIcon("sheep", "Spritesheet", ()=>{
+    this.icons.push(new SubmenuIcon("editspritesheet", "Spritesheet", ()=>{
       
     }));
     
-    this.icons.push(new SubmenuIcon("sheep", "Spawns", ()=>{
+    this.icons.push(new SubmenuIcon("editspawns", "Spawns", ()=>{
       
     }));
     
-    this.icons.push(new SubmenuIcon("sheep", "Animations", ()=>{
+    this.icons.push(new SubmenuIcon("editanimations", "Animations", ()=>{
       
     }));
     
-    this.icons.push(new SubmenuIcon("sheep", "Childs", ()=>{
+    this.icons.push(new SubmenuIcon("editchilds", "Childs", ()=>{
       
     }));
   }
