@@ -79,5 +79,30 @@ class XMLValue
     this.#value = value;
     if(this.#valuetype == XMLValue.Type.FORMULA) this.#calculateFormula();
   }
+
+  check()
+  {
+    if(this.#value == "")
+      return "Value can't be empty";
+    
+    switch(this.#valuetype)
+    {
+      case XMLValue.Type.INT: 
+        if(Number.isNaN(this.#value) || parseInt(this.#value) != this.#value)
+          return `'${this.#value}' is not an INT`;
+        break;
+      case XMLValue.Type.DOUBLE: 
+        if(Number.isNaN(this.#value) || parseFloat(this.#value) != this.#value)
+          return `'${this.#value} is not a DOUBLE`;
+        break;
+      case XMLValue.Type.STRING: 
+        break;
+      case XMLValue.Type.FORMULA: 
+        // todo: check formula!
+        break;
+      default: 
+    }
+    return null;
+  }
   
 };

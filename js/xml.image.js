@@ -1,4 +1,4 @@
-class XMLAnimationsImage
+class XMLAnimationsImage extends XMLNode
 {
   #tilesx = "";
   #tilesy = "";
@@ -12,6 +12,7 @@ class XMLAnimationsImage
   
   constructor(xml)
   {
+    super();
     console.log(xml);
     
     this.#tilesx = new XMLValue(xmlNodeGet(xml, 'tilesx')??1, XMLValue.Type.INT); 

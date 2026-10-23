@@ -42,7 +42,7 @@ const ExtendedConsole = new class
   writeError(txt)
   {
     clearTimeout(this.#timeout);
-    this.#div.style.backgroundColor = "#822";
+    this.#div.style.backgroundColor = "var(--danger)";
     this.#div.textContent = this.getTime() + txt;
     this.#timeout = setTimeout(()=>{this.#div.style.backgroundColor = "transparent";}, 1500);
   }

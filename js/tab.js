@@ -13,7 +13,7 @@ class TabClass
   
   hide()
   {
-    this.div.style.opacity=0.5;
+    this.div.style.opacity=0.3;
     this.div.style.pointerEvents="none";
     this.div.style.backgroundColor = "rgba(0,0,0,0.0)";
   }
@@ -23,7 +23,7 @@ class TabClass
     this.div.style.zIndex = Tabs.index++;
     this.div.style.opacity = 1;
     this.div.style.pointerEvents = "inherit";
-    this.div.style.backgroundColor = "rgba(0,30,50,0.6)";
+    this.div.style.backgroundColor = "var(--tab-bg)";
   }
 };
 
@@ -63,6 +63,21 @@ var Tabs = new class
       this.#tabs.forEach(t => { t.div.style.zIndex = parseInt(t.div.style.zIndex) - 500; });
       Tabs.index -= 500;
     }
+  }
+
+  removeTop()
+  {
+    let find = {z:-1000, t:null};
+    let next = {z:-1000, t:null};
+    this.#tabs.forEach(t => { 
+      if(t.div.style.zIndex > find.z) 
+        find = {z:t.div.style.zIndex, t:t};
+    });
+    this.#tabs.forEach(t => { 
+      if(t.div.style.zIndex > next.z && t.div.style.zIndex < find.z) 
+        next = {z:t.div.style.zIndex, t:t};
+    });
+    this.show(next.t);
   }
 };
 

@@ -1,4 +1,4 @@
-class XMLAnimationsNext
+class XMLAnimationsNext extends XMLNode
 {
   #probability = 10;
   #only = "none";
@@ -6,6 +6,7 @@ class XMLAnimationsNext
   
   constructor(xml)
   {    
+    super();
     this.#probability = new XMLValue(xmlAttrGet(xml, 'probability')??0, XMLValue.Type.INT);
     this.#only = new XMLValue(xmlAttrGet(xml, 'only')??"none", XMLValue.Type.STRING);
     this.#value = new XMLValue(xml.textContent, XMLValue.Type.INT);

@@ -1,4 +1,4 @@
-class XMLAnimationsHeader
+class XMLAnimationsHeader extends XMLNode
 {
   #author = "";
   #title = "";
@@ -10,6 +10,7 @@ class XMLAnimationsHeader
   
   constructor(xml)
   {
+    super();
     console.log(xml);
     
     this.#author = new XMLValue(xmlNodeGet(xml, 'author')??"Unknown", XMLValue.Type.STRING);

@@ -17,13 +17,7 @@ class SubmenuIcon
   
   async #clicked()
   {
-    const menuEvent = new CustomEvent("menu", {
-      detail: { action:this.title.toLowerCase() }, 
-      bubbles: true,
-      cancelable: true
-    });
-
-    document.body.dispatchEvent(menuEvent);
+    Menu.execute(this.title.toLowerCase());
   }
 }
 
@@ -85,17 +79,24 @@ const Menu = new class
       }, j*100)
     });
   }
+
+  execute(action, params=null)
+  {
+    let detail = { action };
+    if(params != null) detail.params = params;
+    document.body.dispatchEvent(
+      new CustomEvent("menu", {
+        detail: detail, 
+        bubbles: true,
+        cancelable: true
+      })
+    );
+  }
 };
 
 window.addEventListener("load", ()=>{
   Menu.init();
   setTimeout(()=>{
-    document.body.dispatchEvent(
-      new CustomEvent("menu", {
-        detail: { action:"open" }, 
-        bubbles: true,
-        cancelable: true
-      })
-    );
+    Menu.execute("open");
   }, 500);
 });

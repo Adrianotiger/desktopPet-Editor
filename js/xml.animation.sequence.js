@@ -1,4 +1,4 @@
-class XMLAnimationsSequence
+class XMLAnimationsSequence extends XMLNode
 {
   #repeatfrom;
   #repeat;
@@ -8,6 +8,7 @@ class XMLAnimationsSequence
   
   constructor(xml)
   {    
+    super();
     this.#repeatfrom = new XMLValue(xmlAttrGet(xml, 'repeatfrom')??0, XMLValue.Type.INT);
     this.#repeat = new XMLValue(xmlAttrGet(xml, 'repeat')??"0", XMLValue.Type.FORMULA);
     this.#action = new XMLValue(xmlNodeGet(xml, 'action')??"none", XMLValue.Type.ACTION);

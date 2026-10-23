@@ -23,12 +23,22 @@ const XML = new class
   
   #animations = new XMLAnimationsClass();
   
-  #scripts = ["value", "header", "image", "spawn", "spawn.next", "animation", "animation.sequence", "animation.next"];
+  #mainscripts = ["value", "node"];
+  #scripts = ["header", "image", "spawn", "spawn.next", "animation", "animation.sequence", "animation.next", "checks"];
   
   constructor()
   {
-    this.#scripts.forEach(s=>{
-      _CN("script", {src:`js/xml.${s}.js`}, [], document.head);
+    let loaded = 0;
+    this.#mainscripts.forEach(ms=>{
+      _CN("script", {src:`js/xml.${ms}.js`}, [], document.head).addEventListener("load",()=>{
+        loaded++;
+        if(loaded >= this.#mainscripts.length)
+        {
+          this.#scripts.forEach(s=>{
+            _CN("script", {src:`js/xml.${s}.js`}, [], document.head);
+          });
+        }
+      });
     });
   }
   

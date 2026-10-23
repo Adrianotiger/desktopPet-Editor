@@ -13,7 +13,7 @@ class FrameEditor
     this.#canvas = canvas;
     this.#trash = _CN("div", { class: "aniframeeditortrash" }, ["🗑️"]);
     this.#addFrame = _CN("div", { class: "aniframeeditoradd" }, ["＋ "]);
-    this.#div = _CN("div", {class:"aniframeeditor"}, [
+    this.#div = _CN("div", {class:"aniframeeditor", style:"padding-right:30px;"}, [
         _CN("i", {}, ["Frames:"]),
         this.#trash,
         this.#addFrame

@@ -5,10 +5,27 @@
   --text-main: #cdd6f4;
   --text-muted: #a6adc8;
   --accent: #89b4fa;
+  --hover: #fffcbe;
   --accent-hover: #74c7ec;
   --border: #45475a;
   --success: #a6e3a1;
+  --danger: #c20f39;
+  --tab-bg: rgba(0,30,50,0.7);
+}
+
+html[data-theme="light"] {
+  --bg-dark: #edf8fc;
+  --bg-panel: #e6fdfd;
+  --bg-sidebar: #e6e6f0;
+  --text-main: #1e1e2e;
+  --text-muted: #5c5f77;
+  --accent: #1e66f5;
+  --hover: #d8a841;
+  --accent-hover: #209fb5;
+  --border: #ccd0da;
+  --success: #40a02b;
   --danger: #f38ba8;
+  --tab-bg: rgba(210,240,250,0.7);
 }
 
 * {

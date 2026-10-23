@@ -23,3 +23,19 @@ function xmlAttrGet(node, name)
   if(!n.textContent) {console.error(`no attribute value found on node.`, node); return null;}
   return n.textContent;
 }
+
+function setDayNightTheme(butt)
+{
+  const currentTheme = localStorage.getItem("pageTheme", "light");
+  const newTheme = butt ? (currentTheme === 'dark' ? 'light' : 'dark') : currentTheme;
+  document.documentElement.setAttribute('data-theme', newTheme);
+  if(butt)
+  {
+    butt.textContent = (currentTheme === 'light' ? '🌙' : '☀️');
+    localStorage.setItem("pageTheme", newTheme);
+  }
+}
+
+addEventListener("load", ()=>{
+  setDayNightTheme();
+});

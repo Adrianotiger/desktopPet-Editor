@@ -29,7 +29,7 @@ class AniCanvasClass
   
   animate(force=false)
   {
-    if(force) this.#forceAni = true;
+    this.#forceAni = force;
     this.#lastTimestamp = 0;
     this.#frameIndex = 0;
     this.#ctx = this.#canvas.getContext('2d');
@@ -78,6 +78,7 @@ class AniCanvasClass
         o:start.opacity + (end.opacity-start.opacity) * this.#seq.length / totFrames
       });
     }
+    if(seq.repeat == 0) this.#seq[0].i = 1000;
   }
   
   #_animate(currentTimestamp) 
@@ -92,6 +93,7 @@ class AniCanvasClass
       this.#lastTimestamp = currentTimestamp - (timeElapsed % this.#seq[this.#frameIndex].i);
       this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
       
+      this.#ctx.globalAlpha = this.#seq[this.#frameIndex].o;
       this.#ctx.drawImage(XML.getImage(this.#seq[this.#frameIndex].f), 0, 0);
 
       this.#frameIndex = (this.#frameIndex + 1) % this.#seq.length;
@@ -137,13 +139,7 @@ class AnimationsTabClass extends TabClass
       });
       
       b.addEventListener("click", ()=>{
-        document.body.dispatchEvent(
-          new CustomEvent("menu", {
-            detail: { action:"animation", params:{ani:ani} }, 
-            bubbles: true,
-            cancelable: true
-          })
-        );
+        Menu.execute("animation", {ani});
       });
       
     });

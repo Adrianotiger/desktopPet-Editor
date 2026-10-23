@@ -1,4 +1,4 @@
-class XMLAnimationsAnimationPos
+class XMLAnimationsAnimationPos extends XMLNode
 {
   #x = 0;
   #y = 0;
@@ -8,6 +8,7 @@ class XMLAnimationsAnimationPos
   
   constructor(xml)
   {
+    super();
     this.#x = new XMLValue(xmlNodeGet(xml, 'x')??0, XMLValue.Type.FORMULA);
     this.#y = new XMLValue(xmlNodeGet(xml, 'y')??0, XMLValue.Type.FORMULA);
     this.#offsety = new XMLValue(xmlNodeGet(xml, 'offsety')??0, XMLValue.Type.INT);
@@ -31,11 +32,8 @@ class XMLAnimationsAnimationPos
   set interval(value) { this.#interval.value = value; }
 }
 
-class XMLAnimationsAnimation
-{
-  #id;
-  #name;
-  
+class XMLAnimationsAnimation extends XMLNode
+{  
   start = null;
   end = null;
   sequence = null;
@@ -44,20 +42,27 @@ class XMLAnimationsAnimation
   
   constructor(xml)
   {    
-    this.#id = new XMLValue(xmlAttrGet(xml, 'id')??1, XMLValue.Type.INT); 
-    
-    this.#name = new XMLValue(xmlNodeGet(xml, 'name')??"noname_"+this.id, XMLValue.Type.STRING);
+    super();
+    super.addAttribute(
+      "id", 
+      xmlAttrGet(xml, 'id')??1, 
+      XMLValue.Type.INT
+    );
+    super.addValue(
+      "name", 
+      xmlNodeGet(xml, 'name')??"noname_"+this.id, 
+      XMLValue.Type.STRING
+    );
     
     this.start = new XMLAnimationsAnimationPos(xml.querySelector('start'));
     this.end = new XMLAnimationsAnimationPos(xml.querySelector('end'));
     
     this.sequence = new XMLAnimationsSequence(xml.querySelector('sequence'));
   }
+
+  get id() { return this.getValue("id"); }
+  set id(value) { this.setValue("id", value); }
   
-  get id() { return this.#id.value; }
-  set id(value) { this.#id.value = value; }
-  
-  get name() { return this.#name.value; }
-  set name(value) { this.#name.value = value; }
-  
+  get name() { return this.getValue("name"); }
+  set name(value) { this.setValue("name", value); }
 };

@@ -9,8 +9,8 @@ button {
 }
 
 button:hover {
-  box-shadow: inset 3px 3px 3px #ffa, inset -3px -3px 3px #995, 0px 0px 3px yellow;
-  color: yellow;
+  box-shadow: inset 3px 3px 3px #ffa, inset -3px -3px 3px #995, 0px 0px 3px var(--hover);
+  color: var(--hover);
 }
 
 input, select {
@@ -23,11 +23,11 @@ input, select {
 }
 
 input:hover, select:hover {
-  box-shadow: inset -2px -2px 2px #ffa, inset 2px 2px 2px #550, 0px 0px 3px yellow;
+  box-shadow: inset -2px -2px 2px #ffa, inset 2px 2px 2px #550, 0px 0px 3px var(--hover);
 }
 
 input:focus, select:focus {
-  background-color: #ff8;
+  background-color: var(--hover);
 }
 
 input[type="number"] {
