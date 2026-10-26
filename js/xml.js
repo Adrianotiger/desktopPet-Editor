@@ -102,6 +102,26 @@ const XML = new class
   {
     return this.#animations.animations;
   }
+
+  getAnimation(id)
+  {
+    let ret = null;
+    this.getAnimations().forEach(a=>{
+      if(a.id == id) ret = a;
+    });
+    return ret;
+  }
+  setAnimation(id, newAni)
+  {
+    let ret = -1;
+    this.getAnimations().forEach((a, j)=>{
+      if(a.id == id && ret < 0) {
+        ret = j;
+      }
+    });
+    if(ret >= 0) this.getAnimations().splice(ret, 1, newAni);
+    return ret >= 0;
+  }
   
   getImage(index=-1)
   {

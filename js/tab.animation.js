@@ -2,7 +2,8 @@ class AnimationTabClass extends TabClass
 {
   #currentAni = null;
   #canv = null;
-  
+  #isAnimating = true;
+
   constructor()
   {
     super("Animation");
@@ -16,8 +17,11 @@ class AnimationTabClass extends TabClass
     if(params?.ani != null)
     {
       console.log(params.ani);
-      this.#currentAni = params.ani;
+      this.#currentAni = params.ani.clone();
+
+      console.log("Cloned", this.#currentAni);
       this.#createDiv();
+      console.log()
     }
   }
 
@@ -31,7 +35,14 @@ class AnimationTabClass extends TabClass
   {
     this.div.innerHTML = "";
     _CN("button", {style:"position:absolute;right:10px;top:0px;"}, [_CN("img", {class:"icon", "data-icon":"filesave"})], this.div).addEventListener("click", ()=>{
-      //this.save
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(this.#currentAni.getXml(), "text/xml");
+      const replaceId = this.#currentAni.id;
+      const replaceNode = new XMLAnimationsAnimation(xml.documentElement);
+      XML.setAnimation(replaceId, replaceNode);
+      Menu.execute("animations");
+      AnimationsTab.reload();
+      //Tabs.removeTop();
     });
     _CN("button", {style:"position:absolute;left:10px;top:0px;"}, [_CN("img", {class:"icon", "data-icon":"cancel"})], this.div).addEventListener("click", ()=>{
       Tabs.removeTop();
@@ -40,15 +51,19 @@ class AnimationTabClass extends TabClass
     const ani = this.#currentAni;
     const seq = ani.sequence;
     const canv = new AniCanvasClass(ani, XML.getImage().getFrameWidth(), XML.getImage().getFrameHeight());
-    const baseInfo = _CN("div", {class:"infobox aniinfobox", style:"width:20vw;height:30vh;"}, [_CN("h3", {}, ["Animation Key"])], this.div);
+    const baseInfo = _CN("div", {class:"infobox aniinfobox", style:"width:20vw;height:30vh;position:relative;"}, [_CN("h3", {}, ["Animation Key"])], this.div);
     const sel = _CN("select", {name:"id"}, [_CN("option", {}, [ani.id])]);
     const inputId =  _CN("input", {type:"text", name:"name", value:ani.name, placeholder:"Unique name"});
-    _CN("div", {}, [canv.getCanvas()], baseInfo);
+    const canvCont = _CN("div", {style:"position:absolute;bottom:-2px;left:0px;width:20vw;height:15vh;"}, [canv.getCanvas()], baseInfo);
+    canvCont.addEventListener("click", ()=>{
+      this.#isAnimating = !this.#isAnimating;
+      this.#canv.animate(this.#isAnimating);
+    });
     
     _CN("div", {}, [_CN("span", {style:"width:50px;display:inline-block;"}, ["Id:"]), sel], baseInfo);
     _CN("div", {}, [_CN("span", {style:"width:50px;display:inline-block;"}, ["Name:"]), inputId], baseInfo);
    
-    const sequenceInfo = _CN("div", {class:"infobox aniinfobox", style:"width:70vw;height:30vh;"}, [_CN("h3", {}, ["Sequence"])], this.div);
+    const sequenceInfo = _CN("div", {class:"infobox aniinfobox", id:"sequence", style:"width:70vw;height:30vh;"}, [_CN("h3", {}, ["Sequence"])], this.div);
     const inputRepeats =  _CN("input", {type:"text", name:"sequence.repeat", value:seq.repeatOriginal, placeholder:"0"});
     const inputRepeatsFrom =  _CN("input", {type:"number", name:"sequence.repeatfrom", value:seq.repeatfrom, placeholder:"0"});
     const inputEndEffect = _CN("select", {name:"sequence.action"});
@@ -64,7 +79,7 @@ class AnimationTabClass extends TabClass
     const fe = new FrameEditor(seq, canv, sequenceInfo);
 
     ["start", "end"].forEach((p,j)=>{
-      const paramInfo = _CN("div", {class:"infobox aniinfobox", style:"width:45vw;"}, [_CN("h3", {}, ["Parameters " + p])], this.div);
+      const paramInfo = _CN("div", {class:"infobox aniinfobox", id:p, style:"width:45vw;"}, [_CN("h3", {}, ["Parameters " + p])], this.div);
       const pos = (j==0?ani.start:ani.end);
       const inputX =  _CN("input", {type:"text", name:`${p}.x`, value:pos.x, placeholder:"-1"});
       const inputY =  _CN("input", {type:"text", name:`${p}.y`, value:pos.y, placeholder:"0"});
@@ -82,25 +97,38 @@ class AnimationTabClass extends TabClass
     canv.animate(true);  
     this.#canv = canv;
 
-    [...this.div.getElementsByTagName("input")].forEach(i=>{
+    [...this.div.querySelectorAll("input, select")].forEach(i=>{
       const original = i.value;
       let oldValue = original;
       i.addEventListener("change", ()=>{
         const newValue = i.value;
         console.log(`ELEMENT changed, from ${original} to ${newValue}`);
         oldValue = this.changeValue(i, i.name, newValue);
-        if(oldValue == original) i.style.backgroundColor = "white";
-        else if(oldValue != newValue) i.style.backgroundColor = "#fad";
+        if(oldValue == original)
+          i.style.backgroundColor = "white";
+        else if(oldValue != newValue)
+          i.style.backgroundColor = "#fad";
         else {
           i.style.backgroundColor = "#bf8";
-          const errors = this.#currentAni.check();
-          if(errors.length > 0)
-          {
-            console.error(errors);
-          }
+          this.#checkAni();
         }
       });
     });
+
+    this.#checkAni();
+    setTimeout(()=>{
+      const rect = canvCont.getBoundingClientRect();
+      this.#canv.resizeCanvasToEmulateScreen(parseInt(rect.width), parseInt(rect.height));
+    }, 100);
+  }
+
+  #checkAni()
+  {
+    const errors = this.#currentAni.check();
+    if(errors.length > 0)
+    {
+      console.error(errors);
+    }
   }
   
   changeValue(element, key, value)
@@ -123,7 +151,14 @@ class AnimationTabClass extends TabClass
       value = element.value = node;
       console.error(failed);
     }
-    node = value;
+    else
+    {
+      if(key.split(".").length==1) this.#currentAni[key] = value;
+      else if(key.split(".").length==2) this.#currentAni[key.split(".")[0]][key.split(".")[1]] = value;
+      this.#canv.updateAni(this.#currentAni);
+    }
+    //node = value;
+    console.log(this.#currentAni);
     return value;
   }
   

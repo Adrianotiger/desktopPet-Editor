@@ -1,24 +1,41 @@
 class XMLAnimationsNext extends XMLNode
 {
-  #probability = 10;
-  #only = "none";
-  #value = 1;
+  #probability;
+  #only;
+  #value;
   
   constructor(xml)
   {    
-    super();
-    this.#probability = new XMLValue(xmlAttrGet(xml, 'probability')??0, XMLValue.Type.INT);
-    this.#only = new XMLValue(xmlAttrGet(xml, 'only')??"none", XMLValue.Type.STRING);
-    this.#value = new XMLValue(xml.textContent, XMLValue.Type.INT);
+    super(xml, "next");
+
+    super.addAttribute(
+      "probability", 
+      xmlAttrGet(xml, 'probability')??0, 
+      XMLValue.Type.INT
+    );
+
+    super.addAttribute(
+      "only", 
+      xmlAttrGet(xml, 'only')??"none", 
+      XMLValue.Type.STRING
+    );
+
+    super.addValue(
+      "_", 
+      xml.textContent, 
+      XMLValue.Type.INT
+    );
+
+    //this.#value = new XMLValue(xml.textContent, XMLValue.Type.INT);
   }
   
-  get probability() { return this.#probability.value; }
-  set probability(value) { this.#probability.value = value; }
+  get probability() { return this.getValue("probability"); }
+  set probability(value) { this.setValue("probability", value); }
   
-  get only() { return this.#only.value; }
-  set only(value) { this.#only.value = value; }
+  get only() { return this.getValue("only"); }
+  set only(value) { this.setValue("only", value); }
   
-  get value() { return this.#value.value; }
-  set value(value) { this.#value.value = value; }
+  get value() { return this.getValue("_"); }
+  set value(value) { this.setValue("_", value); }
   
 };

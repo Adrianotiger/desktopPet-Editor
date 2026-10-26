@@ -10,7 +10,7 @@ class XMLAnimationsHeader extends XMLNode
   
   constructor(xml)
   {
-    super();
+    super(xml, "header");
     console.log(xml);
     
     this.#author = new XMLValue(xmlNodeGet(xml, 'author')??"Unknown", XMLValue.Type.STRING);

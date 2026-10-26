@@ -8,7 +8,7 @@ class XMLAnimationsSpawn extends XMLNode
   
   constructor(xml)
   {    
-    super();
+    super(xml, "spawn");
     this.id = new XMLValue(xmlAttrGet(xml, 'id')??1, XMLValue.Type.INT);
     
     this.probability = new XMLValue(xmlAttrGet(xml, 'probability')??1, XMLValue.Type.INT);

@@ -10,9 +10,16 @@ class AniCanvasClass
   #frameIndex;
   #lastTimestamp;
   #forceAni;
+  #x = 0;
+  #y = 0;
+  #w = 0;
+  #h = 0;
+  #fullCanvas = false;
   constructor(ani, w, h)
   {    
     this.#ani = ani;
+    this.#w = w;
+    this.#h = h;
     this.#canvas = _CN("canvas", {width:w, height:h});
     this.#seq = [];
     this.#frameIndex = 0;
@@ -42,10 +49,26 @@ class AniCanvasClass
     }
   }
 
+  resizeCanvasToEmulateScreen(newW, newH)
+  {
+    this.#x = parseInt((newW - this.#w) / 2);
+    this.#y = newH - this.#h;
+    this.#canvas.height = newH;
+    this.#canvas.width = newW;
+    this.#fullCanvas = true;
+  }
+
   updateFrames(seq)
   {
     this.#frames = [];
     this.#calcFrames(seq)
+  }
+
+  updateAni(ani)
+  {
+    this.#ani = ani;
+    this.#frames = [];
+    this.#calcFrames(ani.sequence)
   }
 
   #calcFrames(seq)
@@ -56,13 +79,17 @@ class AniCanvasClass
     if(seq.repeat > 0)
       totFrames += seq.repeat * (seq.frame.length - seq.repeatfrom);
 
+    this.#frameIndex = 0;
     this.#seq = [];
     
     seq.frame.forEach(f=>{
       const frame = {
         f:f.value, 
         i:parseInt(start.interval + (end.interval-start.interval) * this.#seq.length / totFrames), 
-        o:start.opacity + (end.opacity-start.opacity) * this.#seq.length / totFrames
+        o:start.opacity + (end.opacity-start.opacity) * this.#seq.length / totFrames,
+        x:start.x + (end.x-start.x) * this.#seq.length / totFrames,
+        y:start.y + (end.y-start.y) * this.#seq.length / totFrames,
+        offy:start.offy + (end.offy-start.offy) * this.#seq.length / totFrames
       };
       this.#seq.push(frame);
       this.#frames.push(frame);
@@ -75,7 +102,10 @@ class AniCanvasClass
       this.#seq.push({
         f:seq.frame[ind].value, 
         i:parseInt(start.interval + (end.interval-start.interval) * this.#seq.length / totFrames), 
-        o:start.opacity + (end.opacity-start.opacity) * this.#seq.length / totFrames
+        o:start.opacity + (end.opacity-start.opacity) * this.#seq.length / totFrames,
+        x:start.x + (end.x-start.x) * this.#seq.length / totFrames,
+        y:start.y + (end.y-start.y) * this.#seq.length / totFrames,
+        offy:start.offy + (end.offy-start.offy) * this.#seq.length / totFrames
       });
     }
     if(seq.repeat == 0) this.#seq[0].i = 1000;
@@ -92,9 +122,24 @@ class AniCanvasClass
     {
       this.#lastTimestamp = currentTimestamp - (timeElapsed % this.#seq[this.#frameIndex].i);
       this.#ctx.clearRect(0, 0, this.#canvas.width, this.#canvas.height);
+
+      if(this.#fullCanvas) // use full canvas for animation
+      {
+        this.#x += this.#seq[this.#frameIndex].x;
+        this.#y += this.#seq[this.#frameIndex].y;
+
+        if(this.#x < 0) this.#x = this.#canvas.width - this.#w;
+        else if(this.#x > this.#canvas.width - this.#w) this.#x = 0;
+        if(this.#y < 0) this.#y = this.#canvas.height - this.#h;
+        else if(this.#y > this.#canvas.height - this.#h) this.#y = 0;
+      }
       
       this.#ctx.globalAlpha = this.#seq[this.#frameIndex].o;
-      this.#ctx.drawImage(XML.getImage(this.#seq[this.#frameIndex].f), 0, 0);
+      this.#ctx.drawImage(
+        XML.getImage(this.#seq[this.#frameIndex].f), 
+        this.#x, 
+        this.#y
+      );
 
       this.#frameIndex = (this.#frameIndex + 1) % this.#seq.length;
     }
@@ -115,6 +160,11 @@ class AnimationsTabClass extends TabClass
         this.loadAnimations();
       }
     });
+  }
+
+  reload()
+  {
+    this.loadAnimations();
   }
   
   async loadAnimations()
@@ -139,7 +189,9 @@ class AnimationsTabClass extends TabClass
       });
       
       b.addEventListener("click", ()=>{
-        Menu.execute("animation", {ani});
+        // As the animation can be changed on the fly, get the current one
+        const a = XML.getAnimation(ani.id);
+        Menu.execute("animation", {ani:a});
       });
       
     });

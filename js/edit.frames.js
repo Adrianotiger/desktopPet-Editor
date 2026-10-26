@@ -99,14 +99,15 @@ class FrameEditor
     while(this.#div.children.length > 3) this.#div.removeChild(this.#div.children[3]);
     this.#trash.style.opacity = 0.2;
 
-    this.#seq.frame = [];
+    let newFrames = [];
     this.frames.forEach((f, j)=>{
       const em = _CN("em", {}, [`[${j}]`]);
       const b = _CN("b", {}, [`-${f}-`]);
       const im = _CN("img", {src:XML.getImage(f).src});
       const s = _CN("span", {draggable:"true", "data-index":j}, [im, b, em], this.#div);
 
-      this.#seq.frame.push(new XMLValue(f, XMLValue.Type.INT));
+      //this.#seq.frame.push(new XMLValue(f, XMLValue.Type.INT));
+      newFrames.push(new XMLValue(f, XMLValue.Type.INT));
 
       s.addEventListener("click", (e) => {
         this.#openPicker(j, f);
@@ -135,7 +136,8 @@ class FrameEditor
         }
       });
     });
-
+    
+    this.#seq.frame = newFrames;
     
     this.#canvas.updateFrames(this.#seq);
   }

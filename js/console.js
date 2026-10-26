@@ -33,10 +33,14 @@ const ExtendedConsole = new class
   
   writeLog(txt)
   {
-    clearTimeout(this.#timeout);
-    this.#div.style.backgroundColor = "#333";
-    this.#div.textContent = this.getTime() + txt;
-    this.#timeout = setTimeout(()=>{this.#div.style.backgroundColor = "transparent";}, 800);
+    if(this.#timeout != null) return;
+    
+    this.#div.style.backgroundColor = "#9e9e9e";
+    this.#div.textContent = this.getTime() + (typeof txt == "Object" ? txt.toString() : txt);
+    this.#timeout = setTimeout(()=>{
+      this.#div.style.backgroundColor = "transparent";
+      this.#timeout=null;
+    }, 800);
   }
   
   writeError(txt)
@@ -44,7 +48,10 @@ const ExtendedConsole = new class
     clearTimeout(this.#timeout);
     this.#div.style.backgroundColor = "var(--danger)";
     this.#div.textContent = this.getTime() + txt;
-    this.#timeout = setTimeout(()=>{this.#div.style.backgroundColor = "transparent";}, 1500);
+    this.#timeout = setTimeout(()=>{
+      this.#div.style.backgroundColor = "transparent";
+      this.#timeout=null;
+    }, 1500);
   }
   
   getTime()

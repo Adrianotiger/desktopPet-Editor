@@ -42,6 +42,21 @@ body {
   overflow: hidden;
 }
 
+a {
+  color: var(--text-main);
+}
+
+
+.svg {
+  vertical-align: middle;
+  fill: #000000; 
+  transition: fill 0.2s; 
+}
+
+.svg:hover { 
+  fill: #0066cc; 
+}
+
 .infobox {
   display: block;
   width: 98%;

@@ -1,48 +1,64 @@
 class XMLAnimationsAnimationPos extends XMLNode
-{
-  #x = 0;
-  #y = 0;
-  #offsety = 0;
-  #opacity = 1;
-  #interval = 200;
-  
-  constructor(xml)
+{  
+  constructor(xml, title)
   {
-    super();
-    this.#x = new XMLValue(xmlNodeGet(xml, 'x')??0, XMLValue.Type.FORMULA);
-    this.#y = new XMLValue(xmlNodeGet(xml, 'y')??0, XMLValue.Type.FORMULA);
-    this.#offsety = new XMLValue(xmlNodeGet(xml, 'offsety')??0, XMLValue.Type.INT);
-    this.#opacity = new XMLValue(xmlNodeGet(xml, 'opacity')??1, XMLValue.Type.DOUBLE);
-    this.#interval = new XMLValue(xmlNodeGet(xml, 'interval')??"200", XMLValue.Type.FORMULA);
+    super(xml, title);
+
+    super.addValue(
+      "x", 
+      xmlNodeGet(xml, 'x')??0, 
+      XMLValue.Type.FORMULA
+    );
+
+    super.addValue(
+      "y", 
+      xmlNodeGet(xml, 'y')??0, 
+      XMLValue.Type.FORMULA
+    );
+
+    super.addValue(
+      "interval", 
+      xmlNodeGet(xml, 'interval')??200, 
+      XMLValue.Type.FORMULA
+    );
+
+    super.addValue(
+      "offsety", 
+      xmlNodeGet(xml, 'offsety')??0, 
+      XMLValue.Type.INT
+    );
+
+    super.addValue(
+      "opacity", 
+      xmlNodeGet(xml, 'opacity')??0, 
+      XMLValue.Type.DOUBLE
+    );
   }
   
-  get x() { return this.#x.value; }
-  set x(value) { this.#x.value = value; }
+  get x() { return this.getValue("x"); }
+  set x(value) { this.setValue("x", value); }
   
-  get y() { return this.#y.value; }
-  set y(value) { this.#y.value = value; }
+  get y() { return this.getValue("y"); }
+  set y(value) { this.setValue("y", value); }
   
-  get offsety() { return this.#offsety.value; }
-  set offsety(value) { this.#offsety.value = value; }
+  get offsety() { return this.getValue("offsety"); }
+  set offsety(value) { this.setValue("offsety", value); }
   
-  get opacity() { return this.#opacity.value; }
-  set opacity(value) { this.#opacity.value = value; }
+  get opacity() { return this.getValue("opacity"); }
+  set opacity(value) { this.setValue("opacity", value); }
   
-  get interval() { return this.#interval.value; }
-  set interval(value) { this.#interval.value = value; }
+  get interval() { return this.getValue("interval"); }
+  set interval(value) { this.setValue("interval", value); }
 }
 
 class XMLAnimationsAnimation extends XMLNode
-{  
-  start = null;
-  end = null;
-  sequence = null;
+{
   border = [];
   gravity = [];
   
   constructor(xml)
   {    
-    super();
+    super(xml, "animation");
     super.addAttribute(
       "id", 
       xmlAttrGet(xml, 'id')??1, 
@@ -53,11 +69,19 @@ class XMLAnimationsAnimation extends XMLNode
       xmlNodeGet(xml, 'name')??"noname_"+this.id, 
       XMLValue.Type.STRING
     );
-    
-    this.start = new XMLAnimationsAnimationPos(xml.querySelector('start'));
-    this.end = new XMLAnimationsAnimationPos(xml.querySelector('end'));
-    
-    this.sequence = new XMLAnimationsSequence(xml.querySelector('sequence'));
+
+    super.addNode(
+      "start",
+      new XMLAnimationsAnimationPos(xml.querySelector('start'), "start")
+    );
+    super.addNode(
+      "end",
+      new XMLAnimationsAnimationPos(xml.querySelector('end'), "end")
+    );
+    super.addNode(
+      "sequence",
+      new XMLAnimationsSequence(xml.querySelector('sequence'))
+    );
   }
 
   get id() { return this.getValue("id"); }
@@ -65,4 +89,8 @@ class XMLAnimationsAnimation extends XMLNode
   
   get name() { return this.getValue("name"); }
   set name(value) { this.setValue("name", value); }
+
+  get start() { return this.getNode("start")[0]; }
+  get end() { return this.getNode("end")[0]; }
+  get sequence() { return this.getNode("sequence")[0]; }
 };
