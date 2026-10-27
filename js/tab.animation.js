@@ -9,6 +9,7 @@ class AnimationTabClass extends TabClass
     super("Animation");
     _CN("h1", {}, ["Animation"], this.div);
     _CN("script", {src:"js/edit.frames.js"}, [], document.head);
+    _CN("script", {src:"js/edit.next.js"}, [], document.head);
   }
   
   show(params)
@@ -92,6 +93,22 @@ class AnimationTabClass extends TabClass
         _CN("tr", {}, [_CN("td", {}, ["Y: "]), _CN("td", {}, [inputY])]),
         _CN("tr", {}, [_CN("td", {}, ["Interval: "]), _CN("td", {}, [inputInt]), _CN("td", {}, ["Opacity: "]), _CN("td", {}, [inputO])]),
       ], paramInfo);
+    });
+
+    const nexts = ["sequence", "border", "gravity"];
+    const divw = parseInt(90 / nexts.length) + "vw";
+
+    nexts.forEach(nk=>{
+      const nextInfo = _CN("div", {class:"infobox aniinfobox", id:nk, style:`width:${divw};`}, [_CN("h3", {}, ["Next " + nk])], this.div);
+      const nexts = ani[nk];
+
+      const ne = new NextEditor(ani[nk], nextInfo);
+      if(Array.isArray(nexts.next))
+      {
+        nexts.next.forEach(ns=>{
+          console.log(ns);
+        });
+      }
     });
     
     canv.animate(true);  

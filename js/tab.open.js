@@ -84,9 +84,7 @@ class OpenTabClass extends TabClass
 				if(f.done) break;
 				
 				if(f.value[1].kind === "directory")
-				{					
-					if(f.value[1].name === "stick_temp") continue;
-					
+				{	
 					let fqty = 0;
 					var files2 = await f.value[1].entries();
 					while((f2 = await files2.next())) 
@@ -113,7 +111,7 @@ class OpenTabClass extends TabClass
     let f2;
     this.#localDiv.innerHTML = "";
     let div = _CN("div", {class:"aniframeeditor", style:"height:60vh;width:60vw;overflow:scroll;margin:0 auto;"}, [], this.#localDiv);
-    _CN("i", {}, ["Projects"], div);
+    _CN("i", {}, ["Open Project"], div);
     this.#projects.forEach(async p=>{
       let s = _CN("span", {}, [_CN("img", {class:"icon", "data-icon":"folder"}), _CN("br"), p.f.name], div);
       p.files = [];

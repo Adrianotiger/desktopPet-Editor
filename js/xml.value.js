@@ -16,6 +16,15 @@ class XMLValue
     NONE: "none",
     FLIP: "flip"
   });
+
+  static Only = Object.freeze({
+    NONE: "none",
+    VERTICAL: "vertical",
+    HORIZONTAL: "horizontal",
+    TASKBAR: "taskbar",
+    WINDOW: "window",
+    VERTICAL_PLUS: "vertical+"
+  });
   
   constructor(str, type=XMLValue.Type.STRING)
   {    

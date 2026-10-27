@@ -51,11 +51,28 @@ class XMLAnimationsAnimationPos extends XMLNode
   set interval(value) { this.setValue("interval", value); }
 }
 
-class XMLAnimationsAnimation extends XMLNode
+class XMLAnimationNextCollection extends XMLNode
 {
-  border = [];
-  gravity = [];
-  
+  constructor(xml, nodeName)
+  {
+    super(xml, nodeName);
+
+    if(xml != null)
+    {
+      [...xml.querySelectorAll('next')].forEach(n=>{
+        super.addNode(
+          "next",
+          new XMLAnimationsNext(n)
+        );
+      });
+    }
+  }
+
+  get next() { return this.getNode("next"); }
+}
+
+class XMLAnimationsAnimation extends XMLNode
+{  
   constructor(xml)
   {    
     super(xml, "animation");
@@ -82,6 +99,16 @@ class XMLAnimationsAnimation extends XMLNode
       "sequence",
       new XMLAnimationsSequence(xml.querySelector('sequence'))
     );
+
+    super.addNode(
+      "border",
+      new XMLAnimationNextCollection(xml.querySelector('border')??XML.createElement("border"), "border")
+    );
+
+    super.addNode(
+      "gravity",
+      new XMLAnimationNextCollection(xml.querySelector('gravity')??XML.createElement("gravity"), "gravity")
+    );
   }
 
   get id() { return this.getValue("id"); }
@@ -93,4 +120,7 @@ class XMLAnimationsAnimation extends XMLNode
   get start() { return this.getNode("start")[0]; }
   get end() { return this.getNode("end")[0]; }
   get sequence() { return this.getNode("sequence")[0]; }
+
+  get border() { return this.getNode("border")[0]; }
+  get gravity() { return this.getNode("gravity")[0]; }
 };

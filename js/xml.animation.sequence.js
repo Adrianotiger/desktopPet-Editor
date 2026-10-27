@@ -16,9 +16,10 @@ class XMLAnimationsSequence extends XMLNode
       XMLValue.Type.FORMULA
     );
 
+    // action can be empty!
     super.addValue(
       "action", 
-      xmlNodeGet(xml, 'action')??"none", 
+      xmlHasNode(xml, 'action')?xmlNodeGet(xml, 'action'):XMLValue.Action.NONE, 
       XMLValue.Type.ACTION
     );
     

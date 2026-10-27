@@ -130,4 +130,9 @@ const XML = new class
     else
       return this.#animations.image.getFrameImage(index);
   }
+
+  createElement(nodeName)
+  {
+    return this.#xmlDoc.createElement(nodeName);
+  }
 };

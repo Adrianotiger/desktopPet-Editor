@@ -109,14 +109,16 @@
 .aniframeeditor img {
   max-height: 15vh;
   max-width: 15vw;
+  cursor: grab;
 }
 
 .aniframeeditor .aniframeeditortrash {
   display: inline-block;
   position: absolute;
-  right: 10px;
+  left: 100%;
   top: 10px;
-  padding: 15px;
+  transform: translate(-100%, 0%);
+  padding: 12px;
   background-color: #ffebee;
   border: 2px dashed #ef5350;
   color: #c62828;
@@ -131,8 +133,9 @@
 .aniframeeditor .aniframeeditoradd {
   display: inline-block;
   position: absolute;
-  right: 10px;
-  bottom: 10px;
+  left: 100%;
+  top: 80px;
+  transform: translate(-100%, 0%);
   padding: 15px;
   background-color: #eeffee;
   border: 2px dashed #50ff50;
@@ -164,4 +167,18 @@
 
 .anispritesheetselector img:hover {
   opacity: 1.0 !important;
+}
+
+.aninextitem {
+  width: 80%;
+  height: 40px;
+  border: 1px solid #888;
+  border-radius: 4px;
+  cursor: grab;
+  position: relative;
+}
+
+.aninextitem canvas {
+  height: 40px;
+  float:left;
 }
