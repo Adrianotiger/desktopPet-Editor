@@ -20,16 +20,27 @@ const Msg = new class{
       else
         msg.appendChild(options.content);
     }
+
     let butt = _CN("button", {}, [Array.isArray(options?.buttons) ? options?.buttons[0]  : "OK"]);
-    _CN("div", {class:"messageboxbuttons"}, [butt], msg);
+    let buttDiv = _CN("div", {class:"messageboxbuttons"}, [butt], msg);
     if(ok)
-        butt.addEventListener("click", ()=>{ok();});
-    if(cancel)
     {
-        let butt2 = _CN("button", {}, [Array.isArray(options?.buttons) && options.buttons.length > 1 ? options?.buttons[1]  : "Cancel"], msg);
-        butt2.addEventListener("click", ()=>{cancel();});
+        butt.addEventListener("click", ()=>{ok();});
+    }
+    if(cancel || options.buttons.length > 1)
+    {
+        let butt2 = _CN("button", {}, [Array.isArray(options?.buttons) && options.buttons.length > 1 ? options?.buttons[1]  : "Cancel"], buttDiv);
+        //_CN("td", {}, [butt2], buttTr);
+        if(cancel) butt2.addEventListener("click", ()=>{cancel();});
         butt2.addEventListener("click", ()=>{this.close()});
     }
+    if(options.buttons.length > 2)
+    {
+        let butt3 = _CN("button", {}, [options.buttons[2]], buttDiv);
+        //_CN("td", {}, [butt3], buttTr);
+        butt3.addEventListener("click", ()=>{this.close()});
+    }
+    //_CN("table", {style:"width:90%;"}, [buttTr], msg);
     butt.addEventListener("click", ()=>{this.close()});
     setTimeout(()=>{msg.style.transform = "translate(-50%, -50%) scale(1)";}, 20);
   }

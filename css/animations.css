@@ -60,6 +60,7 @@
   border-radius: 5px;
   position: relative;
   box-shadow: inset -2px -2px 2px #eef, inset 2px 2px 2px #559, 0px 0px 3px var(--accent);
+  container-type: size; 
 }
 
 .aniframeeditor i {
@@ -115,9 +116,8 @@
 .aniframeeditor .aniframeeditortrash {
   display: inline-block;
   position: absolute;
-  left: 100%;
+  right: 0px;
   top: 10px;
-  transform: translate(-100%, 0%);
   padding: 12px;
   background-color: #ffebee;
   border: 2px dashed #ef5350;
@@ -133,9 +133,8 @@
 .aniframeeditor .aniframeeditoradd {
   display: inline-block;
   position: absolute;
-  left: 100%;
+  right: 0px;
   top: 80px;
-  transform: translate(-100%, 0%);
   padding: 15px;
   background-color: #eeffee;
   border: 2px dashed #50ff50;
@@ -159,26 +158,83 @@
   overflow:auto;
 }
 
-.anispritesheetselector img {
+.anispritesheetselector div {
+  width: fit-content;
+  height: fit-content;
+  position: relative;
+  display: inline-block;
+}
+
+.anispritesheetselector div i {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  opacity: 0.0;
+}
+.anispritesheetselector:hover div i {
+  opacity: 1.0;
+}
+
+.anispritesheetselector img, .anispritesheetselector canvas {
   opacity: 0.1;
   cursor:pointer;
   transition: opacity 0.1s linear;
 }
 
-.anispritesheetselector img:hover {
+.anispritesheetselector img:hover, .anispritesheetselector canvas:hover {
   opacity: 1.0 !important;
+  box-shadow: inset 1px 1px 2px var(--border), inset -1px -1px 2px var(--border);
 }
 
 .aninextitem {
   width: 80%;
   height: 40px;
-  border: 1px solid #888;
+  box-shadow: 1px 1px 2px var(--border);
   border-radius: 4px;
   cursor: grab;
+  font-size:12px;
   position: relative;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr); 
+  grid-template-rows: repeat(2, minmax(0, 1fr)); 
+}
+
+.aninextitem span {
+  min-width: 0;
+  min-height: 0; 
+  overflow: hidden;
+  line-height: 16px;
+  text-align: right;
+  margin: 0px 5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .aninextitem canvas {
-  height: 40px;
-  float:left;
+  max-height: 100%;
+  grid-row: span 2;
+  align-self: center;
+  object-fit: contain;
+}
+
+.spanBig
+{
+  display: none !important;
+}
+
+@container (min-height: 40vh) {
+  .spanSmall
+  {
+    display: none !important;
+  }
+  .spanBig
+  {
+    display: inline-block !important;
+  }
+
+  .aninextitem
+  {
+    height: 70px;
+  }
 }

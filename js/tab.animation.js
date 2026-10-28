@@ -3,6 +3,10 @@ class AnimationTabClass extends TabClass
   #currentAni = null;
   #canv = null;
   #isAnimating = true;
+  #changes = [];
+  #nextKeys = ["sequence", "border", "gravity"];
+  #original = {frames:""};
+  #preventClosingIfChanged = true;
 
   constructor()
   {
@@ -17,33 +21,93 @@ class AnimationTabClass extends TabClass
     super.show();
     if(params?.ani != null)
     {
-      console.log(params.ani);
+      this.#isAnimating = true;
+      this.#changes = [];
+      this.#original = {frames:""};
+      this.#nextKeys.forEach(k=>{this.#original[k] = "";});
+      this.#preventClosingIfChanged = true;
+
+      //console.log(params.ani);
       this.#currentAni = params.ani.clone();
 
-      console.log("Cloned", this.#currentAni);
+      //console.log("Cloned", this.#currentAni);
       this.#createDiv();
-      console.log()
     }
   }
 
   hide()
   {
+    if(this.isTop)
+    {
+      const ani = this.#currentAni;
+      let current = {frames:""};
+      this.#nextKeys.forEach(k=>{current[k] = "";});
+
+      let msg = null;
+
+      // check if unsaved data is present
+      if(this.#changes.length > 0)
+      {
+        msg = `There are ${this.#changes.length} unsaved changes. `;
+        if(this.#changes.length == 1) msg += `'${this.#changes[0].name}' is different.`;
+      }
+      else
+      {
+        if(Array.isArray(ani.sequence?.frame)) ani.sequence?.frame.forEach(f=>{current.frames += f.original + ",";});
+        
+        this.#nextKeys.forEach(nk=>{
+          const nexts = ani[nk];
+          if(Array.isArray(nexts.next))
+          {
+            nexts.next.forEach(n=>{
+              current[nk] += n.getXml();
+            });
+          }
+        });
+
+        Object.keys(current).forEach(nk=>{
+          if(this.#original[nk] != current[nk])
+          {
+            msg = `'Next'-node for '${nk}' changed. `;;
+          }
+        });
+      }
+
+      if(msg && this.#preventClosingIfChanged)
+      {
+        Msg.show({title:"Unsaved animation", content:_CN("div", {style:"min-width:500px;padding:50px;"}, [msg]), buttons:["💾 Save and close", "🗑 Discard and close", "Cancel"]},
+          ()=>{
+            this.saveAndClose();
+          }, ()=>{
+            this.#preventClosingIfChanged = false;
+            Tabs.removeTop();
+          }
+        );
+        return false;
+      }
+    }
     super.hide();
     try{this.#canv?.animate(false);}catch(e){};
+  }
+
+  saveAndClose(forceClosing)
+  {
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(this.#currentAni.getXml(), "text/xml");
+    const replaceId = this.#currentAni.id;
+    const replaceNode = new XMLAnimationsAnimation(xml.documentElement);
+    XML.setAnimation(replaceId, replaceNode);
+
+    this.#preventClosingIfChanged = false;
+    Menu.execute("animations");
+    AnimationsTab.reload();
   }
   
   #createDiv()
   {
     this.div.innerHTML = "";
     _CN("button", {style:"position:absolute;right:10px;top:0px;"}, [_CN("img", {class:"icon", "data-icon":"filesave"})], this.div).addEventListener("click", ()=>{
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(this.#currentAni.getXml(), "text/xml");
-      const replaceId = this.#currentAni.id;
-      const replaceNode = new XMLAnimationsAnimation(xml.documentElement);
-      XML.setAnimation(replaceId, replaceNode);
-      Menu.execute("animations");
-      AnimationsTab.reload();
-      //Tabs.removeTop();
+      this.saveAndClose();
     });
     _CN("button", {style:"position:absolute;left:10px;top:0px;"}, [_CN("img", {class:"icon", "data-icon":"cancel"})], this.div).addEventListener("click", ()=>{
       Tabs.removeTop();
@@ -78,6 +142,7 @@ class AnimationTabClass extends TabClass
       _CN("td", {}, ["End action: ", inputEndEffect])
     ])], sequenceInfo);
     const fe = new FrameEditor(seq, canv, sequenceInfo);
+    if(Array.isArray(seq.frame)) seq.frame.forEach(f=>{this.#original.frames += f.original + ",";});
 
     ["start", "end"].forEach((p,j)=>{
       const paramInfo = _CN("div", {class:"infobox aniinfobox", id:p, style:"width:45vw;"}, [_CN("h3", {}, ["Parameters " + p])], this.div);
@@ -95,21 +160,27 @@ class AnimationTabClass extends TabClass
       ], paramInfo);
     });
 
-    const nexts = ["sequence", "border", "gravity"];
-    const divw = parseInt(90 / nexts.length) + "vw";
+    const divw = parseInt(90 / this.#nextKeys.length) + "vw";
 
-    nexts.forEach(nk=>{
-      const nextInfo = _CN("div", {class:"infobox aniinfobox", id:nk, style:`width:${divw};`}, [_CN("h3", {}, ["Next " + nk])], this.div);
+    this.#nextKeys.forEach(nk=>{
+      const nextInfo = _CN("div", {class:"infobox aniinfobox", id:nk, style:`width:${divw};position:relative;`}, [_CN("h3", {}, ["Next " + nk])], this.div);
       const nexts = ani[nk];
 
       const ne = new NextEditor(ani[nk], nextInfo);
       if(Array.isArray(nexts.next))
       {
+        nexts.next.forEach(n=>
+        {
+          this.#original[nk] += n.getXml();
+        });
+
         nexts.next.forEach(ns=>{
-          console.log(ns);
+          //console.log(ns);
         });
       }
     });
+
+    console.log(this.#original);
     
     canv.animate(true);  
     this.#canv = canv;
@@ -122,13 +193,18 @@ class AnimationTabClass extends TabClass
         console.log(`ELEMENT changed, from ${original} to ${newValue}`);
         oldValue = this.changeValue(i, i.name, newValue);
         if(oldValue == original)
+        {
           i.style.backgroundColor = "white";
+          if(this.#changes.indexOf(i) >= 0) this.#changes.splice(this.#changes.indexOf(i), 1);
+        }
         else if(oldValue != newValue)
           i.style.backgroundColor = "#fad";
         else {
           i.style.backgroundColor = "#bf8";
+          if(this.#changes.indexOf(i) < 0) this.#changes.push(i);
           this.#checkAni();
         }
+        console.log(this.#changes);
       });
     });
 

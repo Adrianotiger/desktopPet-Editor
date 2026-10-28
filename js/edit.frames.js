@@ -65,12 +65,12 @@ class FrameEditor
       const imgInd = imgIndex++;
       const imgAni = XML.getImage(imgInd);
 
-      const img = _CN("img", {src:imgAni.src}, [], div);
+      const img = _CN("div", {}, [_CN("img", {src:imgAni.src}), _CN("i", {}, [imgInd])], div);
       if(imgInd == sheetIndex)
       {
         //img.style.backgroundColor = "white";
-        img.style.boxShadow = "inset 3px 3px 8px white, inset -3px -3px 8px lightblue, 0px 0px 5px yellow";
-        img.style.opacity = 1.0;
+        img.style.boxShadow = "inset 3px 3px 8px white, inset -3px -3px 8px lightblue, 0px 0px 5px var(--hover)";
+        img.getElementsByTagName("img")[0].style.opacity = 1.0;
       }
       img.addEventListener("click", ()=>{
         this.frames[frameIndex] = imgInd;

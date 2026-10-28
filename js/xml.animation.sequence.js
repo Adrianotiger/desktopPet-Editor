@@ -52,6 +52,7 @@ class XMLAnimationsSequence extends XMLNode
   set frame(value) {this.replaceNode("frame", value);}
 
   get next() {return this.getNode("next");}
+  set next(value) {this.replaceNode("next", value);}
 
   get repeatOriginal() { return this.values["repeat"].original; }
     

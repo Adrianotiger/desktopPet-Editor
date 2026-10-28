@@ -87,6 +87,23 @@ a {
 }
 
 .console {
+  min-height: 20px;
   font-size: 12px;
   transition: all 0.2s linear;
+  position: relative;
+}
+
+.console p {
+  position: absolute;
+  width: 95%;
+  white-space: nowrap;
+  left: 0px;
+  top: 0px;
+}
+
+.console b {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  cursor: pointer;
 }

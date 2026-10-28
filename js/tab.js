@@ -2,6 +2,8 @@ class TabClass
 {
   div = null;
   title = "";
+  isTop = false;
+
   constructor(title)
   {
     this.title = title;
@@ -13,6 +15,7 @@ class TabClass
   
   hide()
   {
+    this.isTop = false;
     this.div.style.opacity=0.3;
     this.div.style.pointerEvents="none";
     this.div.style.backgroundColor = "rgba(0,0,0,0.0)";
@@ -20,6 +23,7 @@ class TabClass
   
   show()
   {
+    this.isTop = true;
     this.div.style.zIndex = Tabs.index++;
     this.div.style.opacity = 1;
     this.div.style.pointerEvents = "inherit";
@@ -55,7 +59,12 @@ var Tabs = new class
   
   show(tab, params)
   {
-    this.#tabs.forEach(t => { t.hide() });
+    let stopPropagation = false;
+    this.#tabs.forEach(t => { 
+      if(!stopPropagation && t.hide()===false) stopPropagation = true;
+    });
+    if(stopPropagation) return;
+
     if(tab)
       tab.show(params);
     if(Tabs.index > 500)
@@ -70,12 +79,12 @@ var Tabs = new class
     let find = {z:-1000, t:null};
     let next = {z:-1000, t:null};
     this.#tabs.forEach(t => { 
-      if(t.div.style.zIndex > find.z) 
-        find = {z:t.div.style.zIndex, t:t};
+      if(parseInt(t.div.style.zIndex) > find.z) 
+        find = {z:parseInt(t.div.style.zIndex), t:t};
     });
     this.#tabs.forEach(t => { 
-      if(t.div.style.zIndex > next.z && t.div.style.zIndex < find.z) 
-        next = {z:t.div.style.zIndex, t:t};
+      if(parseInt(t.div.style.zIndex) > next.z && t.div.style.zIndex < find.z) 
+        next = {z:parseInt(t.div.style.zIndex), t:t};
     });
     this.show(next.t);
   }

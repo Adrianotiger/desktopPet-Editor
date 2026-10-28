@@ -45,12 +45,55 @@
   display: block;
   position: absolute;
   bottom: 10px;
-  width: 80%;
-  left: 10%;
+  min-width: 80%;
+  width: stretch;
+  left: 50%;
+  transform: translate(-50%, 0px);
   margin:0 auto;
+  white-space: nowrap;
 }
 
 .messageboxbuttons button
 {
     width: 35%;
+}
+
+.consolemsg
+{
+  max-height:80vh;
+  width:90vw;
+  overflow-y:scroll;
+  text-align: left;
+}
+
+.consolemsg div
+{
+  width: 100%;
+  min-height: 5vh;
+  border-radius: 10px;
+  padding: 5px;
+}
+
+.consolemsg .log 
+{
+  box-shadow: inset 3px 3px 6px #ff8, inset -3px -3px 6px #663;
+}
+.consolemsg .err 
+{
+  box-shadow: inset 3px 3px 6px #f88, inset -3px -3px 6px #a33;
+}
+
+.consolemsg div pre
+{
+  font-size: 75%;
+  margin-left: 20px;
+  max-height: 10vh;
+  overflow: auto; 
+  width: 95%;
+  white-space: pre-wrap;
+}
+
+.consolemsg table
+{
+  max-width: 80vw;
 }

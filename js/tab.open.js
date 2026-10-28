@@ -74,7 +74,7 @@ class OpenTabClass extends TabClass
 			await this.#checkFolderHandler();
 		}
 
-    if(await this.#verifyPermission(this.#folderHandler, false))
+    if(await this.#verifyPermission(this.#folderHandler, true))
 		{
 			this.#projects = [];
 			var folders = await this.#folderHandler.entries();
@@ -138,6 +138,7 @@ class OpenTabClass extends TabClass
         if(p.image)
         {
           s.getElementsByTagName("img")[0].src = URL.createObjectURL( await p.image.getFile() );
+          s.getElementsByTagName("img")[0].style.content = "none";
         }
 
         s.addEventListener("click", async ()=>{
