@@ -103,7 +103,7 @@ class NextEditor
     const div = _CN("div", {class:"anispritesheetselector"});
     let canvs = [];
     let img = XML.getImage();
-    XML.getAnimations().forEach(ani=>{
+    XML.animations.forEach(ani=>{
       const canv = new AniCanvasClass(ani, img.getFrameWidth(), img.getFrameHeight());
       
       const b = _CN("div", {}, [canv.getCanvas(), _CN("i", {style:"font-size:12px;text-align:center;display:block;"}, [ani.name])], div);

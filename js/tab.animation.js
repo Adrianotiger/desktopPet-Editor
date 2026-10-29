@@ -1,9 +1,14 @@
+// The animation editor works on a clone of the selected animation. This lets users
+// preview and edit freely; the shared XML model is updated only when they save.
 class AnimationTabClass extends TabClass
 {
   #currentAni = null;
   #canv = null;
   #isAnimating = true;
+  // Tracks changed form controls. Frame and transition editors are checked separately
+  // by comparing their serialized content with the snapshots taken when the tab opened.
   #changes = [];
+  // These are the animation sections handled by the embedded frame/transition editors.
   #nextKeys = ["sequence", "border", "gravity"];
   #original = {frames:""};
   #preventClosingIfChanged = true;
@@ -12,8 +17,8 @@ class AnimationTabClass extends TabClass
   {
     super("Animation");
     _CN("h1", {}, ["Animation"], this.div);
-    _CN("script", {src:"js/edit.frames.js"}, [], document.head);
-    _CN("script", {src:"js/edit.next.js"}, [], document.head);
+    // Load the specialized editors used inside this window.
+    loadScripts(["edit.frames", "edit.next"], true);
   }
   
   show(params)
@@ -27,10 +32,9 @@ class AnimationTabClass extends TabClass
       this.#nextKeys.forEach(k=>{this.#original[k] = "";});
       this.#preventClosingIfChanged = true;
 
-      //console.log(params.ani);
+      // Never edit params.ani directly: discarding this tab should leave the source intact.
       this.#currentAni = params.ani.clone();
 
-      //console.log("Cloned", this.#currentAni);
       this.#createDiv();
     }
   }
@@ -45,7 +49,8 @@ class AnimationTabClass extends TabClass
 
       let msg = null;
 
-      // check if unsaved data is present
+      // Ordinary fields are tracked by their change listeners. Frames and <next>
+      // transitions are custom editors, so compare those against their opening snapshots.
       if(this.#changes.length > 0)
       {
         msg = `There are ${this.#changes.length} unsaved changes. `;
@@ -75,6 +80,7 @@ class AnimationTabClass extends TabClass
 
       if(msg && this.#preventClosingIfChanged)
       {
+        // Saving commits the working copy; discarding simply closes the tab and drops it.
         Msg.show({title:"Unsaved animation", content:_CN("div", {style:"min-width:500px;padding:50px;"}, [msg]), buttons:["💾 Save and close", "🗑 Discard and close", "Cancel"]},
           ()=>{
             this.saveAndClose();
@@ -90,8 +96,10 @@ class AnimationTabClass extends TabClass
     try{this.#canv?.animate(false);}catch(e){};
   }
 
-  saveAndClose(forceClosing)
+  saveAndClose()
   {
+    // Reparse the edited copy so the shared document receives a fresh model backed by
+    // the serialized XML, then replace the original animation by its stable id.
     const parser = new DOMParser();
     const xml = parser.parseFromString(this.#currentAni.getXml(), "text/xml");
     const replaceId = this.#currentAni.id;
@@ -115,6 +123,7 @@ class AnimationTabClass extends TabClass
     _CN("h1", {}, ["Animation"], this.div);
     const ani = this.#currentAni;
     const seq = ani.sequence;
+    // The preview and all controls below are wired to the working copy, not the original.
     const canv = new AniCanvasClass(ani, XML.getImage().getFrameWidth(), XML.getImage().getFrameHeight());
     const baseInfo = _CN("div", {class:"infobox aniinfobox", style:"width:20vw;height:30vh;position:relative;"}, [_CN("h3", {}, ["Animation Key"])], this.div);
     const sel = _CN("select", {name:"id"}, [_CN("option", {}, [ani.id])]);
@@ -142,6 +151,8 @@ class AnimationTabClass extends TabClass
       _CN("td", {}, ["End action: ", inputEndEffect])
     ])], sequenceInfo);
     const fe = new FrameEditor(seq, canv, sequenceInfo);
+    // Keep the frame list's original representation so close can detect edits even
+    // though FrameEditor updates the sequence model directly.
     if(Array.isArray(seq.frame)) seq.frame.forEach(f=>{this.#original.frames += f.original + ",";});
 
     ["start", "end"].forEach((p,j)=>{
@@ -169,6 +180,7 @@ class AnimationTabClass extends TabClass
       const ne = new NextEditor(ani[nk], nextInfo);
       if(Array.isArray(nexts.next))
       {
+        // Snapshot each transition's XML; NextEditor edits the cloned nodes in place.
         nexts.next.forEach(n=>
         {
           this.#original[nk] += n.getXml();
@@ -191,6 +203,8 @@ class AnimationTabClass extends TabClass
       i.addEventListener("change", ()=>{
         const newValue = i.value;
         console.log(`ELEMENT changed, from ${original} to ${newValue}`);
+        // changeValue writes valid edits into the working model and returns the
+        // accepted value (or restores the previous one when validation fails).
         oldValue = this.changeValue(i, i.name, newValue);
         if(oldValue == original)
         {
@@ -217,6 +231,7 @@ class AnimationTabClass extends TabClass
 
   #checkAni()
   {
+    // Run model validation after edits; detailed errors are currently reported in the console.
     const errors = this.#currentAni.check();
     if(errors.length > 0)
     {
@@ -228,6 +243,8 @@ class AnimationTabClass extends TabClass
   {
     let failed = null;
     let node = this.#currentAni;
+    // Input names use dotted paths (for example "start.x") to map controls onto
+    // nested model properties without each control needing a custom handler.
     for (const key2 of key.split(".")) 
       node = node?.[key2];
 
@@ -246,6 +263,7 @@ class AnimationTabClass extends TabClass
     }
     else
     {
+      // Support a top-level animation property or one nested property such as start.x.
       if(key.split(".").length==1) this.#currentAni[key] = value;
       else if(key.split(".").length==2) this.#currentAni[key.split(".")[0]][key.split(".")[1]] = value;
       this.#canv.updateAni(this.#currentAni);

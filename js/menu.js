@@ -3,16 +3,37 @@ class SubmenuIcon
   icon = "";
   title = "";
   div = null;
+  #disable = false;
+
   constructor(icon, title, event)
   {
     this.icon = icon;
     this.title = title;
     
     this.div = _CN("div", {class:"icondiv"}, [_CN("img", {class:"icon", "data-icon":icon}), _CN("br"), _CN("span", {}, [title])]);
-    this.div.addEventListener("click", ()=>{event();});
     this.div.addEventListener("click", ()=>{
+      if(this.#disable) return;
+      event();
+    });
+    this.div.addEventListener("click", ()=>{
+      if(this.#disable) return;
       this.#clicked();
     });
+  }
+
+  set disable(value)
+  {
+    this.#disable = value;
+    if(value)
+    {
+      this.div.style.filter = "sepia(0.8)";
+      this.div.style.opacity = 0.6;
+    }
+    else
+    {
+      this.div.style.filter = "sepia(0)";
+      this.div.style.opacity = 1.0;
+    }
   }
   
   async #clicked()
@@ -39,7 +60,6 @@ const Menu = new class
 {
   div = null;
   #submenusItems = ["files", "animations"];
-  #table = null;
   #menuMainDiv = null;
   #menuSubDiv = null;
   #submenus = [];
@@ -53,8 +73,10 @@ const Menu = new class
     this.div = document.body.getElementsByClassName("menu")[0];
     this.#menuMainDiv = _CN("td", {style:"min-width:10%;white-space:nowrap;"});
     this.#menuSubDiv = _CN("td", {style:"width:80%;overflow-scrollX:auto;white-space:nowrap;"});
-    this.#table = _CN("table", {}, [_CN("tr", {}, [this.#menuMainDiv, this.#menuSubDiv])], this.div);
-    this.#submenusItems.forEach(sm=>{_CN("script", {src:`js/menu.${sm}.js`}, [], document.head)});
+    _CN("table", {}, [_CN("tr", {}, [this.#menuMainDiv, this.#menuSubDiv])], this.div);
+    let scripts2Load = [];
+    this.#submenusItems.forEach(sm=>scripts2Load.push(`menu.${sm}`));
+    loadScripts(scripts2Load, false);
   }
   
   addSubmenu(submenu)
@@ -67,6 +89,8 @@ const Menu = new class
       _CN("span", {}, [submenu.title])
     ], this.#menuMainDiv);
     
+    // auto load first submenu
+    if(this.#submenus.length == 1) setTimeout(()=>{this.openSubMenu(submenu);}, 500);
     menu.addEventListener("click", ()=>{this.openSubMenu(submenu);});
   }
   
@@ -91,6 +115,40 @@ const Menu = new class
         cancelable: true
       })
     );
+  }
+
+  disableSubmenu(itemArray)
+  {
+    itemArray.forEach((i)=>{
+      let found = false;
+      this.#submenus.forEach(sm=>{
+        sm.icons.forEach(smi=>{
+          if(smi.title == i)
+          {
+            smi.disable = true;
+            found = true;
+          }
+        });
+      });
+      if(!found) console.error(`Submenu '${i}' can't be enabled, as it doesn't exists.`);
+    });
+  }
+
+  enableSubmenu(itemArray)
+  {
+    itemArray.forEach((i)=>{
+      let found = false;
+      this.#submenus.forEach(sm=>{
+        sm.icons.forEach(smi=>{
+          if(smi.title == i)
+          {
+            smi.disable = false;
+            found = true;
+          }
+        });
+      });
+      if(!found) console.error(`Submenu '${i}' can't be enabled, as it doesn't exists.`);
+    });
   }
 };
 

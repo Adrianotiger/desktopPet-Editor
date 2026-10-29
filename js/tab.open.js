@@ -10,10 +10,15 @@ class OpenTabClass extends TabClass
   {
     super("Open");
     
-    let butt = _CN("button", {style:"width:30vw"}, ["Open file..."], this.div);
+    _CN("h1", {}, ["Open"], this.div);
+    _CN("hr", {}, [], this.div);
+
+    let butt = _CN("button", {style:"width:30vw;margin:10px;"}, ["Open file..."], this.div);
     butt.addEventListener("click", ()=>{this.openFileDialog();});
 
-    this.#localDiv = _CN("div", {style:"margin:0 auto;"}, [], this.div);
+    _CN("hr", {style:"width:80%;margin:10px auto;"}, [], this.div);
+
+    this.#localDiv = _CN("div", {style:"margin:10px auto;"}, [], this.div);
     _CN("p", {}, ["Local folder is a folder accessible by the browser. This is the root folder, every subfolder is another animation project containing a animations.xml file."], this.#localDiv);
     let buttLocal = _CN("button", {style:"width:30vw;"}, ["Open local Pet folder..."], this.#localDiv);
     this.loadLocalPath(false);
@@ -27,6 +32,30 @@ class OpenTabClass extends TabClass
     buttLocal.addEventListener("click", ()=>{
       this.loadLocalPath(true);
     });
+
+    document.body.addEventListener("menu", (ev)=>{
+      if(ev?.detail?.action == "new")
+      {
+        this.#currentFolder = null;
+
+        fetch("template/animations.xml").then(r=>{
+          return r.blob();
+        }).then(b=>{
+          const f = new File([b], "animations.xml", { type: b.type });
+          this.openFile(f);
+        });
+      }
+    });
+  }
+
+  show(params)
+  {
+    super.show(params);
+  }
+
+  hide()
+  {
+    super.hide();
   }
   
   async openFileDialog()
@@ -45,6 +74,8 @@ class OpenTabClass extends TabClass
 
       const file = await fileHandle.getFile();
 
+      this.#currentFolder = null;
+
       this.openFile(file);
 
     } catch (err) {
@@ -56,6 +87,8 @@ class OpenTabClass extends TabClass
   async openFile(file)
   {
     let xmlString = await file.text();
+
+    Menu.enableSubmenu(['Save']);
       
     console.log("File opened via API:", file.name);
 
@@ -142,6 +175,7 @@ class OpenTabClass extends TabClass
         }
 
         s.addEventListener("click", async ()=>{
+          this.#currentFolder = p.f;
           this.openFile(await p.xml.getFile());
         });
       }
@@ -238,6 +272,8 @@ class OpenTabClass extends TabClass
 
 		return false;
 	}
+
+  get projectFolder() { return this.#currentFolder; }
   
 };
 

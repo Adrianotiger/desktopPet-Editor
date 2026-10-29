@@ -23,6 +23,19 @@ class AniMenuClass extends Submenu
     this.icons.push(new SubmenuIcon("editchilds", "Childs", ()=>{
       
     }));
+
+    this.icons.push(new SubmenuIcon("editsounds", "Sounds", ()=>{
+      
+    }));
+
+    document.body.addEventListener("xml", ev=>{
+      if(ev?.detail?.action == "load") {
+        Menu.openSubMenu(this);
+        Menu.enableSubmenu(['Header', 'Spritesheet', 'Spawns', 'Animations', 'Childs', 'Sounds']);
+      }
+    });
+
+    Menu.disableSubmenu(['Header', 'Spritesheet', 'Spawns', 'Animations', 'Childs', 'Sounds']);
   }
   
   

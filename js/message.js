@@ -27,14 +27,14 @@ const Msg = new class{
     {
         butt.addEventListener("click", ()=>{ok();});
     }
-    if(cancel || options.buttons.length > 1)
+    if(cancel || options.buttons?.length > 1)
     {
         let butt2 = _CN("button", {}, [Array.isArray(options?.buttons) && options.buttons.length > 1 ? options?.buttons[1]  : "Cancel"], buttDiv);
         //_CN("td", {}, [butt2], buttTr);
         if(cancel) butt2.addEventListener("click", ()=>{cancel();});
         butt2.addEventListener("click", ()=>{this.close()});
     }
-    if(options.buttons.length > 2)
+    if(options.buttons?.length > 2)
     {
         let butt3 = _CN("button", {}, [options.buttons[2]], buttDiv);
         //_CN("td", {}, [butt3], buttTr);

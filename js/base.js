@@ -50,6 +50,36 @@ function setDayNightTheme(butt)
   }
 }
 
+let loadedScripts = [];
+function loadScripts(scriptsArray, loadAsync)
+{
+  if(loadAsync)
+  {
+    scriptsArray.forEach(sn=>{
+      if(loadedScripts.indexOf(sn) < 0)
+      {
+        loadedScripts.push(sn);
+        _CN("script", {src:`js/${sn}.js`}, [], document.head);
+      }
+    });
+  }
+  else
+  {
+    const sn = scriptsArray.shift();
+    if(loadedScripts.indexOf(sn) < 0)
+    {
+      loadedScripts.push(sn);
+      _CN("script", {src:`js/${sn}.js`}, [], document.head).addEventListener("load", ()=>{
+        if(scriptsArray.length > 0) loadScripts(scriptsArray, loadAsync);
+      });
+    }
+    else
+    {
+      if(scriptsArray.length > 0) loadScripts(scriptsArray, loadAsync);
+    }
+  }
+}
+
 addEventListener("load", ()=>{
   setDayNightTheme();
 });

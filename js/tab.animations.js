@@ -40,7 +40,7 @@ class AniCanvasClass
     this.#lastTimestamp = 0;
     this.#frameIndex = 0;
     this.#ctx = this.#canvas.getContext('2d');
-    if(this.#seq.length >= 0)
+    if(this.#seq.length >= 0 && this.#frames.length > 0)
     {
       requestAnimationFrame((timestamp) => {
         this.#lastTimestamp = timestamp;
@@ -108,7 +108,7 @@ class AniCanvasClass
         offy:start.offy + (end.offy-start.offy) * this.#seq.length / totFrames
       });
     }
-    if(seq.repeat == 0) this.#seq[0].i = 1000;
+    if(seq.repeat == 0 && this.#seq.length > 0) this.#seq[0].i = 1000;
   }
   
   #_animate(currentTimestamp) 
@@ -152,7 +152,6 @@ class AnimationsTabClass extends TabClass
   constructor()
   {
     super("Animations");
-    _CN("h1", {}, ["Animations"], this.div);
     
     document.body.addEventListener("xml", ev=>{
       if(ev?.detail?.action == "load") {
@@ -172,17 +171,22 @@ class AnimationsTabClass extends TabClass
     this.div.innerHTML = "";
     this.#buttons = [];
     _CN("h1", {}, ["Animations"], this.div);
+    _CN("hr", {style:"width:80%;margin:10px auto;"}, [], this.div);
     
     const img = XML.getImage();
     const w = (XML.getImage().getFrameWidth() + 10)+'px';
     const h = (XML.getImage().getFrameHeight() + 10 + 34)+'px';
+
+    let nextId = 1;
         
-    XML.getAnimations().forEach(ani=>{
+    XML.animations.forEach(ani=>{
       const canv = new AniCanvasClass(ani, img.getFrameWidth(), img.getFrameHeight());
       const i = _CN("i", {}, [`[${ani.id}]`]);
       const s = _CN("span", {}, [ani.name]);
       const b = _CN("button", {class:"anidiv", style:`--box-width:${w};--box-height:${h}`}, [canv.getCanvas(), i, s], this.div);
       
+      if(ani.id > nextId) nextId = ani.id + 1;
+
       this.#buttons.push({
         b: b, 
         c: canv
@@ -195,9 +199,15 @@ class AnimationsTabClass extends TabClass
       });
       
     });
+
+    const b = _CN("button", {class:"anidiv", style:`--box-width:${w};--box-height:${h}`}, [_CN("h1", {}, ["➕"]),_CN("span", {}, ["-Add-"])], this.div);
+    b.addEventListener("click", ()=>{
+      XML.insertAnimation(nextId);
+      this.loadAnimations();
+    });
     
     setTimeout(()=>{
-      XML.getAnimations().forEach((ani, j)=>{
+      XML.animations.forEach((ani, j)=>{
         this.#buttons[j].c.animate();
       });
     }, 500);

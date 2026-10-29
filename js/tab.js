@@ -34,7 +34,7 @@ class TabClass
 var Tabs = new class
 {
   #div = null;
-  #tabItems = ["open", "animations", "animation"];
+  #tabItems = ["open", "save", "header", "animations", "animation"];
   #tabs = [];
   index = 0;
   
@@ -45,9 +45,9 @@ var Tabs = new class
   init()
   {
     this.#div = document.body.getElementsByClassName("tabcollection");
-    this.#tabItems.forEach(tab=>{
-      _CN("script", {src:`js/tab.${tab}.js`}, [], document.head);
-    });
+    let scripts2Load = [];
+    this.#tabItems.forEach(sm=>scripts2Load.push(`tab.${sm}`));
+    loadScripts(scripts2Load, true);
   }
   
   addTab(tab)

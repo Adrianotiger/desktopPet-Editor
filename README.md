@@ -6,13 +6,15 @@ Try it here:
 https://adrianotiger.github.io/desktopPet-Editor/  
 
 ☑ Open project/File  
-☐ Save project/File  
+☑ Save project/File  
 ☑ Open/Edit/Save Animation-Node  
-☐ Open/Edit/Save Header-Node  
+☑ Open/Edit/Save Header-Node  
 ☐ Open/Edit/Save Image(Spritesheet)-Node  
 ☐ Open/Edit/Save Childs-Node  
 ☐ Open/Edit/Save Sounds-Node  
 ☐ Export/Test project  
+➕ Many tweaks and details:
+
 
 <img src="https://adrianotiger.github.io/desktopPet-Editor/help/preview1.gif" alt="Preview">
 

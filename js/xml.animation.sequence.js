@@ -16,6 +16,15 @@ class XMLAnimationsSequence extends XMLNode
       XMLValue.Type.FORMULA
     );
 
+    const frames = [...xml.querySelectorAll('frame')];
+    frames.forEach(f=>{
+      super.addNode(
+        "frame",
+        new XMLValue(f.textContent, XMLValue.Type.INT)
+      );
+    });
+    if(frames.length == 0) super.addNode("frame", null); // create empty array
+
     // action can be empty!
     super.addValue(
       "action", 
@@ -23,20 +32,15 @@ class XMLAnimationsSequence extends XMLNode
       XMLValue.Type.ACTION
     );
     
-    [...xml.querySelectorAll('frame')].forEach(f=>{
-      super.addNode(
-        "frame",
-        new XMLValue(f.textContent, XMLValue.Type.INT)
-      );
-    });
-    
-    [...xml.querySelectorAll('next')].forEach(n=>{
+    const nexts = [...xml.querySelectorAll('next')];
+    nexts.forEach(n=>{
       super.addNode(
         "next",
         new XMLAnimationsNext(n)
       );
       //this.next.push(new XMLAnimationsNext(n));
     });
+    if(nexts.length == 0) super.addNode("next", null); // create empty array
   }
   
   get repeatfrom() { return this.getValue("repeatfrom"); }

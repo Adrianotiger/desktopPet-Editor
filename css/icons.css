@@ -47,15 +47,25 @@
 }
 
 .icon[data-icon="sheep"] { content: url("../icons/sheep.png"); }
+.icon[data-icon="openproject"]   { content: url("../icons/openproject.png"); }
 .icon[data-icon="fileopen"]   { content: url("../icons/fileopen.png"); }
 .icon[data-icon="filenew"]   { content: url("../icons/filenew.png"); }
 .icon[data-icon="filesave"]   { content: url("../icons/filesave.png"); }
 .icon[data-icon="filesaveas"]   { content: url("../icons/filesaveas.png"); }
+.icon[data-icon="fileanimations"]   { content: url("../icons/fileanimations.png"); }
+.icon[data-icon="fileicon"]   { content: url("../icons/fileicon.png"); }
+.icon[data-icon="filereadme"]   { content: url("../icons/filereadme.png"); }
+.icon[data-icon="fileunknown"]   { content: url("../icons/fileunknown.png"); }
+.icon[data-icon="filexml"]   { content: url("../icons/filexml.png"); }
 .icon[data-icon="folderopen"]   { content: url("../icons/folderopen.png"); }
 .icon[data-icon="editheader"]   { content: url("../icons/editheader.png"); }
 .icon[data-icon="editspritesheet"]   { content: url("../icons/editspritesheet.png"); }
 .icon[data-icon="editspawns"]   { content: url("../icons/editspawns.png"); }
 .icon[data-icon="editanimations"]   { content: url("../icons/editanimations.png"); }
 .icon[data-icon="editchilds"]   { content: url("../icons/editchilds.png"); }
+.icon[data-icon="editsounds"]   { content: url("../icons/editsounds.png"); }
 .icon[data-icon="cancel"]   { content: url("../icons/cancel.png"); }
 .icon[data-icon="folder"]   { content: url("../icons/folder.png"); }
+.icon[data-icon="import"]   { content: url("../icons/import.png"); }
+.icon[data-icon="export"]   { content: url("../icons/export.png"); }
+.icon[data-icon="exportani"]   { content: url("../icons/exportani.png"); }
