@@ -64,6 +64,11 @@
 .icon[data-icon="editanimations"]   { content: url("../icons/editanimations.png"); }
 .icon[data-icon="editchilds"]   { content: url("../icons/editchilds.png"); }
 .icon[data-icon="editsounds"]   { content: url("../icons/editsounds.png"); }
+.icon[data-icon="editadd"]   { content: url("../icons/editadd.png"); }
+.icon[data-icon="editclose"]   { content: url("../icons/editclose.png"); }
+.icon[data-icon="editdelete"]   { content: url("../icons/editdelete.png"); }
+.icon[data-icon="editremove"]   { content: url("../icons/editremove.png"); }
+.icon[data-icon="edituploadimage"]   { content: url("../icons/edituploadimage.png"); }
 .icon[data-icon="cancel"]   { content: url("../icons/cancel.png"); }
 .icon[data-icon="folder"]   { content: url("../icons/folder.png"); }
 .icon[data-icon="import"]   { content: url("../icons/import.png"); }

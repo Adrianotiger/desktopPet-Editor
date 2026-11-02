@@ -11,7 +11,7 @@ class XMLAnimationsHeader extends XMLNode
   constructor(xml)
   {
     super(xml, "header");
-    console.log(xml);
+    //console.log(xml);
 
     super.addValue(
       "author", 

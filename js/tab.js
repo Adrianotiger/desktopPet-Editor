@@ -34,7 +34,7 @@ class TabClass
 var Tabs = new class
 {
   #div = null;
-  #tabItems = ["open", "save", "header", "animations", "animation"];
+  #tabItems = ["open", "save", "header", "image", "spawns", "spawn", "animations", "animation"];
   #tabs = [];
   index = 0;
   
@@ -60,6 +60,8 @@ var Tabs = new class
   show(tab, params)
   {
     let stopPropagation = false;
+    if(typeof TabMenu != 'undefined') TabMenu.removeIcons();
+
     this.#tabs.forEach(t => { 
       if(!stopPropagation && t.hide()===false) stopPropagation = true;
     });

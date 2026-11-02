@@ -71,9 +71,13 @@ class HeaderTabClass extends TabClass
     }).catch(e=>{
       Msg.show({title:"Icon error", content:"The provided icon is not valid! Please upload another image"});
     });
-    _CN("button", {}, ["Upload new icon"], tdIcon).addEventListener("click", ()=>{
+
+    TabMenu.addIcon("edituploadimage", "Upload icon", ()=>{
       this.#uploadNewIcon(divIcon, inputIcon);
     });
+    //_CN("button", {}, ["Upload new icon"], tdIcon).addEventListener("click", ()=>{
+    //  this.#uploadNewIcon(divIcon, inputIcon);
+    //});
 
     let textarea = _CN("div", {id:"infotext"}, []);
     _CN("tr", {}, [
@@ -109,13 +113,18 @@ class HeaderTabClass extends TabClass
 
   #uploadNewIcon(div, inp)
   {
+    let msgp = _CN("p", {}, [
+      "The uploaded image has to be a valid image:",
+      _CN("br"),
+      _CN("ul", {}, [
+        _CN("li", {}, ["Accepted: PNG, JPG, BMP or ICO"]),
+        _CN("li", {}, ["Resolution of 48x48"])
+      ]),
+      "Bigger images will be scaled and/or clipped to 48x48."
+    ]);
     Msg.show({
       title:"Upload icon", 
-      content:_CN("p", {}, [
-        "The uploaded image has to be a valid image (PNG, JPG, BMP or ICO) and should have a resolution of 48x48.",
-        _CN("br"),
-        "Bigger images will be scaled and/or clipped to 48x48."
-      ])
+      content:msgp
     }, async ()=>{
       try {
         const [fileHandle] = await window.showOpenFilePicker({

@@ -9,11 +9,15 @@ https://adrianotiger.github.io/desktopPet-Editor/
 ☑ Save project/File  
 ☑ Open/Edit/Save Animation-Node  
 ☑ Open/Edit/Save Header-Node  
-☐ Open/Edit/Save Image(Spritesheet)-Node  
+☑ Open/Edit/Save Image(Spritesheet)-Node  
+☐ Open/Edit/Save Spawn-Node | in progress...  
 ☐ Open/Edit/Save Childs-Node  
 ☐ Open/Edit/Save Sounds-Node  
 ☐ Export/Test project  
-➕ Many tweaks and details:
+☐ Documenting code
+☐ Tutorials
+☐ Animation-functionality/possibilities      
+➕ Many tweaks and details:  
 
 
 <img src="https://adrianotiger.github.io/desktopPet-Editor/help/preview1.gif" alt="Preview">

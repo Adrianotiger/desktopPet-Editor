@@ -10,7 +10,11 @@ class SubmenuIcon
     this.icon = icon;
     this.title = title;
     
-    this.div = _CN("div", {class:"icondiv"}, [_CN("img", {class:"icon", "data-icon":icon}), _CN("br"), _CN("span", {}, [title])]);
+    this.div = _CN("div", {class:"icondiv", title:title}, [
+      _CN("img", {class:"icon", "data-icon":icon}), 
+      _CN("br"), 
+      _CN("span", {}, [title])
+    ]);
     this.div.addEventListener("click", ()=>{
       if(this.#disable) return;
       event();
@@ -59,9 +63,10 @@ class Submenu
 const Menu = new class
 {
   div = null;
-  #submenusItems = ["files", "animations"];
+  #submenusItems = ["files", "animations", "tab"];
   #menuMainDiv = null;
   #menuSubDiv = null;
+  #menuTabDiv = null;
   #submenus = [];
   
   constructor()
@@ -71,9 +76,10 @@ const Menu = new class
   init()
   {
     this.div = document.body.getElementsByClassName("menu")[0];
-    this.#menuMainDiv = _CN("td", {style:"min-width:10%;white-space:nowrap;"});
-    this.#menuSubDiv = _CN("td", {style:"width:80%;overflow-scrollX:auto;white-space:nowrap;"});
-    _CN("table", {}, [_CN("tr", {}, [this.#menuMainDiv, this.#menuSubDiv])], this.div);
+    this.#menuMainDiv = _CN("td", {style:"min-width:10%;width:10%;"});
+    this.#menuSubDiv = _CN("td", {style:"max-width:60%;overflow-scroll-x:auto;white-space:nowrap;"});
+    this.#menuTabDiv = _CN("td", {style:"max-width:30%;overflow-scroll-x:auto;white-space:nowrap;text-align:right;"});
+    _CN("table", {style:"width:100%;overflow:hidden;white-space:nowrap;"}, [_CN("tr", {}, [this.#menuMainDiv, this.#menuSubDiv, this.#menuTabDiv])], this.div);
     let scripts2Load = [];
     this.#submenusItems.forEach(sm=>scripts2Load.push(`menu.${sm}`));
     loadScripts(scripts2Load, false);
@@ -96,12 +102,24 @@ const Menu = new class
   
   openSubMenu(submenu)
   {
-    this.#menuSubDiv.innerHTML = "<div style='width:3px;border:ridge 2px #555;height:30px;display:inline-block;' />";
+    this.#menuSubDiv.innerHTML = "<div style='width:3px;border:ridge 2px #555;height:40px;display:inline-block;' />";
     submenu.icons.forEach((smi, j)=>{
       setTimeout(()=>{
         this.#menuSubDiv.appendChild(smi.div);
       }, j*100)
     });
+  }
+
+  clearTabMenu()
+  {
+    this.#menuTabDiv.innerHTML = "";
+  }
+
+  addTabMenu(submenuIcon)
+  {
+    if(this.#menuTabDiv.childNodes.length == 0)
+      this.#menuTabDiv.innerHTML = "<div style='width:3px;border:ridge 2px #555;height:40px;display:inline-block;margin-right:20px;' />"
+    this.#menuTabDiv.appendChild(submenuIcon.div);
   }
 
   execute(action, params=null)

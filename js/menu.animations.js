@@ -8,7 +8,7 @@ class AniMenuClass extends Submenu
       
     }));
     
-    this.icons.push(new SubmenuIcon("editspritesheet", "Spritesheet", ()=>{
+    this.icons.push(new SubmenuIcon("editspritesheet", "Image", ()=>{
       
     }));
     
@@ -31,11 +31,11 @@ class AniMenuClass extends Submenu
     document.body.addEventListener("xml", ev=>{
       if(ev?.detail?.action == "load") {
         Menu.openSubMenu(this);
-        Menu.enableSubmenu(['Header', 'Spritesheet', 'Spawns', 'Animations', 'Childs', 'Sounds']);
+        Menu.enableSubmenu(['Header', 'Image', 'Spawns', 'Animations', 'Childs', 'Sounds']);
       }
     });
 
-    Menu.disableSubmenu(['Header', 'Spritesheet', 'Spawns', 'Animations', 'Childs', 'Sounds']);
+    Menu.disableSubmenu(['Header', 'Image', 'Spawns', 'Animations', 'Childs', 'Sounds']);
   }
   
   

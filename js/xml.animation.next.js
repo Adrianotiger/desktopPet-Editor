@@ -1,9 +1,5 @@
 class XMLAnimationsNext extends XMLNode
-{
-  #probability;
-  #only;
-  #value;
-  
+{  
   constructor(xml)
   {    
     super(xml, "next");

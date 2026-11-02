@@ -1,14 +1,26 @@
 class XMLAnimationsSpawnNext extends XMLNode
-{
-  probability = 100;
-  _value = "";
-  
+{  
   constructor(xml)
   {        
     super(xml, "next");
-    this.probability = new XMLValue(xmlAttrGet(xml, 'probability')??0, XMLValue.Type.INT);
-    
-    this._value = new XMLValue(xml.textContent, XMLValue.Type.INT);
+
+    super.addAttribute(
+      "probability", 
+      xmlAttrGet(xml, 'probability')??100, 
+      XMLValue.Type.INT
+    );
+
+    super.addValue(
+      "_", 
+      xml.textContent, 
+      XMLValue.Type.INT
+    );
   }
   
+  get probability() { return this.getValue("probability"); }
+  set probability(value) { this.setValue("probability", value); }
+    
+  get value() { return this.getValue("_"); }
+  set value(value) { this.setValue("_", value); }
+
 };

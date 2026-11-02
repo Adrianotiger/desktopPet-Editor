@@ -1,26 +1,54 @@
+
 class XMLAnimationsSpawn extends XMLNode
-{
-  id = 1;
-  probability = 100;
-  x = "";
-  y = "";
-  next = [];
-  
+{  
   constructor(xml)
   {    
     super(xml, "spawn");
-    this.id = new XMLValue(xmlAttrGet(xml, 'id')??1, XMLValue.Type.INT);
+
+    super.addAttribute(
+      "id", 
+      xmlAttrGet(xml, 'id')??1, 
+      XMLValue.Type.INT
+    );
+
+    super.addAttribute(
+      "probability", 
+      xmlAttrGet(xml, 'probability')??100, 
+      XMLValue.Type.INT
+    );
+
+    super.addValue(
+      "x", 
+      xmlNodeGet(xml, 'x')??"0", 
+      XMLValue.Type.FORMULA
+    );
+
+    super.addValue(
+      "y", 
+      xmlNodeGet(xml, 'y')??"0", 
+      XMLValue.Type.FORMULA
+    );
     
-    this.probability = new XMLValue(xmlAttrGet(xml, 'probability')??1, XMLValue.Type.INT);
-    
-    this.x = new XMLValue(xmlNodeGet(xml, 'x')??0, XMLValue.Type.STRING);
-    this.y = new XMLValue(xmlNodeGet(xml, 'y')??0, XMLValue.Type.STRING);
-    
-    this.next = [];
-    
-    [...xml.querySelectorAll('next')].forEach(next=>{
-      this.next.push(new XMLAnimationsSpawnNext(next));
+    [...xml.querySelectorAll('next')].forEach(n=>{
+      super.addNode(
+        "next",
+        new XMLAnimationsSpawnNext(n)
+      );
     });
   }
   
+  get id() { return this.getValue("id"); }
+  set id(value) { this.setValue("id", value); }
+
+  get probability() { return this.getValue("probability"); }
+  set probability(value) { this.setValue("probability", value); }
+
+  get x() { return this.getValue("x"); }
+  set x(value) { this.setValue("x", value); }
+
+  get y() { return this.getValue("y"); }
+  set y(value) { this.setValue("y", value); }
+
+  get next() {return this.getNode("next");}
+  set next(value) {this.replaceNode("next", value);}
 };

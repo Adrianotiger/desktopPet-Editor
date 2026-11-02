@@ -37,6 +37,23 @@ class AnimationTabClass extends TabClass
 
       this.#createDiv();
     }
+
+    TabMenu.addIcon("editdelete", "Delete", ()=>{
+      const refs = XML.getAnimationReferences(this.#currentAni.id);
+      if(refs.length > 0)
+      {
+        Msg.show({title:"References to this animation", content:`There ${refs.length==1?"is":"are"} ${refs.length} references to this animation!`})
+      }
+      alert("Not implemented yet");
+    });
+
+    TabMenu.addIcon("filesave", "Save&Close", ()=>{
+      this.saveAndClose();
+    });
+
+    TabMenu.addIcon("editclose", "Close", ()=>{
+      Tabs.removeTop();
+    });
   }
 
   hide()
@@ -114,12 +131,16 @@ class AnimationTabClass extends TabClass
   #createDiv()
   {
     this.div.innerHTML = "";
+    /*
+    // Save and close
     _CN("button", {style:"position:absolute;right:10px;top:0px;"}, [_CN("img", {class:"icon", "data-icon":"filesave"})], this.div).addEventListener("click", ()=>{
       this.saveAndClose();
     });
+    // Close without saving
     _CN("button", {style:"position:absolute;left:10px;top:0px;"}, [_CN("img", {class:"icon", "data-icon":"cancel"})], this.div).addEventListener("click", ()=>{
       Tabs.removeTop();
     });
+    */
     _CN("h1", {}, ["Animation"], this.div);
     const ani = this.#currentAni;
     const seq = ani.sequence;

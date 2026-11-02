@@ -15,6 +15,7 @@ class AniCanvasClass
   #w = 0;
   #h = 0;
   #fullCanvas = false;
+
   constructor(ani, w, h)
   {    
     this.#ani = ani;
@@ -149,6 +150,8 @@ class AniCanvasClass
 class AnimationsTabClass extends TabClass
 {
   #buttons = [];
+  #nextId;
+
   constructor()
   {
     super("Animations");
@@ -177,7 +180,7 @@ class AnimationsTabClass extends TabClass
     const w = (XML.getImage().getFrameWidth() + 10)+'px';
     const h = (XML.getImage().getFrameHeight() + 10 + 34)+'px';
 
-    let nextId = 1;
+    this.#nextId = 1;
         
     XML.animations.forEach(ani=>{
       const canv = new AniCanvasClass(ani, img.getFrameWidth(), img.getFrameHeight());
@@ -185,7 +188,7 @@ class AnimationsTabClass extends TabClass
       const s = _CN("span", {}, [ani.name]);
       const b = _CN("button", {class:"anidiv", style:`--box-width:${w};--box-height:${h}`}, [canv.getCanvas(), i, s], this.div);
       
-      if(ani.id > nextId) nextId = ani.id + 1;
+      if(ani.id >= this.#nextId) this.#nextId = ani.id + 1;
 
       this.#buttons.push({
         b: b, 
@@ -198,12 +201,6 @@ class AnimationsTabClass extends TabClass
         Menu.execute("animation", {ani:a});
       });
       
-    });
-
-    const b = _CN("button", {class:"anidiv", style:`--box-width:${w};--box-height:${h}`}, [_CN("h1", {}, ["➕"]),_CN("span", {}, ["-Add-"])], this.div);
-    b.addEventListener("click", ()=>{
-      XML.insertAnimation(nextId);
-      this.loadAnimations();
     });
     
     setTimeout(()=>{
@@ -224,6 +221,10 @@ class AnimationsTabClass extends TabClass
         b.c.animate();
       });
     }
+    TabMenu.addIcon("editadd", "Add animation", ()=>{
+      XML.insertAnimation(this.#nextId);
+      this.loadAnimations();
+    });
     aniCanvasLetAnimate = true;
   }
   

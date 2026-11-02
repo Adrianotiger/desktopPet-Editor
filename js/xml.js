@@ -144,6 +144,44 @@ const XML = new class
     const importedNode = this.#xmlDoc.importNode(newNode, true);
     XML.animations.push(new XMLAnimationsAnimation(importedNode));
   }
+  insertSpawn(id)
+  {
+    const newNode = new DOMParser().parseFromString(
+      `<spawn id="${id}" probability="100"><x>0</x><y>0</y><next probability="100">1</next></spawn>`, 
+      "text/xml"
+    ).documentElement;
+    const importedNode = this.#xmlDoc.importNode(newNode, true);
+    XML.spawns.push(new XMLAnimationsSpawn(importedNode));
+  }
+
+  getAnimationReferences(id)
+  {
+    let ret = [];
+    this.animations.forEach((a, j)=>{
+      if(a.id != id) {
+        let found = false;
+        this.getAnimation(a.id).sequence.next?.forEach(an=>{
+          if(!found && an.value == id) {
+            found = true;
+            ret.push(a.id);
+          }
+        });
+        this.getAnimation(a.id).border?.next?.forEach(an=>{
+          if(!found && an.value == id) {
+            found = true;
+            ret.push(a.id);
+          }
+        });
+        this.getAnimation(a.id).gravity?.next?.forEach(an=>{
+          if(!found && an.value == id) {
+            found = true;
+            ret.push(a.id);
+          }
+        });
+      }
+    });
+    return ret;
+  }
   
   getImage(index=-1)
   {
