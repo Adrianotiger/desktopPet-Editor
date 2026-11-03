@@ -124,7 +124,7 @@ const Menu = new class
 
   execute(action, params=null)
   {
-    let detail = { action };
+    let detail = { action:action.toLowerCase() };
     if(params != null) detail.params = params;
     document.body.dispatchEvent(
       new CustomEvent("menu", {
@@ -170,9 +170,5 @@ const Menu = new class
   }
 };
 
-window.addEventListener("load", ()=>{
-  Menu.init();
-  setTimeout(()=>{
-    Menu.execute("open");
-  }, 500);
-});
+
+Menu.init();

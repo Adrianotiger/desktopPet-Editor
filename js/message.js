@@ -55,12 +55,3 @@ const Msg = new class{
     }, 400); 
   }
 };
-
-window.addEventListener("load", ()=>{
-  Msg.show({
-    title: "Preview",
-    content: "This is just a preview. It doesn't fully works and you can't save your project, it just a preview of the development of this project.",
-    buttons: ["OK"]
-  });
-
-});

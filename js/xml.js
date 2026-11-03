@@ -144,6 +144,27 @@ const XML = new class
     const importedNode = this.#xmlDoc.importNode(newNode, true);
     XML.animations.push(new XMLAnimationsAnimation(importedNode));
   }
+  deleteAnimation(id)
+  {
+    let findNode = -1;
+    this.animations.forEach((a, j)=>{
+      if(a.id == id) findNode = j;
+    });
+    if(findNode >= 0)
+    {
+      this.animations.splice(findNode, 1);
+      return true;
+    }
+    return false;
+  }
+  getSpawn(id)
+  {
+    let ret = null;
+    this.spawns.forEach(s=>{
+      if(s.id == id) ret = s;
+    });
+    return ret;
+  }
   insertSpawn(id)
   {
     const newNode = new DOMParser().parseFromString(
@@ -152,6 +173,19 @@ const XML = new class
     ).documentElement;
     const importedNode = this.#xmlDoc.importNode(newNode, true);
     XML.spawns.push(new XMLAnimationsSpawn(importedNode));
+  }
+  deleteSpawn(id)
+  {
+    let findNode = -1;
+    this.spawns.forEach((s, j)=>{
+      if(s.id == id) findNode = j;
+    });
+    if(findNode >= 0)
+    {
+      this.spawns.splice(findNode, 1);
+      return true;
+    }
+    return false;
   }
 
   getAnimationReferences(id)

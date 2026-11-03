@@ -40,6 +40,7 @@ body {
   color: var(--text-main);
   height: 100vh;
   overflow: hidden;
+  user-select: none;
 }
 
 a {

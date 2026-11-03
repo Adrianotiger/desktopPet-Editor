@@ -25,7 +25,7 @@ class AniCanvasClass
     this.#seq = [];
     this.#frameIndex = 0;
 
-    this.#calcFrames(ani.sequence);
+    this.#calcFrames(ani?.sequence);
 
     this.#forceAni = false;
   }
@@ -48,6 +48,12 @@ class AniCanvasClass
         this.#_animate(timestamp);
       });
     }
+    else
+    {
+      let img = new Image();
+      img.src = "icons/removed.png";
+      img.addEventListener("load", ()=>{ this.#ctx.drawImage(img, 0, 0, this.#canvas.width, this.#canvas.height) });
+    }
   }
 
   resizeCanvasToEmulateScreen(newW, newH)
@@ -69,11 +75,13 @@ class AniCanvasClass
   {
     this.#ani = ani;
     this.#frames = [];
-    this.#calcFrames(ani.sequence)
+    this.#calcFrames(ani?.sequence)
   }
 
   #calcFrames(seq)
   {
+    if(!this.#ani) return;
+
     const start = this.#ani.start;
     const end = this.#ani.end;
     let totFrames = seq.frame.length;

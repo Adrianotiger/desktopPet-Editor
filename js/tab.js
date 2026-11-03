@@ -34,7 +34,7 @@ class TabClass
 var Tabs = new class
 {
   #div = null;
-  #tabItems = ["open", "save", "header", "image", "spawns", "spawn", "animations", "animation"];
+  #tabItems = ["open", "save", "header", "image", "spawns", "animations", "animation"];
   #tabs = [];
   index = 0;
   
@@ -92,4 +92,4 @@ var Tabs = new class
   }
 };
 
-window.addEventListener("load", ()=>{Tabs.init();});
+Tabs.init();

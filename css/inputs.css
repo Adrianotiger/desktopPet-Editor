@@ -20,6 +20,7 @@ input, select {
   padding: 6px;
   border-radius: 5px;
   box-shadow: inset -2px -2px 2px #eef, inset 2px 2px 2px #559, 0px 0px 3px var(--accent);
+  user-select: text;
 }
 
 input:hover, select:hover {

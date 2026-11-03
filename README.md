@@ -10,12 +10,13 @@ https://adrianotiger.github.io/desktopPet-Editor/
 ☑ Open/Edit/Save Animation-Node  
 ☑ Open/Edit/Save Header-Node  
 ☑ Open/Edit/Save Image(Spritesheet)-Node  
-☐ Open/Edit/Save Spawn-Node | in progress...  
+☑ Open/Edit/Save Spawn-Node  
 ☐ Open/Edit/Save Childs-Node  
 ☐ Open/Edit/Save Sounds-Node  
+☑ Formula editor    
 ☐ Export/Test project  
-☐ Documenting code
-☐ Tutorials
+☐ Documenting code  
+☐ Tutorials  
 ☐ Animation-functionality/possibilities      
 ➕ Many tweaks and details:  
 

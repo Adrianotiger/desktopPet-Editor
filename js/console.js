@@ -144,4 +144,4 @@ const ExtendedConsole = new class
   }
 };
 
-window.addEventListener("load", ()=>{ExtendedConsole.init();});
+ExtendedConsole.init();

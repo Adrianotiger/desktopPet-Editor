@@ -6,8 +6,10 @@ class NextEditor
   #addNext;
   next;
   #originalStyle = {};
+  #options = {attributes:[], goto:true, maxitems:99, minitems:1};
+  #onChanged = null;
 
-  constructor(parent, parentDiv)
+  constructor(parent, parentDiv, options)
   {
     this.#baseNode = parent;
     this.#trash = _CN("div", { class: "aniframeeditortrash" }, ["🗑️"]);
@@ -18,6 +20,16 @@ class NextEditor
         this.#addNext
     ], parentDiv);
     this.next = [];
+
+    this.#options.attributes = (options?.attributes ?? ["only", "probability"]);
+    this.#options.goto       = (options?.goto ?? true);
+    this.#options.maxitems   = (options?.maxitems ?? 99);
+    this.#options.minitems   = (options?.minitems ?? 1);
+
+    if(this.#options.maxitems <= this.#baseNode?.next?.length)
+      this.#addNext.style.display = "none";
+    if(this.#options.minitems >= this.#baseNode?.next?.length)
+      this.#trash.style.display = "none";
 
     let resize = _CN("button", {title:"Resize box", style:"position:absolute;right:6px;top:0px;line-height:12px;height:25px;"}, ["🗖"], parentDiv);
     resize.addEventListener("click", ()=>{
@@ -41,6 +53,8 @@ class NextEditor
 
       const removeIndex = parseInt(e.dataTransfer.getData("text/plain"), 10);
       this.next.splice(removeIndex, 1);
+
+      if(typeof this.#onChanged != 'undefined') this.#onChanged(null);
       this.#renderNexts();
     });
 
@@ -52,6 +66,8 @@ class NextEditor
       let newNext = new XMLAnimationsNext(xml);
       this.next.push(newNext);
       this.#baseNode.next.push(newNext);
+
+      if(typeof this.#onChanged != 'undefined') this.#onChanged(newNext);
       this.#renderNexts();
     });
     
@@ -65,6 +81,11 @@ class NextEditor
   }
 
   get div() { return this.#div; }
+
+  onChanged(func)
+  {
+    this.#onChanged = func;
+  }
 
   #resize(parent, resize)
   {
@@ -106,7 +127,7 @@ class NextEditor
     XML.animations.forEach(ani=>{
       const canv = new AniCanvasClass(ani, img.getFrameWidth(), img.getFrameHeight());
       
-      const b = _CN("div", {}, [canv.getCanvas(), _CN("i", {style:"font-size:12px;text-align:center;display:block;"}, [ani.name])], div);
+      const b = _CN("div", {title:ani.name}, [canv.getCanvas(), _CN("i", {style:"font-size:12px;text-align:center;display:block;"}, [ani.name])], div);
 
       if(ani.id == aniIndex)
       {
@@ -121,6 +142,8 @@ class NextEditor
         canvs.forEach(c=>{c.animate(false);});
         this.next[nextIndex].value = ani.id;
         Msg.close();
+
+        if(typeof this.#onChanged != 'undefined') this.#onChanged(this.next[nextIndex]);
         this.#renderNexts();
       });
       
@@ -155,35 +178,47 @@ class NextEditor
         this.#resize(this.#div.parentNode);
       });
 
-      const openAni = _CN("a", {}, ["📂(GoTo) "]);
-      openAni.addEventListener("click", (e)=>{
-        e.stopPropagation();
-        const a = XML.getAnimation(ani.id);
-        Menu.execute("animation", {ani:a});
-      });
+      let openAni = null;
+      if(this.#options.goto)
+      {
+        openAni = _CN("a", {}, ["📂(GoTo) "]);
+        openAni.addEventListener("click", (e)=>{
+          e.stopPropagation();
+          const a = XML.getAnimation(ani.id);
+          Menu.execute("animation", {ani:a});
+        });
+      }
       
-      let prob = _CN("input", {type:"number", min:1, max:100, value:n.probability, style:"padding:2px;text-align:center;"});
-      let limit = _CN("select", {style:"padding:2px;"}, []);
-      Object.entries(XMLValue.Only).forEach(([okey, oval]) => {
-        const so = _CN("option", {value:oval}, [okey], limit);
-        if(n.only == so.value) {so.selected = true; limit.value=so.value; }
-      });
+      let prob = null;
+      let limit = null;
+      if(this.#options.attributes.includes("probability"))
+        prob = _CN("input", {type:"number", min:1, max:100, value:n.probability, style:"padding:2px;text-align:center;"});
 
-      prob.addEventListener("click", (e)=>{e.preventDefault();e.stopPropagation();});
-      limit.addEventListener("click", (e)=>{e.preventDefault();e.stopPropagation();});
+      if(this.#options.attributes.includes("only"))
+      {
+        limit = _CN("select", {style:"padding:2px;"}, []);
 
-      prob.addEventListener("change", ()=>{n.probability = prob.value;});
-      limit.addEventListener("change", ()=>{n.only = limit.value;});
+        Object.entries(XMLValue.Only).forEach(([okey, oval]) => {
+          const so = _CN("option", {value:oval}, [okey], limit);
+          if(n.only == so.value) {so.selected = true; limit.value=so.value; }
+        });
+      }
+
+      prob?.addEventListener("click", (e)=>{e.preventDefault();e.stopPropagation();});
+      limit?.addEventListener("click", (e)=>{e.preventDefault();e.stopPropagation();});
+
+      prob?.addEventListener("change", ()=>{n.probability = prob.value;});
+      limit?.addEventListener("change", ()=>{n.only = limit.value;});
 
       _CN("span", {class:"spanSmall"}, [
-        editAni, openAni
+        editAni, openAni ?? " "
       ], div);
       _CN("span", {class:"spanBig"}, [
-        "Prob.: ", prob, " - ",
-        "Limit: ", limit
+        "Prob.: ", prob ?? "-", " - ",
+        "Limit: ", limit ?? "-"
       ], div);
       
-      _CN("span", {style:"text-align:right;"}, [`[${ani.id}] ${ani.name} `], div);
+      _CN("span", {style:"text-align:right;"}, [`[${ani?.id??"-"}] ${ani?.name??"-"} `], div);
 
       c.animate(true);
 
@@ -192,6 +227,7 @@ class NextEditor
       c.getCanvas().addEventListener("click", (e) => {
         this.#openPicker(j, n.value);
       });
+
       // remember index
       div.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("text/plain", j);

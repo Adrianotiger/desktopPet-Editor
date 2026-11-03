@@ -42,9 +42,19 @@ class AnimationTabClass extends TabClass
       const refs = XML.getAnimationReferences(this.#currentAni.id);
       if(refs.length > 0)
       {
-        Msg.show({title:"References to this animation", content:`There ${refs.length==1?"is":"are"} ${refs.length} references to this animation!`})
+        let p = _CN("p", {}, [`There ${refs.length==1?"is":"are"} ${refs.length} references to this animation!`, _CN("br"), "Remove the next animation(s) first:"]);
+        let ul = _CN("ul", {style:"text-align:left;"}, [], p);
+        for(let j=0;j<Math.min(10, refs.length);j++) _CN("li", {}, [refs[j] + " - " + XML.getAnimation(refs[j]).name], ul);
+        Msg.show({title:"References to this animation", content:p})
       }
-      alert("Not implemented yet");
+      else
+      {
+        if(XML.deleteAnimation(this.#currentAni.id))
+        {
+          AnimationsTab.reload();
+          Menu.execute("animations");
+        }
+      }
     });
 
     TabMenu.addIcon("filesave", "Save&Close", ()=>{
@@ -198,7 +208,7 @@ class AnimationTabClass extends TabClass
       const nextInfo = _CN("div", {class:"infobox aniinfobox", id:nk, style:`width:${divw};position:relative;`}, [_CN("h3", {}, ["Next " + nk])], this.div);
       const nexts = ani[nk];
 
-      const ne = new NextEditor(ani[nk], nextInfo);
+      const ne = new NextEditor(ani[nk], nextInfo , {minitems:0});
       if(Array.isArray(nexts.next))
       {
         // Snapshot each transition's XML; NextEditor edits the cloned nodes in place.

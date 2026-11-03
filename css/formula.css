@@ -1,0 +1,73 @@
+.formula_div
+{
+  width:70vw;
+  min-height:40vh;
+  max-height:70vh;
+  overflow-y:auto;
+  position:relative;
+}
+
+.formula_div input
+{
+  position: absolute;
+  width: 100%;
+  top: 5px;
+  left: 0px;
+  height: 30px;
+}
+
+.formula_dropdown
+{
+  position: absolute;
+  left: 30px;
+  top: 35px;
+  width: 200px;
+  min-height: 30px;
+  background-color: var(--bg-panel);
+  border: 2px solid var(--border);
+  box-shadow: 5px 5px 10px #000;
+  border-radius: 5px;
+}
+
+.formula_dropdown div
+{
+  width: 100%;
+  height: 30px;
+  margin: 0px;
+  box-shadow: inset 3px 3px 4px var(--border), inset -3px -3px 4px var(--border);
+  padding-left: 10px;
+  text-align: left;
+  border-radius: 5px;
+}
+
+.formula_help
+{
+  position: relative;
+  margin-top: 40px;
+  width: 100%;
+}
+
+.formula_help table {
+  width: 300px;
+  font-size: 12px;
+  display: inline-block;
+}
+
+.formula_help table td:nth-child(2) {
+  text-align:left;
+}
+
+.formula_help span {
+  background: linear-gradient(to bottom, #585, #253);
+  border-radius: 8px;
+  height: 16px;
+  color: yellow;
+  padding: 0px 7px;
+  line-height: 16px;
+  display: inline-block;
+}
+
+.formula_canv {
+  display: inline-block;
+  width: calc(100% - 320px);
+}

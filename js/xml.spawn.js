@@ -45,9 +45,11 @@ class XMLAnimationsSpawn extends XMLNode
 
   get x() { return this.getValue("x"); }
   set x(value) { this.setValue("x", value); }
+  get xOriginal() { return this.values["x"].original; }
 
   get y() { return this.getValue("y"); }
   set y(value) { this.setValue("y", value); }
+  get yOriginal() { return this.values["y"].original; }
 
   get next() {return this.getNode("next");}
   set next(value) {this.replaceNode("next", value);}
