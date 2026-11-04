@@ -31,7 +31,7 @@ const XML = new class
   // This makes sure classes like XMLValue, XMLNode, XMLAnimationsAnimation, and
   // XMLAnimationsSequence are defined before the parser tries to instantiate them.
   #mainscripts = ["value", "node"];
-  #scripts = ["header", "image", "spawn", "spawn.next", "animation", "animation.sequence", "animation.next", "checks"];
+  #scripts = ["header", "image", "spawn", "spawn.next", "animation", "animation.sequence", "animation.next", "child", "checks"];
   
   constructor()
   {
@@ -84,6 +84,7 @@ const XML = new class
     if(!imageElement) {console.error("IMAGE element missing"); return; }
     if(!spawnsElement) {console.error("SPAWNS element missing"); return; }
     if(!animationsElement) {console.error("ANIMATIONS element missing"); return; }
+    if(!childsElement) {console.error("CHILDS element missing"); return; }
     
     this.#xmlString = xmlString;
     
@@ -99,6 +100,10 @@ const XML = new class
     this.#animations.animations = [];
     animationsElement.querySelectorAll('animation').forEach(an=>{
       this.#animations.animations.push(new XMLAnimationsAnimation(an));
+    });
+    this.#animations.childs = [];
+    childsElement.querySelectorAll('child').forEach(an=>{
+      this.#animations.childs.push(new XMLAnimationsChild(an));
     });
     
     console.log(this.#animations);
@@ -187,6 +192,36 @@ const XML = new class
     }
     return false;
   }
+  getChild(id)
+  {
+    let ret = null;
+    this.childs.forEach(c=>{
+      if(c.animationid == id) ret = c;
+    });
+    return ret;
+  }
+  insertChild(id)
+  {
+    const newNode = new DOMParser().parseFromString(
+      `<child animationid="${id}"><x>imageX</x><y>imageY</y><next>1</next></child>`, 
+      "text/xml"
+    ).documentElement;
+    const importedNode = this.#xmlDoc.importNode(newNode, true);
+    XML.childs.push(new XMLAnimationsChild(importedNode));
+  }
+  deleteChild(id)
+  {
+    let findNode = -1;
+    this.childs.forEach((sc, j)=>{
+      if(c.animationid == id) findNode = j;
+    });
+    if(findNode >= 0)
+    {
+      this.childs.splice(findNode, 1);
+      return true;
+    }
+    return false;
+  }
 
   getAnimationReferences(id)
   {
@@ -261,4 +296,8 @@ const XML = new class
   get animations() { return this.#animations.animations }
   get childs() { return this.#animations.childs }
   get sounds() { return this.#animations.sounds }
+
+  get xmlDoc() { return this.#xmlDoc }
+  get xmlOriginalString() { return this.#xmlString; }
+  get xmlNewString() { return this.getXml(); }
 };

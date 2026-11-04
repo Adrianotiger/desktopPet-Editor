@@ -63,7 +63,7 @@ class Submenu
 const Menu = new class
 {
   div = null;
-  #submenusItems = ["files", "animations", "tab"];
+  #submenusItems = ["files", "animations", "tools", "help", "tab"];
   #menuMainDiv = null;
   #menuSubDiv = null;
   #menuTabDiv = null;

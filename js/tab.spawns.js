@@ -92,7 +92,7 @@ class SpawnsTabClass extends TabClass
 
     const nextInfo = _CN("div", {class:"infobox aniinfobox", id:spawn.id, style:`width:100%;position:relative;`}, [_CN("h3", {}, ["Next #" + spawn.id])], this.#spawnDiv);
 
-    const ne = new NextEditor(spawn, nextInfo, {goto:false, minitems:1, maxitems:1, attributes:["probability"]});
+    const ne = new NextEditor(spawn, nextInfo, {goto:true, minitems:1, maxitems:1, attributes:["probability"]});
 
     setTimeout(()=>{
       inputs.forEach((i)=>{

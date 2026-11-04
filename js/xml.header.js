@@ -1,13 +1,5 @@
 class XMLAnimationsHeader extends XMLNode
-{
-  #author = "";
-  #title = "";
-  #petname = "";
-  #version = "";
-  #info = "";
-  #application = 1;
-  #icon = "";
-  
+{ 
   constructor(xml)
   {
     super(xml, "header");
@@ -22,6 +14,13 @@ class XMLAnimationsHeader extends XMLNode
     super.addValue(
       "title", 
       xmlNodeGet(xml, 'title')??"Unknown Title", 
+      XMLValue.Type.STRING
+    );
+
+    //  petname is here, as the .net application saved it here
+    super.addValue(
+      "petname", 
+      xmlNodeGet(xml, 'petname')??"Unknown Pet name", 
       XMLValue.Type.STRING
     );
 
@@ -47,13 +46,6 @@ class XMLAnimationsHeader extends XMLNode
       "icon", 
       xmlNodeGet(xml, 'icon')??"AAABAAEAMDAAAAAAIACJAAAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAwAAAAMAgGAAAAVwL5hwAAAFBJREFUeJztz0ENACAQwLAD/55BBI+GZFWwrZk587GtA141oDWgNaA1oDWgNaA1oDWgNaA1oDWgNaA1oDWgNaA1oDWgNaA1oDWgNaA1oDWgXfd6AV/xEwpFAAAAAElFTkSuQmCC", 
       XMLValue.Type.CDATA
-    );
-
-    //  petname is here, as the .net application saved it here
-    super.addValue(
-      "petname", 
-      xmlNodeGet(xml, 'petname')??"Unknown Pet name", 
-      XMLValue.Type.STRING
     );
 
   }

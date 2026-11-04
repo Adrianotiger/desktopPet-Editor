@@ -48,6 +48,10 @@ function setDayNightTheme(butt)
     butt.textContent = (currentTheme === 'light' ? '🌙' : '☀️');
     localStorage.setItem("pageTheme", newTheme);
   }
+  else
+  {
+    document.getElementById('daynightbutton').textContent = (currentTheme === 'light' ? '🌙' : '☀️');
+  }
 }
 
 let loadedScripts = [];

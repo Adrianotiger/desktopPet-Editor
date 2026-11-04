@@ -65,7 +65,7 @@ class FormulaPreviewClass
   canv;
   screen = {w:1920, h:1080, x:100, y:100, i:null};
   area = {w:1920, h:1018, x:100, y:100};
-  size = {w:2120, h:1218};
+  size = {w:2120, h:1218, x:0, y:0};
   origin = {x:100, y:100};
   image = {w:10, h:10, x:0, y:0, i:null};
   randInc = 0;
@@ -114,6 +114,8 @@ const Formula = new class
     areaH: "areaH",
     imageW: "imageW",
     imageH: "imageH",
+    imageX: "imageX",
+    imageY: "imageY",
     random: "random",
     randS: "randS"
   });
@@ -245,6 +247,14 @@ const Formula = new class
     _CN("tr", {}, [
       _CN("td", {}, [_CN("span", {}, ["imageH"])]),
       _CN("td", {}, ["Animation frame height"])
+    ], table);
+    _CN("tr", {}, [
+      _CN("td", {}, [_CN("span", {}, ["imageX"])]),
+      _CN("td", {}, ["Animation position X"])
+    ], table);
+    _CN("tr", {}, [
+      _CN("td", {}, [_CN("span", {}, ["imageY"])]),
+      _CN("td", {}, ["Animation position Y"])
     ], table);
     _CN("tr", {}, [
       _CN("td", {}, [_CN("span", {}, ["random"])]),

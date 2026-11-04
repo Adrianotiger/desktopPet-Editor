@@ -1,3 +1,7 @@
+// Edit the next node.
+// Note: As there are some animation ID that are not defined in the next node, subnode can be used to set the node to change!
+//       In this case, parent (or baseNode is not anymore an object but a value)
+
 class NextEditor
 {
   #baseNode;
@@ -6,16 +10,19 @@ class NextEditor
   #addNext;
   next;
   #originalStyle = {};
-  #options = {attributes:[], goto:true, maxitems:99, minitems:1};
+  #options = {attributes:[], goto:true, edit:true, maxitems:99, minitems:1};
   #onChanged = null;
+  #divHeight = "";
+  #subnode = "next";
 
-  constructor(parent, parentDiv, options)
+  constructor(parent, parentDiv, options, subnode)
   {
     this.#baseNode = parent;
+    if(subnode) this.#subnode = subnode;
     this.#trash = _CN("div", { class: "aniframeeditortrash" }, ["🗑️"]);
     this.#addNext = _CN("div", { class: "aniframeeditoradd" }, ["＋ "]);
     this.#div = _CN("div", {class:"aniframeeditor", style:"padding-right:30px;padding-top:15px;"}, [
-        _CN("i", {}, ["Next animation:"]),
+        _CN("i", {}, [` > ${this.#subnode}:`]),
         this.#trash,
         this.#addNext
     ], parentDiv);
@@ -25,16 +32,27 @@ class NextEditor
     this.#options.goto       = (options?.goto ?? true);
     this.#options.maxitems   = (options?.maxitems ?? 99);
     this.#options.minitems   = (options?.minitems ?? 1);
+    this.#options.edit       = (options?.edit ?? true);
+    
 
     if(this.#options.maxitems <= this.#baseNode?.next?.length)
       this.#addNext.style.display = "none";
     if(this.#options.minitems >= this.#baseNode?.next?.length)
       this.#trash.style.display = "none";
 
-    let resize = _CN("button", {title:"Resize box", style:"position:absolute;right:6px;top:0px;line-height:12px;height:25px;"}, ["🗖"], parentDiv);
-    resize.addEventListener("click", ()=>{
-      this.#resize(parentDiv, resize);
-    });
+    if(this.#options.maxitems == this.#options.minitems)
+    {
+      this.#divHeight = "100px";
+      this.#div.style.height = this.#divHeight;
+    }
+
+    if(this.#options.edit)
+    {
+      let resize = _CN("button", {title:"Resize box", style:"position:absolute;right:6px;top:0px;line-height:12px;height:25px;"}, ["🗖"], parentDiv);
+      resize.addEventListener("click", ()=>{
+        this.#resize(parentDiv, resize);
+      });
+    }
 
     this.#trash.addEventListener("dragover", (e) => {
       e.preventDefault();
@@ -72,9 +90,16 @@ class NextEditor
     });
     
     setTimeout(()=>{
-      this.#baseNode?.next?.forEach(f=>{
-        this.next.push(f);
-      });
+      if(this.#subnode == "next")
+      {
+        this.#baseNode?.next?.forEach(f=>{
+          this.next.push(f);
+        });
+      }
+      else 
+      {
+        this.next.push(this.#baseNode[this.#subnode]);
+      }
 
       this.#renderNexts();
     }, 100);
@@ -99,7 +124,7 @@ class NextEditor
       parent.style.transform = "translate(-35%, 0px)";
       parent.style.width = "60vw";
       parent.style.maxWidth = "600px";
-      parent.style.height = "80vh";
+      parent.style.height = "70vh";
       parent.style.backgroundColor = "var(--tab-bg)";
       parent.style.zIndex = 100;
       if(resize)resize.textContent = "🗗";
@@ -115,7 +140,7 @@ class NextEditor
       parent.style.height = "";
       parent.style.zIndex = 1;
       if(resize)resize.textContent = "🗖";
-      this.#div.style.height = "";
+      this.#div.style.height = this.#divHeight;
     }
   }
 
@@ -140,21 +165,34 @@ class NextEditor
       
       b.addEventListener("click", ()=>{
         canvs.forEach(c=>{c.animate(false);});
-        this.next[nextIndex].value = ani.id;
+        if(this.next[nextIndex].value) this.next[nextIndex].value = ani.id;
+        else this.next[nextIndex] = ani.id;
         Msg.close();
 
-        if(typeof this.#onChanged != 'undefined') this.#onChanged(this.next[nextIndex]);
+        if(this.#onChanged != null) this.#onChanged(this.next[nextIndex]);
         this.#renderNexts();
       });
       
     });
 
     setTimeout(()=>{
-      let imgIndex = 0;
-      [...div.getElementsByTagName("canvas")].forEach(i=>{
-        if(imgIndex++ != aniIndex) i.style.opacity = 0.8;
+      [...div.getElementsByTagName("canvas")].forEach(c=>{
+        if(c.id != aniIndex) c.style.opacity = 0.8;
       });
     }, 1000);
+
+    const divFilter = _CN("div", {class:"filterDiv", style:"position:absolute;top:0px;right:0px;height:30px;"}, [], div);
+    let filter = new TextFilterIcon(divFilter);
+
+    filter.onEdit((filterText)=>{
+      canvs.forEach(c=>{
+        c.getCanvas().parentNode.style.opacity = 1.0;
+        if(filterText.length > 0 && c.name.indexOf(filterText) < 0)
+        {
+          c.getCanvas().parentNode.style.opacity = 0.2;
+        }
+      });
+    });
 
     Msg.show({title:"Select animation", content:div, buttons:["Cancel"]}, ()=>{
       canvs.forEach(c=>{c.animate(false);});
@@ -168,7 +206,7 @@ class NextEditor
 
     let newNexts = [];
     this.next.forEach((n, j)=>{
-      const ani = XML.getAnimation(n.value);
+      const ani = XML.getAnimation(n.value ?? n); // n can be a NEXT-object or just a value
       const c = new AniCanvasClass(ani, XML.getImage().getFrameWidth(), XML.getImage().getFrameHeight());
       const div = _CN("div", {class:"aninextitem", draggable:"true", "data-index":j}, [c.getCanvas()], this.#div);
       
@@ -211,7 +249,7 @@ class NextEditor
       limit?.addEventListener("change", ()=>{n.only = limit.value;});
 
       _CN("span", {class:"spanSmall"}, [
-        editAni, openAni ?? " "
+        this.#options.edit ? editAni : " ", openAni ?? " "
       ], div);
       _CN("span", {class:"spanBig"}, [
         "Prob.: ", prob ?? "-", " - ",
@@ -238,7 +276,8 @@ class NextEditor
       });
     });
     
-    this.#baseNode.next = newNexts;
+    if(Array.isArray(this.#baseNode[this.#subnode])) this.#baseNode[this.#subnode] = newNexts;
+    else this.#baseNode[this.#subnode] = newNexts[0];
     
   }
 };

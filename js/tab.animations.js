@@ -29,6 +29,9 @@ class AniCanvasClass
 
     this.#forceAni = false;
   }
+
+  get id() { return this.#ani.id; }
+  get name() { return this.#ani.name; }
   
   getCanvas()
   {

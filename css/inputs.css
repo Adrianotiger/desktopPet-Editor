@@ -34,3 +34,31 @@ input:focus, select:focus {
 input[type="number"] {
   width: 70px;
 }
+
+.filterDiv {
+  min-width:30px;
+}
+
+.filterDiv button {
+  height:100%;
+  padding:0px;
+  border-width:0px;
+  position: absolute;
+  right: 0px;
+  box-shadow: inset -1px -1px 2px #000;
+}
+
+.filterDiv button img {
+  height: 90%;
+  opacity: 1.0 !important;
+}
+
+.filterDiv input {
+  width:0px;
+  transition:all 0.7s ease-in-out;
+  position: absolute;
+  right: 0px;
+  padding: 2px 5px;
+  line-height: 16px;
+  margin-top: 3px;
+}

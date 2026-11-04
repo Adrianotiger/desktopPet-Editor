@@ -18,7 +18,7 @@ class AnimationTabClass extends TabClass
     super("Animation");
     _CN("h1", {}, ["Animation"], this.div);
     // Load the specialized editors used inside this window.
-    loadScripts(["edit.frames", "edit.next"], true);
+    loadScripts(["edit.frames", "edit.next", "edit.filter"], true);
   }
   
   show(params)

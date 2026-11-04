@@ -11,6 +11,8 @@
   --success: #a6e3a1;
   --danger: #c20f39;
   --tab-bg: rgba(0,30,50,0.7);
+  --gold-bg: #D4AF37;
+  --gold-text: #3E2723;
 }
 
 html[data-theme="light"] {

@@ -3,6 +3,7 @@ class TabClass
   div = null;
   title = "";
   isTop = false;
+  loading = true;
 
   constructor(title)
   {
@@ -11,6 +12,8 @@ class TabClass
     
     document.body.addEventListener("menu", (ev)=>{if(ev?.detail?.action == title.toLowerCase()) Tabs.show(this, ev.detail.params);});
     Tabs.addTab(this);
+    
+    this.loading = false;
   }
   
   hide()
@@ -34,12 +37,20 @@ class TabClass
 var Tabs = new class
 {
   #div = null;
-  #tabItems = ["open", "save", "header", "image", "spawns", "animations", "animation"];
+  #tabItems = [];//"open", "save", "header", "image", "spawns", "animations", "animation", "childs"];
   #tabs = [];
   index = 0;
   
   constructor()
   {
+    // File
+    this.#tabItems = this.#tabItems.concat(["open", "save"]);
+    // Animations
+    this.#tabItems = this.#tabItems.concat(["header", "image", "spawns", "animations", "animation", "childs"]);
+    // Tools
+    this.#tabItems = this.#tabItems.concat(["xmlviewer"]);
+    // Help
+    this.#tabItems = this.#tabItems.concat([]);
   }
   
   init()
@@ -63,7 +74,7 @@ var Tabs = new class
     if(typeof TabMenu != 'undefined') TabMenu.removeIcons();
 
     this.#tabs.forEach(t => { 
-      if(!stopPropagation && t.hide()===false) stopPropagation = true;
+      if(!stopPropagation && !t.loading && t.hide()===false) stopPropagation = true;
     });
     if(stopPropagation) return;
 

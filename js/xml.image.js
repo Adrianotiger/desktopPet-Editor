@@ -1,10 +1,5 @@
 class XMLAnimationsImage extends XMLNode
-{
-  #tilesx = "";
-  #tilesy = "";
-  #png = "";
-  #transparency = "Magenta";
-  
+{ 
   #_spritesheet = null;
   #_images = [];
   #_frameWidth = 1;
@@ -14,13 +9,30 @@ class XMLAnimationsImage extends XMLNode
   {
     super(xml, "image");
     
-    this.#tilesx = new XMLValue(xmlNodeGet(xml, 'tilesx')??1, XMLValue.Type.INT); 
-    this.#tilesy = new XMLValue(xmlNodeGet(xml, 'tilesy')??1, XMLValue.Type.INT);
-    
-    this.#png = new XMLValue(xmlNodeGet(xml, 'png')??"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGUlEQVR4nO3BMQEAAADCoPVP7WENoAAAAG4MIAABt9NlCQAAAABJRU5ErkJggg==", XMLValue.Type.STRING);
-    
-    this.#transparency = new XMLValue(xmlNodeGet(xml, 'transparency')??"Magenta", XMLValue.Type.STRING); 
-    
+    super.addValue(
+      "tilesx", 
+      xmlNodeGet(xml, 'tilesx')??"1", 
+      XMLValue.Type.INT
+    );
+
+    super.addValue(
+      "tilesy", 
+      xmlNodeGet(xml, 'tilesy')??"1", 
+      XMLValue.Type.INT
+    );
+
+    super.addValue(
+      "png", 
+      xmlNodeGet(xml, 'png')??"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGUlEQVR4nO3BMQEAAADCoPVP7WENoAAAAG4MIAABt9NlCQAAAABJRU5ErkJggg==", 
+      XMLValue.Type.CDATA
+    );
+
+    super.addValue(
+      "transparency", 
+      xmlNodeGet(xml, 'transparency')??"Magenta", 
+      XMLValue.Type.STRING
+    );
+
     this.#convertBase64toPNG();
   }
   
@@ -64,16 +76,16 @@ class XMLAnimationsImage extends XMLNode
   getFrameHeight() {return this.#_frameHeight;}
   getFrameImage(index) {return index < this.#_images.length ? this.#_images[index] : this.#_images[0];}
   
-  get tilesx() { return this.#tilesx.value; }
-  set tilesx(value) { return this.#tilesx.value = value; }
+  get tilesx() { return this.getValue("tilesx"); }
+  set tilesx(value) { this.setValue("tilesx", value); }
   
-  get tilesy() { return this.#tilesy.value; }
-  set tilesy(value) { return this.#tilesy.value = value; }
+  get tilesy() { return this.getValue("tilesy"); }
+  set tilesy(value) { this.setValue("tilesy", value); }
   
-  get png() { return this.#png.value; }
-  set png(value) { return this.#png.value = value; }
-  
-  get transparency() { return this.#transparency.value; }
-  set transparency(value) { return this.#transparency.value = value; }
+  get png() { return this.getValue("png"); }
+  set png(value) { this.setValue("png", value); }
+
+  get transparency() { return this.getValue("transparency"); }
+  set transparency(value) { this.setValue("transparency", value); }
   
 };
