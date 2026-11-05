@@ -7,21 +7,21 @@ https://adrianotiger.github.io/desktopPet-Editor/
 
 ## Features
 
-☑ Open project / file
-☑ Save project / file
-☑ Open, edit and save animation nodes
-☑ Open, edit and save header data
-☑ Open, edit and save image / spritesheet data
-☑ Open, edit and save spawn data
-☑ Open, edit and save child nodes
-☑ Open, edit and save sounds
-☑ Formula editor
-☑ Tutorials and help integrated in the app
-☐ Export / test project
-☐ Improve animation functionality and possibilities
-☐ Links to sprite resources and editors
-☐ Editor for pet README files
-☐ Final polish and documentation pass
+☑ Open project / file  
+☑ Save project / file  
+☑ Open, edit and save animation nodes  
+☑ Open, edit and save header data  
+☑ Open, edit and save image / spritesheet data  
+☑ Open, edit and save spawn data  
+☑ Open, edit and save child nodes  
+☑ Open, edit and save sounds  
+☑ Formula editor  
+☑ Tutorials and help integrated in the app  
+☐ Export / test project  
+☐ Improve animation functionality and possibilities  
+☐ Links to sprite resources and editors  
+☐ Editor for pet README files  
+☐ Final polish and documentation pass  
 
 ## Preview
 
