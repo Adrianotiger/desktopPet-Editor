@@ -76,7 +76,12 @@ class XmlNotepad {
         switch (node.nodeType) {
             case Node.ELEMENT_NODE:
                 if(node.attributes?.length == 0 && node.childNodes.length == 1 && node.childNodes[0].nodeType == Node.TEXT_NODE)
-                  this._renderText(node.childNodes[0], parentContainer, indentPx, node.tagName);
+                {
+                    if(node.tagName == "base64")
+                        this._renderCData(node, parentContainer, indentPx);
+                    else
+                        this._renderText(node.childNodes[0], parentContainer, indentPx, node.tagName);
+                }
                 else
                   this._renderElement(node, parentContainer, depth, indentPx);
                 break;
@@ -247,7 +252,7 @@ class XmlNotepad {
     }
 
     _renderCData(node, parentContainer, indentPx) {
-        const text = node.nodeValue;
+        const text = node.nodeValue ?? node.textContent;
         const sizeBytes = new TextEncoder().encode(text).length;
         const sizeStr = sizeBytes > 1024 ? `${(sizeBytes/1024).toFixed(1)} KB` : `${sizeBytes} B`;
 

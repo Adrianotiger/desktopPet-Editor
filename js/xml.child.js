@@ -7,7 +7,7 @@ class XMLAnimationsChildNext extends XMLNode
 
     super.addValue(
       "_", 
-      xml.textContent, 
+      xml.textContent??xml,  /* as it can be a node or just a value */
       XMLValue.Type.INT
     );
   }
@@ -41,11 +41,7 @@ class XMLAnimationsChild extends XMLNode
       XMLValue.Type.FORMULA
     );
     
-    /*
-    super.addNode(
-      "next",
-      xmlNodeGet(xml, 'next')??"1", 
-    );*/
+    // xmlNodeGet(xml, 'next') can be a node or just a value!
     super.addNode(
       "next",
       new XMLAnimationsChildNext(xmlNodeGet(xml, 'next'))

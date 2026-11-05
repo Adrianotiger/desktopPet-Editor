@@ -102,7 +102,7 @@ const Menu = new class
   
   openSubMenu(submenu)
   {
-    this.#menuSubDiv.innerHTML = "<div style='width:3px;border:ridge 2px #555;height:40px;display:inline-block;' />";
+    this.#menuSubDiv.innerHTML = "<div style='margin:10px;width:3px;border:ridge 2px #555;height:30px;display:inline-block;' />";
     submenu.icons.forEach((smi, j)=>{
       setTimeout(()=>{
         this.#menuSubDiv.appendChild(smi.div);

@@ -14,7 +14,7 @@ class XMLAnimationsNext extends XMLNode
     super.addAttribute(
       "only", 
       xmlHasAttribute(xml, 'only')?onlyAttr:"none", 
-      XMLValue.Type.STRING
+      XMLValue.Type.STRING,
     );
 
     super.addValue(

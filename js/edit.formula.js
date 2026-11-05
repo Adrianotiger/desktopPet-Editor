@@ -138,6 +138,7 @@ const Formula = new class
     
     Msg.show({title, content, buttons}, ()=>{
       inputOrigin.value = input.value;
+      inputOrigin.dispatchEvent(new Event('change'));
     });
 
     this.#fillHelp(help);

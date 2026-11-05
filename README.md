@@ -1,30 +1,60 @@
 # desktopPet-Editor [PREVIEW]
 
-A preview for the new desktopPet editor.  
+A browser-based editor for creating and managing DesktopPet animation projects in XML.
 
-Try it here:  
-https://adrianotiger.github.io/desktopPet-Editor/  
+Try it here:
+https://adrianotiger.github.io/desktopPet-Editor/
 
-☑ Open project/File  
-☑ Save project/File  
-☑ Open/Edit/Save Animation-Node  
-☑ Open/Edit/Save Header-Node  
-☑ Open/Edit/Save Image(Spritesheet)-Node  
-☑ Open/Edit/Save Spawn-Node  
-☐ Open/Edit/Save Childs-Node  
-☐ Open/Edit/Save Sounds-Node  
-☑ Formula editor    
-☐ Export/Test project  
-☐ Documenting code  
-☐ Tutorials  
-☐ Animation-functionality/possibilities      
-➕ Many tweaks and details:  
+## Features
 
+☑ Open project / file
+☑ Save project / file
+☑ Open, edit and save animation nodes
+☑ Open, edit and save header data
+☑ Open, edit and save image / spritesheet data
+☑ Open, edit and save spawn data
+☑ Open, edit and save child nodes
+☑ Open, edit and save sounds
+☑ Formula editor
+☑ Tutorials and help integrated in the app
+☐ Export / test project
+☐ Improve animation functionality and possibilities
+☐ Links to sprite resources and editors
+☐ Editor for pet README files
+☐ Final polish and documentation pass
 
-<img src="https://adrianotiger.github.io/desktopPet-Editor/help/preview1.gif" alt="Preview">
+## Preview
 
-This online editor allows you to open, edit and manage your pets, before uploading them to the repository.  
+<img src="https://adrianotiger.github.io/desktopPet-Editor/help/preview1.gif" alt="DesktopPet Editor preview">
 
-It use all new browser capabilities, so you need to use a new browser with the new standards - like read computer folders.  
+This online editor lets you open, edit and manage DesktopPet projects before publishing them to a repository or reuse them in compatible applications.
 
-Tutorial and help is integrated in the app.
+It uses modern browser capabilities, including local file access, so it works best in a recent browser with updated standards support.
+
+## Documentation
+
+The project includes a set of help pages and documentation:
+
+- [Help](help/help.md)
+- [Tutorial](help/tutorial.md)
+- [Info](help/info.md)
+- [Credits](help/credits.md)
+- [License](help/license.md)
+
+## Main goal
+
+The editor is designed to make DesktopPet XML creation easier and more visual, so you can work on animations, headers, sprites, spawns and logic without editing the raw XML by hand every time.
+
+## To do before finishing the project
+
+- complete the export / test workflow
+- document the remaining code and editor logic
+- expand animation functionality and possibilities
+- add better links to sprite resources and community assets
+- create a dedicated editor for pet README files
+- review the UX and polish the remaining details
+- validate the project against real pet examples
+
+## Notes
+
+Tutorial and help content are integrated in the app, and the user documentation is also available directly in the repository.

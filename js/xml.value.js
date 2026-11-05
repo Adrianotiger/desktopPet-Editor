@@ -5,6 +5,8 @@ class XMLValue
   #value;
   #formulavalue;
   #valuetype;
+  #default;
+  #minoccurs;
   
   // These types control how XML text is interpreted and validated by the editor.
   static Type = Object.freeze({
@@ -32,12 +34,15 @@ class XMLValue
     VERTICAL_PLUS: "vertical+"
   });
   
-  constructor(str, type=XMLValue.Type.STRING)
+  constructor(str, type=XMLValue.Type.STRING, options={})
   {    
     this.#value = str;
     this.#valuetype = type;
     // Formula values keep both their source expression and a computed result.
     this.#formulavalue = parseInt(str);
+
+    this.#default = options.default ?? null;
+    this.#minoccurs = options.minoccurs ?? 0;
     
     if(this.#valuetype == XMLValue.Type.FORMULA) this.#calculateFormula();
   }
@@ -102,6 +107,15 @@ class XMLValue
     // Re-evaluate formulas immediately when the editor changes their source text.
     this.#value = value;
     if(this.#valuetype == XMLValue.Type.FORMULA) this.#calculateFormula();
+  }
+
+  get default()
+  {
+    return this.#default;
+  }
+  get minoccurs()
+  {
+    return this.#minoccurs;
   }
 
   check()

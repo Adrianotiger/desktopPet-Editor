@@ -10,7 +10,7 @@
   --border: #45475a;
   --success: #a6e3a1;
   --danger: #c20f39;
-  --tab-bg: rgba(0,30,50,0.7);
+  --tab-bg: rgba(0,30,50,0.85);
   --gold-bg: #D4AF37;
   --gold-text: #3E2723;
 }
@@ -110,3 +110,10 @@ a {
   top: 0px;
   cursor: pointer;
 }
+
+.markdown p {margin:10px;}
+.markdown hr {margin:10px;}
+.markdown ul {padding-left:30px;}
+.markdown h1 {padding:20px;border-bottom:outset 1px;}
+.markdown h2 {padding:12px;}
+.markdown h3 {padding:7px;}

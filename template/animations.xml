@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<animations xmlns:xsd="https://esheep.petrucci.ch/ https://raw.githubusercontent.com/Adrianotiger/desktopPet/master/Resources/animations.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://esheep.petrucci.ch/">
+<animations 
+  xmlns="https://esheep.petrucci.ch/"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:xsd="https://esheep.petrucci.ch/ https://adrianotiger.github.io/desktopPet/Resources/animations.xsd" 
+  >
   <header>
     <author>Your name</author>
     <title>Project name (title)</title>

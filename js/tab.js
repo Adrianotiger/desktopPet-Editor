@@ -46,11 +46,11 @@ var Tabs = new class
     // File
     this.#tabItems = this.#tabItems.concat(["open", "save"]);
     // Animations
-    this.#tabItems = this.#tabItems.concat(["header", "image", "spawns", "animations", "animation", "childs"]);
+    this.#tabItems = this.#tabItems.concat(["header", "image", "spawns", "animations", "animation", "childs", "sounds"]);
     // Tools
     this.#tabItems = this.#tabItems.concat(["xmlviewer"]);
     // Help
-    this.#tabItems = this.#tabItems.concat([]);
+    this.#tabItems = this.#tabItems.concat(["help"]);
   }
   
   init()

@@ -92,7 +92,7 @@ class SpawnsTabClass extends TabClass
 
     const nextInfo = _CN("div", {class:"infobox aniinfobox", id:spawn.id, style:`width:100%;position:relative;`}, [_CN("h3", {}, ["Next #" + spawn.id])], this.#spawnDiv);
 
-    const ne = new NextEditor(spawn, nextInfo, {goto:true, minitems:1, maxitems:1, attributes:["probability"]});
+    const ne = new NextEditor(spawn, nextInfo, {goto:true, minitems:1, maxitems:1, edit:false, attributes:[]});
 
     setTimeout(()=>{
       inputs.forEach((i)=>{
@@ -127,12 +127,13 @@ class SpawnsTabClass extends TabClass
   {
     const node = input.name.toLowerCase();
     const value = input.value;
-    if(!XML.getSpawn(this.#currentSpawn.id)?.next)
+    const spawn = XML.getSpawn(this.#currentSpawn.id);
+    if(!spawn || !spawn[node])
     {
-      console.error(`Node '${node}' not found in the header XML!`);
+      console.error(`Node '${node}' not found in the spawn XML!`);
       return;
     }
-    XML.getSpawn(this.#currentSpawn.id).next[node] = value;
+    spawn[node] = value;
   }
   
   show()
@@ -153,7 +154,6 @@ class SpawnsTabClass extends TabClass
 
     super.hide();
   }
-  
   
 };
 

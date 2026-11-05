@@ -21,6 +21,14 @@ class XMLAnimationsImage extends XMLNode
       XMLValue.Type.INT
     );
 
+    // skins can be null (default to 0 to have the same xml as the old one, in future, this value can be set to 1).
+    super.addValue(
+      "skins", 
+      xmlNodeGet(xml, 'skins')??"", 
+      XMLValue.Type.INT,
+      {minoccurs:0, default:"0"}
+    );
+
     super.addValue(
       "png", 
       xmlNodeGet(xml, 'png')??"iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAAAGUlEQVR4nO3BMQEAAADCoPVP7WENoAAAAG4MIAABt9NlCQAAAABJRU5ErkJggg==", 

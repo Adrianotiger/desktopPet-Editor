@@ -23,12 +23,6 @@ class XMLAnimationsAnimationPos extends XMLNode
     );
 
     super.addValue(
-      "interval", 
-      xmlNodeGet(xml, 'interval')??200, 
-      XMLValue.Type.FORMULA
-    );
-
-    super.addValue(
       "offsety", 
       xmlNodeGet(xml, 'offsety')??0, 
       XMLValue.Type.INT
@@ -39,6 +33,13 @@ class XMLAnimationsAnimationPos extends XMLNode
       xmlNodeGet(xml, 'opacity')??0, 
       XMLValue.Type.DOUBLE
     );
+    
+    super.addValue(
+      "interval", 
+      xmlNodeGet(xml, 'interval')??200, 
+      XMLValue.Type.FORMULA
+    );
+
   }
   
   get x() { return this.getValue("x"); }
@@ -122,15 +123,15 @@ class XMLAnimationsAnimation extends XMLNode
     // Border and gravity are not simple scalar values; they are collections of <next>
     // transitions that may lead to different follow-up animations.
     super.addNode(
-      "gravity",
-      new XMLAnimationNextCollection(xml.querySelector('gravity')??XML.createElement("gravity"), "gravity")
-    );
-    
-    super.addNode(
       "border",
       new XMLAnimationNextCollection(xml.querySelector('border')??XML.createElement("border"), "border")
     );
 
+    
+    super.addNode(
+      "gravity",
+      new XMLAnimationNextCollection(xml.querySelector('gravity')??XML.createElement("gravity"), "gravity")
+    );
   }
 
   get id() { return this.getValue("id"); }

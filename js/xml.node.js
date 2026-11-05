@@ -2,9 +2,15 @@ class XMLNode
 {
   // Keep the parsed contents in separate collections: values/attributes are wrapped
   // as XMLValue objects, while child elements are stored as XMLNode (or XMLValue) lists.
+
+  // Values, without subnodes. Simple text as node content.
   values = {};
+  // Nodes (can be also values but have a class containing it)
   nodes = {};
+  // Attributes of this node.
   attributes = [];
+  // xsdOrder. Maintain the order of the constructor also when saving the XML-string.
+  #xsdOrder = [];
   // The source DOM node is retained so this model can be cloned or returned unchanged.
   #nodeName = "";
   #xml = null; 
@@ -17,10 +23,11 @@ class XMLNode
     if(!name) throw Error("No name set");
   }
 
-  addValue(key, value, type)
+  addValue(key, value, type, options={})
   {
     // XMLValue preserves the source text while exposing a typed value to the editor.
-    this.values[key] = new XMLValue(value, type); 
+    this.values[key] = new XMLValue(value, type, options); 
+    if(!this.#xsdOrder.includes(key)) this.#xsdOrder.push(key);
   }
 
   addAttribute(key, value, type)
@@ -38,6 +45,7 @@ class XMLNode
       this.nodes[key] = [];
 
     if(node) this.nodes[key].push(node);
+    if(!this.#xsdOrder.includes(key)) this.#xsdOrder.push(key);
   }
 
   replaceNode(key, node)
@@ -112,21 +120,32 @@ class XMLNode
     });
     ret += `>`;
 
-    Object.keys(this.values).forEach(k=>{
-      if(this.attributes.indexOf(k) < 0) // only if not in the attributes
+    this.#xsdOrder.forEach(xsdKey=>{
+      if(Object.keys(this.values).includes(xsdKey))
       {
-        // "_" is the convention for text directly inside an element, such as <next>42</next>.
-        if(k=="_") ret += `${this.values[k].original}`;
-        else ret += `<${k}>${this.values[k].original}</${k}>`;
+        if(this.attributes.indexOf(xsdKey) < 0) // only if not in the attributes
+        {
+          const nodeVal = this.values[xsdKey];
+          // "_" is the convention for text directly inside an element, such as <next>42</next>.
+          if(xsdKey=="_") ret += `${nodeVal.original}`;
+          // If a value is the same as the default XSD value, we do not need to loose space, so we don't write it.
+          else if(nodeVal.default == nodeVal.original && nodeVal.minoccurs == 0) ret += "";
+          // Write node and value directly.
+          else ret += `<${xsdKey}>${nodeVal.original}</${xsdKey}>`;
+        }
       }
-    });
-
-    Object.keys(this.nodes).forEach(k=>{
-      this.nodes[k].forEach(nk=>{
-        // A child may be plain text content (XMLValue) or another structured XMLNode.
-        if(nk instanceof XMLValue) ret += `<${k}>${nk.original}</${k}>`;
-        else ret += nk.getXml(false);
-      });
+      else if(Object.keys(this.nodes).includes(xsdKey))
+      {
+        this.nodes[xsdKey].forEach(nk=>{
+          // A child may be plain text content (XMLValue) or another structured XMLNode.
+          if(nk instanceof XMLValue) ret += `<${xsdKey}>${nk.original}</${xsdKey}>`;
+          else ret += nk.getXml(false);
+        });
+      }
+      else
+      {
+        console.error(`Undefined value ${xsdKey} on Node`, this);
+      }
     });
     
     ret += `</${this.#nodeName}>`;

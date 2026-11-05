@@ -72,7 +72,7 @@ class NextEditor
       const removeIndex = parseInt(e.dataTransfer.getData("text/plain"), 10);
       this.next.splice(removeIndex, 1);
 
-      if(typeof this.#onChanged != 'undefined') this.#onChanged(null);
+      if(this.#onChanged != null) this.#onChanged(null);
       this.#renderNexts();
     });
 
@@ -83,18 +83,25 @@ class NextEditor
       xml.textContent = "1";
       let newNext = new XMLAnimationsNext(xml);
       this.next.push(newNext);
+      if(!this.#baseNode.next)
+        this.#baseNode.next = [];
       this.#baseNode.next.push(newNext);
 
-      if(typeof this.#onChanged != 'undefined') this.#onChanged(newNext);
+      if(this.#onChanged != null) this.#onChanged(newNext);
       this.#renderNexts();
     });
     
     setTimeout(()=>{
       if(this.#subnode == "next")
       {
-        this.#baseNode?.next?.forEach(f=>{
-          this.next.push(f);
-        });
+        if(Array.isArray(this.#baseNode?.next))
+        {
+          this.#baseNode?.next?.forEach(f=>{
+            this.next.push(f);
+          });
+        }
+        else if(this.#baseNode?.next)
+          this.next.push(this.#baseNode?.next);
       }
       else 
       {

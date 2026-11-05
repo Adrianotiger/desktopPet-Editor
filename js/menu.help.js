@@ -14,6 +14,14 @@ class HelpMenuClass extends Submenu
 
     this.icons.push(new SubmenuIcon("helplicense", "License", ()=>{}));
 
+    const helpPages = ["license", "credits", "info", "help", "tutorial"];
+    document.body.addEventListener("menu", (ev)=>{
+      if(helpPages.includes(ev?.detail?.action))
+      {
+        HelpTab.show({link:ev?.detail?.action, title:ev?.detail?.action});
+      }
+    });
+    
   }
   
   

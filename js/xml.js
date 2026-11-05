@@ -7,7 +7,7 @@ class XMLAnimationsClass
 {
   xsi = "http://www.w3.org/2001/XMLSchema-instance"
   xmlns = "https://esheep.petrucci.ch/";
-  schemaLocation = "https://esheep.petrucci.ch/ https://raw.githubusercontent.com/Adrianotiger/desktopPet/master/Resources/animations.xsd";
+  schemaLocation = "https://esheep.petrucci.ch/ https://adrianotiger.github.io/desktopPet/Resources/animations.xsd";
   header = null;
   image = null;
   spawns = [];
@@ -31,7 +31,7 @@ const XML = new class
   // This makes sure classes like XMLValue, XMLNode, XMLAnimationsAnimation, and
   // XMLAnimationsSequence are defined before the parser tries to instantiate them.
   #mainscripts = ["value", "node"];
-  #scripts = ["header", "image", "spawn", "spawn.next", "animation", "animation.sequence", "animation.next", "child", "checks"];
+  #scripts = ["header", "image", "spawn", "spawn.next", "animation", "animation.sequence", "animation.next", "child", "sound", "checks"];
   
   constructor()
   {
@@ -56,7 +56,11 @@ const XML = new class
     // Older XML files sometimes have a malformed namespace declaration, so this line
     // repairs the known incompatibility before parsing. Without it, some files would
     // fail to load even though the data itself is valid.
-    xmlString = xmlString.replace('xmlns:xsd="https://esheep.petrucci.ch/ https://raw.githubusercontent.com/Adrianotiger/desktopPet/master/Resources/animations.xsd"', 'xmlns:xsd="https://raw.githubusercontent.com/Adrianotiger/desktopPet/master/Resources/animations.xsd"');
+    xmlString = xmlString.replace(
+      'https://esheep.petrucci.ch/ https://raw.githubusercontent.com/Adrianotiger/desktopPet/master/Resources/animations.xsd', 
+      'https://adrianotiger.github.io/desktopPet/Resources/animations.xsd'
+    );
+    xmlString = xmlString.replace("xmlns:xsd", "xsi:sxhemaLocation");
     
     const parser = new DOMParser();
     this.#xmlDoc = parser.parseFromString(xmlString, "text/xml");
@@ -102,8 +106,12 @@ const XML = new class
       this.#animations.animations.push(new XMLAnimationsAnimation(an));
     });
     this.#animations.childs = [];
-    childsElement.querySelectorAll('child').forEach(an=>{
+    childsElement?.querySelectorAll('child').forEach(an=>{
       this.#animations.childs.push(new XMLAnimationsChild(an));
+    });
+    this.#animations.sounds = [];
+    soundsElement?.querySelectorAll('sound').forEach(an=>{
+      this.#animations.sounds.push(new XMLAnimationsSound(an));
     });
     
     console.log(this.#animations);
@@ -212,12 +220,42 @@ const XML = new class
   deleteChild(id)
   {
     let findNode = -1;
-    this.childs.forEach((sc, j)=>{
+    this.childs.forEach((c, j)=>{
       if(c.animationid == id) findNode = j;
     });
     if(findNode >= 0)
     {
       this.childs.splice(findNode, 1);
+      return true;
+    }
+    return false;
+  }
+  getSound(id)
+  {
+    let ret = null;
+    this.sounds.forEach(s=>{
+      if(s.animationid == id) ret = s;
+    });
+    return ret;
+  }
+  insertSound(id)
+  {
+    const newNode = new DOMParser().parseFromString(
+      `<sound animationid="${id}"><probability>50</probability><base64></base64></sound>`, 
+      "text/xml"
+    ).documentElement;
+    const importedNode = this.#xmlDoc.importNode(newNode, true);
+    XML.sounds.push(new XMLAnimationsSound(importedNode));
+  }
+  deleteSound(id)
+  {
+    let findNode = -1;
+    this.sounds.forEach((s, j)=>{
+      if(s.animationid == id) findNode = j;
+    });
+    if(findNode >= 0)
+    {
+      this.sounds.splice(findNode, 1);
       return true;
     }
     return false;
