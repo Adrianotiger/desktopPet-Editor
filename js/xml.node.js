@@ -9,19 +9,32 @@ class XMLNode
   nodes = {};
   // Attributes of this node.
   attributes = [];
-  // xsdOrder. Maintain the order of the constructor also when saving the XML-string.
-  #xsdOrder = [];
   // The source DOM node is retained so this model can be cloned or returned unchanged.
   #nodeName = "";
   #xml = null; 
+  
+  #xsd = null;
+  // xsdOrder. Maintain the order of the constructor also when saving the XML-string.
+  #xsdOrder = [];
 
-  constructor(originalXml, name)
+  path = "";
+
+  constructor(originalXml, path)
   {
+    const pathnames = path.split(".");
+    this.path = path;
     this.#xml = originalXml;
-    this.#nodeName = name;
+    this.#nodeName = pathnames.length >= 0 ? pathnames[pathnames.length-1] : path;
     if(!originalXml) throw Error("Invalid XML param");
-    if(!name) throw Error("No name set");
+    if(!path) throw Error("No name set");
+
+    this.#xsd = XSD.xsdNode(path);
+    this.#xsd.children.forEach(c=>{
+      if(c.name) this.#xsdOrder.push(c.name);
+    });
   }
+
+  get xsd() { return this.#xsd; }
 
   addValue(key, value, type, options={})
   {

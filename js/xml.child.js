@@ -1,9 +1,10 @@
 
 class XMLAnimationsChildNext extends XMLNode
 {  
-  constructor(xml)
+  constructor(xml, path)
   {        
-    super(xml, "next");
+    path += ".next";
+    super(xml, path);
 
     super.addValue(
       "_", 
@@ -19,9 +20,10 @@ class XMLAnimationsChildNext extends XMLNode
 
 class XMLAnimationsChild extends XMLNode
 {  
-  constructor(xml)
-  {    
-    super(xml, "child");
+  constructor(xml, path="animations.childs")
+  {
+    path += ".child";
+    super(xml, path);
 
     super.addAttribute(
       "animationid", 
@@ -44,7 +46,7 @@ class XMLAnimationsChild extends XMLNode
     // xmlNodeGet(xml, 'next') can be a node or just a value!
     super.addNode(
       "next",
-      new XMLAnimationsChildNext(xmlNodeGet(xml, 'next'))
+      new XMLAnimationsChildNext(xmlNodeGet(xml, 'next'), path)
     );
   }
   

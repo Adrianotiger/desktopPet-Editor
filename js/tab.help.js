@@ -35,14 +35,17 @@ class HelpTabClass extends TabClass
       });
     }
 
-    if(params.link)
+    if(params?.link)
     {
       const link = `help/${params.link.toLowerCase()}.md`;
-      const converter = new showdown.Converter({smartIndentationFix:'true', simpleLineBreaks:'true'});
+      const converter = new showdown.Converter({smartIndentationFix:'false', simpleLineBreaks:'true'});
       fetch(link).then(res=>{
         return res.text();
       }).then(txt=>{
-        const html = converter.makeHtml(txt);
+        let html = converter.makeHtml(txt);
+        
+        html = html.replace(/\.\.\/help\/(.*?)\.md/g, "javascript:HelpTab.show({title:'Link', link:'$1'})");
+
         this.div.innerHTML = html;
       }).catch(err =>{
         console.error(err);

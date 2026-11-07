@@ -24,17 +24,28 @@ async function loaderScripts(div, tabDiv, divMain)
     _CN("script", {src:`js/${s}.js`}, [], document.head).addEventListener("load",()=>{
       if(++loadedScripts == scripts.length)
       {
-        loaderFinished(divMain, tabDiv);
+        loaderFinished(divMain, tabDiv, div);
       }
       div.textContent = `Loading scripts (${loadedScripts}/${scripts.length})...`;
     });
   });
 }
 
-function loaderFinished(divMain, tabDiv)
+function loaderFinished(divMain, tabDiv, textDiv)
 {
-  setTimeout(()=>{
-    setTimeout(()=>{divMain.removeChild(tabDiv);}, 500);
-    Menu.execute("open");
-  }, 2000);
+  let str = null;
+  let loadInterval = setInterval(()=>{
+    str = XML.loadString;
+    if(str)
+    {
+      textDiv.textContent = str;
+    }
+    else
+    {
+      clearInterval(loadInterval);
+      textDiv.textContent = "Loaded 100%";
+      setTimeout(()=>{divMain.removeChild(tabDiv);}, 200);
+      Menu.execute("open");
+    }
+  }, 500);
 }

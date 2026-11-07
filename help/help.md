@@ -76,20 +76,4 @@ Recommended usage:
 
 This project is currently in preview/development and continues to evolve. The current build includes the primary editing tools needed to work with animation structures, while some advanced features are still being added or refined.
 
-## License
-
-This project is distributed under the MIT License. See the license file in the project for full legal details.
-
-## Repository and links
-
-- GitHub project: https://github.com/Adrianotiger/desktopPet-Editor
-- Demo / live preview: https://adrianotiger.github.io/desktopPet-Editor/
-
-## Attribution
-
-If you use this project in your own work, a reference or attribution to the original project is appreciated.
-
-## Summary
-
-DesktopPet Editor is a lightweight, browser-based toolkit for editing XML animations used by DesktopPet projects. It provides a clean interface to manage pet definitions, animation data, and project files in a way that is accessible to creators and developers working with open animation formats.
 

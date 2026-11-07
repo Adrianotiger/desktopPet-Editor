@@ -21,6 +21,9 @@ input, select {
   border-radius: 5px;
   box-shadow: inset -2px -2px 2px #eef, inset 2px 2px 2px #559, 0px 0px 3px var(--accent);
   user-select: text;
+  background-position: right;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 
 input:hover, select:hover {
@@ -61,4 +64,35 @@ input[type="number"] {
   padding: 2px 5px;
   line-height: 16px;
   margin-top: 3px;
+}
+
+.inputInfo {
+  display:none;
+  opacity:0.0;
+  position:absolute;
+  min-width: 150px;
+  aspect-ratio: 1.5;
+  width: fit-content;
+  max-height: 120px;
+  line-height: 15px;
+  font-size: 12px;
+  white-space: normal;
+  box-sizing: content-box;
+  padding: 5px;
+  background: #def;
+  border-radius: 8px;
+  box-shadow: inset 3px 3px 3px #eef, inset -3px -3px 3px #88d, 10px 10px 5px rgba(120,120,180, 0.5);
+  transition: all 0.5s ease-in 0.3s;
+}
+
+.inputInfo div{
+  position:relative;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:fit-content;
+  max-width: 250px;
+  margin: 0px;
+  padding: 5px;
+  overflow-wrap: break-word;
 }

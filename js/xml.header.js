@@ -1,8 +1,9 @@
 class XMLAnimationsHeader extends XMLNode
 { 
-  constructor(xml)
+  constructor(xml, path="animations")
   {
-    super(xml, "header");
+    path += ".header";
+    super(xml, path);
     //console.log(xml);
 
     super.addValue(

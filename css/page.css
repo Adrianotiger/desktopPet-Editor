@@ -114,6 +114,8 @@ a {
 .markdown p {margin:10px;}
 .markdown hr {margin:10px;}
 .markdown ul {padding-left:30px;}
+.markdown ol {padding-left:30px;}
 .markdown h1 {padding:20px;border-bottom:outset 1px;}
 .markdown h2 {padding:12px;}
 .markdown h3 {padding:7px;}
+.markdown pre {white-space:pre;background-color:#ddd;font-family:monospace;padding-left:20px;}

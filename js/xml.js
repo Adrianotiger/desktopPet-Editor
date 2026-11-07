@@ -30,23 +30,39 @@ const XML = new class
   // The editor loads the core XML helper scripts first, then the schema-specific ones.
   // This makes sure classes like XMLValue, XMLNode, XMLAnimationsAnimation, and
   // XMLAnimationsSequence are defined before the parser tries to instantiate them.
-  #mainscripts = ["value", "node"];
+  #mainscripts = ["xsd", "value", "node"];
   #scripts = ["header", "image", "spawn", "spawn.next", "animation", "animation.sequence", "animation.next", "child", "sound", "checks"];
+  #loadingString = "Loading XML class...";
   
   constructor()
   {
-    let loaded = 0;
-    this.#mainscripts.forEach(ms=>{
-      _CN("script", {src:`js/xml.${ms}.js`}, [], document.head).addEventListener("load",()=>{
-        loaded++;
-        if(loaded >= this.#mainscripts.length)
-        {
-          let scripts2Load = [];
-          this.#scripts.forEach(sm=>scripts2Load.push(`xml.${sm}`));
-          loadScripts(scripts2Load, true);
-        }
+    // Leave time for other classes to load
+    setTimeout(()=>{ this.#loadClass(); }, 100);
+  }
+
+  get loadString() { return this.#loadingString; }
+
+  // Load all neccessary files, to open an animation XML file
+  async #loadClass()
+  {
+    this.#loadingString = "Loading XML classes...";
+    await new Promise((res)=>{
+      let loaded = 0;
+      this.#mainscripts.forEach(ms=>{
+        _CN("script", {src:`js/xml.${ms}.js`}, [], document.head).addEventListener("load",()=>{
+          if(++loaded >= this.#mainscripts.length) res();
+        });
       });
     });
+
+    this.#loadingString = "Loading XSD file...";
+    await XSD.fetchXSD()
+        
+    let scripts2Load = [];
+    this.#scripts.forEach(sm=>scripts2Load.push(`xml.${sm}`));
+    loadScripts(scripts2Load, true);  
+
+    this.#loadingString = null;
   }
   
   // This is the main import point: it takes a raw XML string from disk or the editor,
@@ -60,7 +76,7 @@ const XML = new class
       'https://esheep.petrucci.ch/ https://raw.githubusercontent.com/Adrianotiger/desktopPet/master/Resources/animations.xsd', 
       'https://adrianotiger.github.io/desktopPet/Resources/animations.xsd'
     );
-    xmlString = xmlString.replace("xmlns:xsd", "xsi:sxhemaLocation");
+    xmlString = xmlString.replace("xmlns:xsd", "xsi:schemaLocation"); // << was wrong on older xml files
     
     const parser = new DOMParser();
     this.#xmlDoc = parser.parseFromString(xmlString, "text/xml");

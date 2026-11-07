@@ -34,16 +34,22 @@ class ImageTabClass extends TabClass
     this.#inputs = [];
     let input;
 
+    INPUT.setContainer(this.div);
+    INPUT.setNode(image);
+
     _CN("tr", {}, [_CN("th", {}, ["Columns"]), _CN("th", {}, ["Rows"]), _CN("th", {}, ["Transparency-Key"])], table);
 
-    input = _CN("input", {type:"number", name:"tilesx", min:1, placeholder:"1", value:image.tilesx});
-    this.#inputs.push(input);
+    //input = _CN("input", {type:"number", name:"tilesx", min:1, placeholder:"1", value:image.tilesx});
+    //this.#inputs.push(input);
+    this.#inputs.push(INPUT.createInput("tilesx", "1"));
 
-    input = _CN("input", {type:"number", name:"tilesy", min:1, placeholder:"1", value:image.tilesy});
-    this.#inputs.push(input);
+    //input = _CN("input", {type:"number", name:"tilesy", min:1, placeholder:"1", value:image.tilesy});
+    //this.#inputs.push(input);
+    this.#inputs.push(INPUT.createInput("tilesy", "1"));
 
-    input = _CN("input", {type:"text", name:"transparency", placeholder:"Magenta", value:image.transparency});
-    this.#inputs.push(input);
+    //input = _CN("input", {type:"text", name:"transparency", placeholder:"Magenta", value:image.transparency});
+    //this.#inputs.push(input);
+    this.#inputs.push(INPUT.createInput("transparency", "Magenta"));
 
     let tr = _CN("tr", {}, [], table);
     this.#inputs.forEach(i=>{
@@ -51,8 +57,8 @@ class ImageTabClass extends TabClass
     });
 
     this.#canvas = _CN("canvas", {width:800, height: 600});
-    _CN("div", {style:"max-width:90vw;overflow:auto;"}, [this.#canvas], this.div);
-
+    _CN("div", {style:"max-width:90vw;overflow:auto;"}, [this.#canvas, INPUT.getHelp("png")], this.div);
+    
     this.#spritesheet = new Image();
     this.#spritesheet.addEventListener("load", ()=>{
       this.updateCanvas();

@@ -1,8 +1,9 @@
 class XMLAnimationsSequence extends XMLNode
 {  
-  constructor(xml)
+  constructor(xml, path)
   {    
-    super(xml, "sequence");
+    path += ".sequence";
+    super(xml, path);
 
     super.addAttribute(
       "repeatfrom", 
@@ -37,7 +38,7 @@ class XMLAnimationsSequence extends XMLNode
     nexts.forEach(n=>{
       super.addNode(
         "next",
-        new XMLAnimationsNext(n)
+        new XMLAnimationsNext(n, path)
       );
       //this.next.push(new XMLAnimationsNext(n));
     });

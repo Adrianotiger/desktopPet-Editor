@@ -1,9 +1,10 @@
 
 class XMLAnimationsSound extends XMLNode
 {  
-  constructor(xml)
-  {    
-    super(xml, "sound");
+  constructor(xml, path="animations.sounds")
+  {
+    path += ".sound";
+    super(xml, path);
 
     super.addAttribute(
       "animationid", 

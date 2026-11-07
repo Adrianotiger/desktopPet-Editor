@@ -1,8 +1,9 @@
 class XMLAnimationsNext extends XMLNode
 {  
-  constructor(xml)
+  constructor(xml, path)
   {    
-    super(xml, "next");
+    path += ".next";
+    super(xml, path);
 
     super.addAttribute(
       "probability", 

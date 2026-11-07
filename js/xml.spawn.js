@@ -1,9 +1,10 @@
 
 class XMLAnimationsSpawn extends XMLNode
 {  
-  constructor(xml)
-  {    
-    super(xml, "spawn");
+  constructor(xml, path="animations.spawns")
+  {
+    path += ".spawn";
+    super(xml, path);
 
     super.addAttribute(
       "id", 
@@ -32,7 +33,7 @@ class XMLAnimationsSpawn extends XMLNode
     [...xml.querySelectorAll('next')].forEach(n=>{
       super.addNode(
         "next",
-        new XMLAnimationsSpawnNext(n)
+        new XMLAnimationsSpawnNext(n, path)
       );
     });
   }

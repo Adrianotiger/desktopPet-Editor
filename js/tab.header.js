@@ -6,7 +6,7 @@ class HeaderTabClass extends TabClass
   {
     super("Header");
 
-    loadScripts(["../3thparty/qweneditor", "../3thparty/qwenicon"], true);
+    loadScripts(["../3thparty/qweneditor", "../3thparty/qwenicon", "edit.input"], true);
   }
 
   show()
@@ -31,20 +31,28 @@ class HeaderTabClass extends TabClass
     let inputs = [];
     let input;
 
-    input = _CN("input", {type:"text", name:"Author", placeholder:"Your name", value:header.author});
-    inputs.push(input);
+    INPUT.setContainer(this.div);
+    INPUT.setNode(header);
 
-    input = _CN("input", {type:"text", name:"Title", placeholder:"Project title", value:header.title});
-    inputs.push(input);
+    //input = _CN("input", {type:"text", name:"Author", placeholder:"Your name", value:header.author});
+    //inputs.push(input);
+    inputs.push(INPUT.createInput("author", "Your name"));
 
-    input = _CN("input", {type:"text", name:"PetName", placeholder:"Name of your pet", value:header.petname});
-    inputs.push(input);
+    //input = _CN("input", {type:"text", name:"Title", placeholder:"Project title", value:header.title});
+    //inputs.push(input);
+    inputs.push(INPUT.createInput("title", "Project title"));
 
-    input = _CN("input", {type:"text", name:"Version", placeholder:"Project version", value:header.version});
-    inputs.push(input);
+    //input = _CN("input", {type:"text", name:"PetName", placeholder:"Name of your pet", value:header.petname});
+    //inputs.push(input);
+    inputs.push(INPUT.createInput("petname", "Name of your pet"));
 
-    input = _CN("input", {type:"text", name:"Application", placeholder:"For Application", value:header.application, readonly:true});
-    inputs.push(input);
+    //input = _CN("input", {type:"text", name:"Version", placeholder:"Project version", value:header.version});
+    //inputs.push(input);
+    inputs.push(INPUT.createInput("version", "Project version"));
+
+    //input = _CN("input", {type:"text", name:"Application", placeholder:"For Application", value:header.application, readonly:true});
+    //inputs.push(input);
+    inputs.push(INPUT.createInput("application", "For Application", {readonly:true}));
 
     let tdIcon = null;
 
@@ -71,6 +79,7 @@ class HeaderTabClass extends TabClass
     }).catch(e=>{
       Msg.show({title:"Icon error", content:"The provided icon is not valid! Please upload another image"});
     });
+    INPUT.getHelpSpan(divIcon, "icon");
 
     TabMenu.addIcon("edituploadimage", "Upload icon", ()=>{
       this.#uploadNewIcon(divIcon, inputIcon);
@@ -81,7 +90,12 @@ class HeaderTabClass extends TabClass
 
     let textarea = _CN("div", {id:"infotext"}, []);
     _CN("tr", {}, [
-      _CN("td", {colspan:4}, ["Info:", _CN("br"), textarea])
+      _CN("td", {colspan:4}, [
+        "Info:", 
+        _CN("br"), 
+        textarea,
+        INPUT.getHelp("info")
+      ])
     ], table);
     
     let inputInfo = _CN("input", {type:"hidden", name:"Info", value:header.info});
@@ -120,7 +134,8 @@ class HeaderTabClass extends TabClass
         _CN("li", {}, ["Accepted: PNG, JPG, BMP or ICO"]),
         _CN("li", {}, ["Resolution of 48x48"])
       ]),
-      "Bigger images will be scaled and/or clipped to 48x48."
+      "Bigger images will be scaled and/or clipped to 48x48. ",
+      "Once uploaded, the image will be converted to an icon image."
     ]);
     Msg.show({
       title:"Upload icon", 

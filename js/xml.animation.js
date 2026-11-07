@@ -3,9 +3,10 @@
 // while still keeping the original XML available for export/save operations.
 class XMLAnimationsAnimationPos extends XMLNode
 {  
-  constructor(xml, title)
+  constructor(xml, title, path)
   {
-    super(xml, title);
+    path += "." + title;
+    super(xml, path);
 
     // X/Y and interval are stored as formulas so the editor can accept expressions
     // such as "screenW/2" or "imageW-10" instead of only fixed numbers.
@@ -63,16 +64,17 @@ class XMLAnimationsAnimationPos extends XMLNode
 // each child <next> node as a collection so the editor can enumerate them uniformly.
 class XMLAnimationNextCollection extends XMLNode
 {
-  constructor(xml, nodeName)
+  constructor(xml, nodeName, path)
   {
-    super(xml, nodeName);
+    path += "." + nodeName;
+    super(xml, path);
 
     if(xml != null)
     {
       [...xml.querySelectorAll('next')].forEach(n=>{
         super.addNode(
           "next",
-          new XMLAnimationsNext(n)
+          new XMLAnimationsNext(n, path)
         );
       });
     }
@@ -87,9 +89,10 @@ class XMLAnimationNextCollection extends XMLNode
 // for the UI, while still being able to serialize back to XML later.
 class XMLAnimationsAnimation extends XMLNode
 {  
-  constructor(xml)
-  {    
-    super(xml, "animation");
+  constructor(xml, path="animations.animations")
+  {
+    path += ".animation";
+    super(xml, path);
 
     // The id is a useful key when the UI wants to fetch a specific animation by number.
     super.addAttribute(
@@ -109,28 +112,28 @@ class XMLAnimationsAnimation extends XMLNode
     // will reject missing nodes rather than silently creating empty ones.
     super.addNode(
       "start",
-      new XMLAnimationsAnimationPos(xml.querySelector('start'), "start")
+      new XMLAnimationsAnimationPos(xml.querySelector('start'), "start", path)
     );
     super.addNode(
       "end",
-      new XMLAnimationsAnimationPos(xml.querySelector('end'), "end")
+      new XMLAnimationsAnimationPos(xml.querySelector('end'), "end", path)
     );
     super.addNode(
       "sequence",
-      new XMLAnimationsSequence(xml.querySelector('sequence'))
+      new XMLAnimationsSequence(xml.querySelector('sequence'), path)
     );
 
     // Border and gravity are not simple scalar values; they are collections of <next>
     // transitions that may lead to different follow-up animations.
     super.addNode(
       "border",
-      new XMLAnimationNextCollection(xml.querySelector('border')??XML.createElement("border"), "border")
+      new XMLAnimationNextCollection(xml.querySelector('border')??XML.createElement("border"), "border", path)
     );
 
     
     super.addNode(
       "gravity",
-      new XMLAnimationNextCollection(xml.querySelector('gravity')??XML.createElement("gravity"), "gravity")
+      new XMLAnimationNextCollection(xml.querySelector('gravity')??XML.createElement("gravity"), "gravity", path)
     );
   }
 

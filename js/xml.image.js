@@ -5,9 +5,10 @@ class XMLAnimationsImage extends XMLNode
   #_frameWidth = 1;
   #_frameHeight = 1;
   
-  constructor(xml)
+  constructor(xml, path="animations")
   {
-    super(xml, "image");
+    path += ".image";
+    super(xml, path);
     
     super.addValue(
       "tilesx", 
