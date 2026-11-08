@@ -18,6 +18,14 @@ class XMLAnimationsSound extends XMLNode
       XMLValue.Type.INT
     );
 
+    // loop can be missing
+    super.addValue(
+      "loop", 
+      xmlNodeGet(xml, 'loop', true)??0, 
+      XMLValue.Type.INT,
+      {minoccurs:0, default:"0"}
+    );
+
     super.addValue(
       "base64", 
       xmlNodeGet(xml, 'base64')??"", 
@@ -35,7 +43,9 @@ class XMLAnimationsSound extends XMLNode
   get probability() { return this.getValue("probability"); }
   set probability(value) { this.setValue("probability", value); }
 
+  get loop() { return this.getValue("loop"); }
+  set loop(value) { this.setValue("loop", value); }
 
-  get base64() {return this.getValue("base64");}
-  set base64(value) {this.setValue("base64", value);}
+  get base64() { return this.getValue("base64"); }
+  set base64(value) { this.setValue("base64", value); }
 };

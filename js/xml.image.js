@@ -25,7 +25,7 @@ class XMLAnimationsImage extends XMLNode
     // skins can be null (default to 0 to have the same xml as the old one, in future, this value can be set to 1).
     super.addValue(
       "skins", 
-      xmlNodeGet(xml, 'skins')??"", 
+      xmlNodeGet(xml, 'skins', true)??"", 
       XMLValue.Type.INT,
       {minoccurs:0, default:"0"}
     );
@@ -90,6 +90,9 @@ class XMLAnimationsImage extends XMLNode
   
   get tilesy() { return this.getValue("tilesy"); }
   set tilesy(value) { this.setValue("tilesy", value); }
+
+  get skins() { return this.getValue("skins"); }
+  set skins(value) { this.setValue("skins", value); }
   
   get png() { return this.getValue("png"); }
   set png(value) { this.setValue("png", value); }

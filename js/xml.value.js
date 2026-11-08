@@ -27,11 +27,14 @@ class XMLValue
   // `only` restricts which screen/edge contexts can use a transition.
   static Only = Object.freeze({
     NONE: "none",
-    VERTICAL: "vertical",
-    HORIZONTAL: "horizontal",
-    TASKBAR: "taskbar",
-    WINDOW: "window",
-    VERTICAL_PLUS: "vertical+"
+    HORIZONTAL_TASKBAR: "taskbar",
+    HORIZONTAL_WINDOW: "window",
+    HORIZONTAL_SCREEN: "horizontal",
+    HORIZONTAL_ALL: "horizontal+",
+    VERTICAL_WINDOW: "windowSide",
+    VERTICAL_SCREEN: "vertical",
+    VERTICAL_PET: "petSide",
+    VERTICAL_ALL: "vertical+"
   });
   
   constructor(str, type=XMLValue.Type.STRING, options={})

@@ -125,6 +125,45 @@ const Formula = new class
     
   }
 
+  // This is an input with formula
+  // If only numbers are present, we don't need to show a messagedialog, just allow numbers
+  // If a formula is present show directly the message dialog
+  // Else, just wait for a character different than 0-9 (and '-')
+  extendInput(input, nodeTitle, node)
+  {
+    const isNumber = (value) => /^-?\d+(\.\d+)?$/.test(value);
+    const isValidChar = (evchar) => /^[-0-9.]$/.test(evchar);
+
+    if(isNumber(input.value) || input.value == "")
+    {
+      // normal number, no formula dialog until a special character is detected
+      input.addEventListener("keydown", (ev)=>{
+        //Formula.show(i, `Spawn #${spawn.id}.${i.name}`, spawn);
+        if(ev.key.length == 1)
+        {
+          if(!isValidChar(ev.key)) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            input.value += ev.key;
+            Formula.show(input, nodeTitle, node);
+            input.setAttribute("readonly", true);
+            input.addEventListener("focus", ()=>{
+              Formula.show(input, nodeTitle, node);
+            });
+          }
+        }
+        console.log(ev);
+      });
+    }
+    else
+    {
+      input.addEventListener("focus", ()=>{
+        Formula.show(input, nodeTitle, node);
+      });
+      input.setAttribute("readonly", true);
+    }
+  }
+
   show(inputOrigin, nodeTitle, node)
   {
     let title = `Node ${nodeTitle}`;

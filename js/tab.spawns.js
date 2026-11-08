@@ -102,10 +102,13 @@ class SpawnsTabClass extends TabClass
         });
         if(i.placeholder == "formula")
         {
+          Formula.extendInput(i, `Spawn #${spawn.id}.${i.name}`, spawn);
+          /*
           i.addEventListener("focus", ()=>{
             Formula.show(i, `Spawn #${spawn.id}.${i.name}`, spawn);
           });
           i.setAttribute("readonly", true);
+          */
         }
       });
 

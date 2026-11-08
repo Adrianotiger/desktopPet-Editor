@@ -30,14 +30,13 @@ class ImageTabClass extends TabClass
   #createDiv()
   {
     const image = XML.image;
-    const table = _CN("table", {style:"width:60%;margin:0 auto;"}, [], this.div);
+    const table = _CN("div", {style:"width:80%;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;"}, [], this.div);
     this.#inputs = [];
     let input;
+    let flexElements = ["Columns", "Rows", "Transparency-Key", "Skins"];
 
     INPUT.setContainer(this.div);
     INPUT.setNode(image);
-
-    _CN("tr", {}, [_CN("th", {}, ["Columns"]), _CN("th", {}, ["Rows"]), _CN("th", {}, ["Transparency-Key"])], table);
 
     //input = _CN("input", {type:"number", name:"tilesx", min:1, placeholder:"1", value:image.tilesx});
     //this.#inputs.push(input);
@@ -51,13 +50,22 @@ class ImageTabClass extends TabClass
     //this.#inputs.push(input);
     this.#inputs.push(INPUT.createInput("transparency", "Magenta"));
 
-    let tr = _CN("tr", {}, [], table);
-    this.#inputs.forEach(i=>{
-      _CN("td", {}, [i], tr);
+    this.#inputs.push(INPUT.createInput("skins", "1"));
+
+    flexElements.forEach((fe, j)=>{
+      _CN("span", {}, [
+        _CN("h3", {}, [fe]),
+        this.#inputs[j]
+      ], table);
     });
 
     this.#canvas = _CN("canvas", {width:800, height: 600});
-    _CN("div", {style:"max-width:90vw;overflow:auto;"}, [this.#canvas, INPUT.getHelp("png")], this.div);
+
+    _CN("div", {style:"max-width:90vw;overflow:auto;"}, [
+      this.#canvas, 
+      _CN("hr"),
+      INPUT.getHelp("png")
+    ], this.div);
     
     this.#spritesheet = new Image();
     this.#spritesheet.addEventListener("load", ()=>{

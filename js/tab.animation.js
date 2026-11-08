@@ -186,6 +186,8 @@ class AnimationTabClass extends TabClass
     // though FrameEditor updates the sequence model directly.
     if(Array.isArray(seq.frame)) seq.frame.forEach(f=>{this.#original.frames += f.original + ",";});
 
+    Formula.extendInput(inputRepeats, `Repeats`, seq.repeatOriginal);
+
     ["start", "end"].forEach((p,j)=>{
       const paramInfo = _CN("div", {class:"infobox aniinfobox", id:p, style:"width:45vw;"}, [_CN("h3", {}, ["Parameters " + p])], this.div);
       const pos = (j==0?ani.start:ani.end);
@@ -194,6 +196,10 @@ class AnimationTabClass extends TabClass
       const inputInt =  _CN("input", {type:"text", name:`${p}.interval`, value:pos.interval, placeholder:"200"});
       const inputOff =  _CN("input", {type:"number", name:`${p}.offsety`, value:pos.offsety, placeholder:"0"});
       const inputO =  _CN("input", {type:"number", name:`${p}.opacity`, value:pos.opacity, placeholder:"1.0"});
+
+      Formula.extendInput(inputX, `${p}->X`, pos.x);
+      Formula.extendInput(inputY, `${p}->Y`, pos.y);
+      Formula.extendInput(inputInt, `${p}->Interval`, pos.interval);
 
       _CN("table", {}, [
         _CN("tr", {}, [_CN("td", {}, ["X: "]), _CN("td", {}, [inputX]), _CN("td", {}, ["Offset Y: "]), _CN("td", {}, [inputOff])]),

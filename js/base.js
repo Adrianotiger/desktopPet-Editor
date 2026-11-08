@@ -1,9 +1,10 @@
 /*Create node: create element e, with attributes t as object, with array of html elements as r, appending this new element to parent n*/
 function _CN(e,t,r,n=null){var o=document.createElement(e);if("object"==typeof t)for(var a in t)o.setAttribute(a,t[a]);return Array.isArray(r)&&r.forEach(e=>{o.appendChild("string"==typeof e||"number"==typeof e?document.createTextNode(e):e)}),null!==n&&n.appendChild(o),o};
 
-function xmlNodeGet(node, name)
+function xmlNodeGet(node, name, canBeVoid=false)
 {
   const n = node.querySelector(name);
+  if(!n && canBeVoid) return null;
   if(!n) {console.error(`value '${name}' not found on node.`, node); return null;}
   if(!n.textContent) {console.error(`no value found on node.`, node); return null;}
   return n.textContent;

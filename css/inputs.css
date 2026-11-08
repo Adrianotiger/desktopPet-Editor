@@ -81,6 +81,7 @@ input[type="number"] {
   padding: 5px;
   background: #def;
   border-radius: 8px;
+  color: #004;
   box-shadow: inset 3px 3px 3px #eef, inset -3px -3px 3px #88d, 10px 10px 5px rgba(120,120,180, 0.5);
   transition: all 0.5s ease-in 0.3s;
 }

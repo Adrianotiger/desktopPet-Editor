@@ -75,21 +75,27 @@ class XmlNotepad {
 
         switch (node.nodeType) {
             case Node.ELEMENT_NODE:
-                if(node.attributes?.length == 0 && node.childNodes.length == 1 && node.childNodes[0].nodeType == Node.TEXT_NODE)
+                /*if(node.attributes?.length == 0 && node.childNodes.length == 1 && node.childNodes[0].nodeType == Node.TEXT_NODE)
                 {
                     if(node.tagName == "base64")
-                        this._renderCData(node, parentContainer, indentPx);
+                        //this._renderCData(node.childNodes[0]??node, parentContainer, indentPx, "base64");
+                        this._renderElement(node, parentContainer, depth, indentPx);
                     else
                         this._renderText(node.childNodes[0], parentContainer, indentPx, node.tagName);
                 }
-                else
+                else*/
                   this._renderElement(node, parentContainer, depth, indentPx);
                 break;
             case Node.ATTRIBUTE_NODE:
                 this._renderAttribute(node, parentContainer, indentPx);
                 break;
             case Node.TEXT_NODE:
-                if (node.nodeValue.trim()) this._renderText(node, parentContainer, indentPx);
+                if (node.nodeValue.trim()) {
+                    if(node.parentElement.tagName=="base64")
+                        this._renderCData(node, parentContainer, indentPx);
+                    else
+                        this._renderText(node, parentContainer, indentPx);
+                }
                 break;
             case Node.CDATA_SECTION_NODE:
                 this._renderCData(node, parentContainer, indentPx);
@@ -251,7 +257,7 @@ class XmlNotepad {
         parentContainer.appendChild(row);
     }
 
-    _renderCData(node, parentContainer, indentPx) {
+    _renderCData(node, parentContainer, indentPx, tagName) {
         const text = node.nodeValue ?? node.textContent;
         const sizeBytes = new TextEncoder().encode(text).length;
         const sizeStr = sizeBytes > 1024 ? `${(sizeBytes/1024).toFixed(1)} KB` : `${sizeBytes} B`;

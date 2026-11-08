@@ -51,24 +51,33 @@ const INPUT = new class
       const span = _CN("span", {class:"inputInfo"}, [
         _CN("div", {}, [doc.documentation])
       ], this.#div);
+      if(doc.documentation.length > 180) span.style.minWidth = "250px";
       const r0 = this.#div.getBoundingClientRect();
+      let spanRect = span.getBoundingClientRect();
       element.addEventListener("mousemove", (ev)=>{
-        const rect = element.getBoundingClientRect();
+        const inputRect = element.getBoundingClientRect();
         span.style.display = "inline-block";
         if(isInput)
         {
-          span.style.left = parseInt(rect.x + rect.width - r0.x) + "px";
-          span.style.top = parseInt(rect.y - r0.y) + "px";
+          //console.log(ev, inputRect, spanRect, window.innerWidth, ev.clientX);
+          if(ev.clientX < window.innerWidth * 0.65)
+            span.style.left = parseInt(inputRect.x + inputRect.width - r0.x) + "px";
+          else
+            span.style.left = parseInt(inputRect.x - Math.max(150, spanRect.width) - r0.x) + "px";
+          span.style.top = parseInt(inputRect.y - r0.y) + "px";
         }
         else
         {
-          if(ev.clientX < window.clientWidth * 0.65)
+          if(ev.clientX < window.innerWidth * 0.65)
             span.style.left = parseInt(ev.clientX + 10 - r0.x) + "px";
           else
-            span.style.left = parseInt(ev.clientX - rect.width - 10 - r0.x) + "px";
+            span.style.left = parseInt(ev.clientX - Math.max(150, spanRect.width) - 10 - r0.x) + "px";
           span.style.top = parseInt(ev.clientY + 10 - r0.y) + "px";
         }
-        setTimeout(()=>{span.style.opacity = 1.0;}, 20);
+        setTimeout(()=>{
+          span.style.opacity = 1.0;
+          spanRect = span.getBoundingClientRect();
+        }, 20);
       });
 
       element.addEventListener("mouseleave", ()=>{
@@ -82,8 +91,8 @@ const INPUT = new class
   {
     let doc = this.#node.xsd?.getChildren(valueKey);
     let txt = doc?.documentation??"No HELP FOUND";
-    return _CN("span", {style:"white-space:normal;font-size:14px;text-align:left;"}, [
-      _CN("img", {src:"images/inputinfo.png", style:`float:left;height:${txt.length > 100?"32px":"64px"}`}),
+    return _CN("span", {style:"white-space:normal;font-size:14px;text-align:left;display:inline-block;margin:0 auto;"}, [
+      _CN("img", {src:"images/inputinfo.png", style:`float:left;height:${txt.length > 100?"64px":"32px"}`}),
       txt
     ]);
   }

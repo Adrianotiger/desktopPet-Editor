@@ -1,6 +1,7 @@
 class HelpTabClass extends TabClass
 { 
   #menuAdded = false;
+  #basePath = "";
 
   constructor()
   {
@@ -10,6 +11,10 @@ class HelpTabClass extends TabClass
     //_CN("hr", {}, [], this.div);
 
     loadScripts(["../3thparty/showdown"], true);
+    this.#basePath = window.location.origin || window.location.href; 
+    //console.log("origin", window.location.origin);
+    //console.log("href", window.location.href);
+
   }
 
   show(params)
@@ -44,7 +49,10 @@ class HelpTabClass extends TabClass
       }).then(txt=>{
         let html = converter.makeHtml(txt);
         
+        // replace any md file to a link for this editor...
         html = html.replace(/\.\.\/help\/(.*?)\.md/g, "javascript:HelpTab.show({title:'Link', link:'$1'})");
+        // replace every ../ link to an absolute link
+        html = html.replace(/(\.\.\/)/g, `${this.#basePath}/`);
 
         this.div.innerHTML = html;
       }).catch(err =>{

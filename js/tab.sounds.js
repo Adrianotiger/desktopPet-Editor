@@ -81,7 +81,11 @@ class SoundsTabClass extends TabClass
     _CN("h2", {}, [`Sound #${sound.id}`, _CN("br")], this.#soundDiv);
 
     _CN("div", {style:"margin-top:20px;"}, ["Probability (0-100):"], this.#soundDiv);
-    input = _CN("input", {type:"int", value:sound.probability, placeholder:'100', name:"probability"}, [], this.#soundDiv);
+    input = _CN("input", {type:"number", value:sound.probability, placeholder:'100', name:"probability"}, [], this.#soundDiv);
+    inputs.push(input);
+
+    _CN("div", {style:"margin-top:20px;"}, ["Loop (0 = no loop):"], this.#soundDiv);
+    input = _CN("input", {type:"number", value:sound.loop, placeholder:'0', name:"loop"}, [], this.#soundDiv);
     inputs.push(input);
 
     input = _CN("input", {type:"hidden", value:sound.base64, name:"base64"}, [], this.#soundDiv);
