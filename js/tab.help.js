@@ -11,7 +11,7 @@ class HelpTabClass extends TabClass
     //_CN("hr", {}, [], this.div);
 
     loadScripts(["../3thparty/showdown"], true);
-    this.#basePath = window.location.origin || window.location.href; 
+    this.#basePath = window.location.href || window.location.pathname; 
     //console.log("origin", window.location.origin);
     //console.log("href", window.location.href);
 
