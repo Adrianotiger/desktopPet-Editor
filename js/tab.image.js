@@ -30,7 +30,7 @@ class ImageTabClass extends TabClass
   #createDiv()
   {
     const image = XML.image;
-    const table = _CN("div", {style:"width:80%;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:space-between;"}, [], this.div);
+    const table = _CN("div", {style:"width:80%;margin:0 auto;display:flex;flex-wrap:wrap;justify-content:center;gap:5px 20px;"}, [], this.div);
     this.#inputs = [];
     let input;
     let flexElements = ["Columns", "Rows", "Transparency-Key", "Skins"];

@@ -44,7 +44,7 @@ var Tabs = new class
   constructor()
   {
     // File
-    this.#tabItems = this.#tabItems.concat(["open", "save"]);
+    this.#tabItems = this.#tabItems.concat(["open", "save", "export"]);
     // Animations
     this.#tabItems = this.#tabItems.concat(["header", "image", "spawns", "animations", "animation", "childs", "sounds"]);
     // Tools

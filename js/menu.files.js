@@ -10,7 +10,9 @@ class FileMenuClass extends Submenu
 
     this.icons.push(new SubmenuIcon("filesave", "Save", ()=>{}));
 
-    Menu.disableSubmenu(['Save']);
+    this.icons.push(new SubmenuIcon("exportani", "Export", ()=>{}));
+
+    Menu.disableSubmenu(['Save', 'Export']);
   }
   
   

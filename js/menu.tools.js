@@ -7,6 +7,7 @@ class ToolsMenuClass extends Submenu
     this.icons.push(new SubmenuIcon("filexml", "XML viewer", ()=>{}));
     
 
+    Menu.disableSubmenu(['XML viewer']);
   }
   
   

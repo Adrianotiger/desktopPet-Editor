@@ -88,7 +88,7 @@ class OpenTabClass extends TabClass
   {
     let xmlString = await file.text();
 
-    Menu.enableSubmenu(['Save']);
+    Menu.enableSubmenu(['Save', 'Export', 'XML viewer']);
       
     console.log("File opened via API:", file.name);
 

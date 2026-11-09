@@ -61,10 +61,15 @@ const INPUT = new class
         {
           //console.log(ev, inputRect, spanRect, window.innerWidth, ev.clientX);
           if(ev.clientX < window.innerWidth * 0.65)
+          {
             span.style.left = parseInt(inputRect.x + inputRect.width - r0.x) + "px";
+            span.style.top = parseInt(inputRect.y - r0.y) + "px";
+          }
           else
-            span.style.left = parseInt(inputRect.x - Math.max(150, spanRect.width) - r0.x) + "px";
-          span.style.top = parseInt(inputRect.y - r0.y) + "px";
+          {
+            span.style.left = parseInt(inputRect.x + inputRect.width - Math.max(150, spanRect.width) - r0.x) + "px";
+            span.style.top = parseInt(inputRect.y - r0.y + inputRect.height) + "px";
+          }
         }
         else
         {

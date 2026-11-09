@@ -63,12 +63,12 @@ class SaveTabClass extends TabClass
 
       const writableStream = await fileHandle.createWritable();
       // 3. Write data and close the stream
-      await writableStream.write(fileContentString);
+      await writableStream.write(XML.getXml());
       await writableStream.close();
 
       Msg.show({title:"File saved", content:"File successfully saved"});
     } catch (err) {
-      console.log("Canceled by user");
+      console.log("Canceled by user", err);
       return;
     }
   }
