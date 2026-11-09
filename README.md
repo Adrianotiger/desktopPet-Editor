@@ -17,15 +17,15 @@ https://adrianotiger.github.io/desktopPet-Editor/
 ☑ Open, edit and save sounds  
 ☑ Formula editor  
 ☑ Tutorials and help integrated in the app  
-☐ Export / test project  
-☐ Improve animation functionality and possibilities  
+☑ Export / test project  
+☑ Improve animation functionality and possibilities  
 ☐ Links to sprite resources and editors  
 ☐ Editor for pet README files  
 ☐ Final polish and documentation pass  
 
 ## Preview
 
-<img src="https://adrianotiger.github.io/desktopPet-Editor/help/preview1.gif" alt="DesktopPet Editor preview">
+<img src="https://adrianotiger.github.io/desktopPet-Editor/help/preview2.gif" alt="DesktopPet Editor preview">
 
 This online editor lets you open, edit and manage DesktopPet projects before publishing them to a repository or reuse them in compatible applications.
 
@@ -44,16 +44,6 @@ The project includes a set of help pages and documentation:
 ## Main goal
 
 The editor is designed to make DesktopPet XML creation easier and more visual, so you can work on animations, headers, sprites, spawns and logic without editing the raw XML by hand every time.
-
-## To do before finishing the project
-
-- complete the export / test workflow
-- document the remaining code and editor logic
-- expand animation functionality and possibilities
-- add better links to sprite resources and community assets
-- create a dedicated editor for pet README files
-- review the UX and polish the remaining details
-- validate the project against real pet examples
 
 ## Notes
 
