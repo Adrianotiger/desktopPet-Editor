@@ -6,18 +6,14 @@ The editor works as a visual layer over a DesktopPet XML project. In practice, e
 
 The tutorials are organized like this:
 
-- Tutorial 1: Using the application and its tabs
-- Tutorial 2: Understanding the XML nodes and project structure
-- Tutorial 3: What you can do with the editor
-
 ---
 
-## ![img](../icons/helptutorial.png) [Open TUTORIAL 1](../help/tutorial1.md)
-**Using the application and its tabs**
+## >> [Open Editor HELP](../help/tutorialApp.md)  
+![img](../icons/helptutorial.png) **Using the application and its tabs**
 
-## ![img](../icons/helptutorial.png) [Open TUTORIAL 2](../help/tutorial2.md)
-**Understanding the XML nodes and project structure**
+## >> [Open XML HELP](../help/tutorialXml.md)
+![img](../icons/helptutorial.png) **Understanding the XML nodes and project structure**
 
-## ![img](../icons/helptutorial.png) [Open TUTORIAL 3](../help/tutorial3.md)
-**What you can do with the editor**
+## >> [Open General HELP](../help/tutorial3.md)
+![img](../icons/helptutorial.png) **What you can do with the editor**
 

@@ -42,7 +42,7 @@ class HelpTabClass extends TabClass
 
     if(params?.link)
     {
-      const link = `help/${params.link.toLowerCase()}.md`;
+      const link = `help/${params.link.split('#')[0].toLowerCase()}.md`;
       const converter = new showdown.Converter({smartIndentationFix:'false', simpleLineBreaks:'true'});
       fetch(link).then(res=>{
         return res.text();
@@ -50,11 +50,26 @@ class HelpTabClass extends TabClass
         let html = converter.makeHtml(txt);
         
         // replace any md file to a link for this editor...
-        html = html.replace(/\.\.\/help\/(.*?)\.md/g, "javascript:HelpTab.show({title:'Link', link:'$1'})");
+        html = html.replace(/\.\.\/help\/([^#"\s>]+)\.md(#[^"\s>]+)?/g, "javascript:HelpTab.show({title:'Link', link:'$1$2'})");
         // replace every ../ link to an absolute link
         html = html.replace(/(\.\.\/)/g, `${this.#basePath}/`);
 
         this.div.innerHTML = html;
+
+        if(params?.link?.indexOf('#') > 0)
+        {
+          setTimeout(()=>{
+            const id = params.link.split('#')[1].toLowerCase();
+            if(document.getElementById(id))
+            {
+              document.getElementById(id).scrollIntoView({
+                behavior: "smooth",
+                block: "start",  
+                inline: "nearest"
+              });
+            }
+          }, 200);
+        }
       }).catch(err =>{
         console.error(err);
       });

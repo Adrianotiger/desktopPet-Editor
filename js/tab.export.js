@@ -5,15 +5,19 @@ class ExportTabClass extends TabClass
   {
     super("Export");
 
-    _CN("h1", {}, ["Export"], this.div);
-    _CN("hr", {}, [], this.div);
-
-    _CN("hr", {style:"width:80%;margin:10px auto;"}, [], this.div);
+    
   }
 
   show(params)
   {
     super.show(params);
+
+    this.div.innerHTML = "";
+
+    _CN("h1", {}, ["Export"], this.div);
+    _CN("hr", {}, [], this.div);
+
+    _CN("hr", {style:"width:80%;margin:10px auto;"}, [], this.div);
 
     let exportGenerated = false;
     

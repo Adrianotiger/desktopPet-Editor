@@ -6,6 +6,13 @@ class SaveTabClass extends TabClass
   constructor()
   {
     super("Save");
+  }
+
+  show(params)
+  {
+    super.show(params);
+
+    this.div.innerHTML = "";
 
     _CN("h1", {}, ["Save"], this.div);
     _CN("hr", {}, [], this.div);
@@ -30,11 +37,7 @@ class SaveTabClass extends TabClass
     });
 
     this.#localDiv = _CN("div", {style:"margin:0 auto;"}, [], this.div);
-  }
 
-  show(params)
-  {
-    super.show(params);
     if(this.#currentFolder != OpenTab.projectFolder)
     {
       this.#currentFolder = OpenTab.projectFolder;
@@ -51,8 +54,8 @@ class SaveTabClass extends TabClass
   async saveFileDialog()
   {    
     try {
-      const [fileHandle] = await window.showSaveFilePicker({
-        suggestname: 'animations.xml',
+      const fileHandle = await window.showSaveFilePicker({
+        suggestedName: 'animations.xml',
         id: 'e-sheep-openfolder',
         startIn: 'downloads',
         types: [{
@@ -61,9 +64,10 @@ class SaveTabClass extends TabClass
         }]
       });
 
+      const xml = XML.getXml();
       const writableStream = await fileHandle.createWritable();
       // 3. Write data and close the stream
-      await writableStream.write(XML.getXml());
+      await writableStream.write(xml);
       await writableStream.close();
 
       Msg.show({title:"File saved", content:"File successfully saved"});
@@ -142,7 +146,7 @@ class SaveTabClass extends TabClass
         hour: '2-digit', minute: '2-digit', hour12: false
       });
       const [{ value: month },,{ value: day },,{ value: year },,{ value: hour },,{ value: minute }] = formatter.formatToParts(now);
-      this.#save(`${year}${month}${day}${hour}${minute}.xml`, xml)
+      this.#save(`${year}${month}${day}.xml`, xml)
     }
     else
     {
@@ -151,9 +155,24 @@ class SaveTabClass extends TabClass
     }
   }
 
+  async #findValidName(filename, ext="0")
+  {
+    try 
+    {
+      let fileHandle = await this.#currentFolder.getFileHandle(filename.replace(".", `${ext}.`), { create: false });
+      return await this.#findValidName(filename, parseInt(ext)+1); // file exists!
+    } 
+    catch (error) 
+    {
+      return filename.replace(".", `${ext}.`);
+    }
+  }
+
   async #save(filename, fileContent)
   {
     try {
+      filename = await this.#findValidName(filename);
+
       const fileHandle = await this.#currentFolder.getFileHandle(filename, { create: true });
       const writable = await fileHandle.createWritable();
       await writable.write(fileContent);

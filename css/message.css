@@ -97,3 +97,13 @@
 {
   max-width: 80vw;
 }
+
+.errorline
+{
+  width: 80vw;
+  height: 60px;
+  line-height: 30px;
+  color: yellow;
+  background: linear-gradient(to bottom, #500, #833, #300);
+  border-radius: 15px;
+}

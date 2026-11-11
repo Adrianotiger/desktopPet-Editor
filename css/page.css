@@ -118,4 +118,5 @@ a {
 .markdown h1 {padding:20px;border-bottom:outset 1px;}
 .markdown h2 {padding:12px;}
 .markdown h3 {padding:7px;}
-.markdown pre {white-space:pre;background-color:#ddd;font-family:monospace;padding-left:20px;}
+.markdown pre {white-space:pre;background-color:#ddd;color:black;font-family:monospace;padding-left:20px;}
+.markdown img {max-width:50vw;}

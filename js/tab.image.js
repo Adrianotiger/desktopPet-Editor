@@ -4,6 +4,8 @@ class ImageTabClass extends TabClass
   #canvas = null;
   #inputs = [];
   #log = "";
+  #errorline = null;
+  #noGridOnCanvas = false;
 
   constructor()
   {
@@ -59,9 +61,11 @@ class ImageTabClass extends TabClass
       ], table);
     });
 
+    this.#errorline = _CN("div", {class:"errorline", style:"display:none"});
     this.#canvas = _CN("canvas", {width:800, height: 600});
 
     _CN("div", {style:"max-width:90vw;overflow:auto;"}, [
+      this.#errorline,
       this.#canvas, 
       _CN("hr"),
       INPUT.getHelp("png")
@@ -122,6 +126,9 @@ class ImageTabClass extends TabClass
         const reader = new FileReader();
         reader.readAsDataURL(file);
 
+        this.#noGridOnCanvas = true;
+        setTimeout(()=>{ this.#noGridOnCanvas = false; this.updateCanvas(); }, 1500);
+
         reader.addEventListener("load", ()=>{
           const base64 = reader.result;
 
@@ -154,7 +161,7 @@ class ImageTabClass extends TabClass
 
             //console.log(`Compressed 256 PNG: ${parseInt(base64String.length/102.4)/10} kb`);
             this.#log += ` Compressed 256 PNG: ${parseInt(base64String.length/102.4)/10}kb`;
-          }, 1000);
+          }, 500);
         });
 
       } catch (err) {
@@ -170,6 +177,8 @@ class ImageTabClass extends TabClass
 
     const ctx = this.#canvas.getContext('2d');
     ctx.drawImage(this.#spritesheet, 0, 0);
+
+    if(this.#noGridOnCanvas) return;
 
     // draw grid
     ctx.strokeStyle = "red";
@@ -188,6 +197,19 @@ class ImageTabClass extends TabClass
       ctx.moveTo(0, y);
       ctx.lineTo(this.#canvas.width, y);
       ctx.stroke();
+    }
+
+    if((this.#spritesheet.width % this.#inputs[0].value) != 0 ||
+       (this.#spritesheet.height % this.#inputs[1].value) != 0)
+    {
+      let framew = parseInt(this.#spritesheet.width / this.#inputs[0].value);
+      let frameh = parseInt(this.#spritesheet.height / this.#inputs[1].value);
+      this.#errorline.style.display = "block";
+      this.#errorline.textContent = `${this.#spritesheet.width}x${this.#spritesheet.height} is not a multiple of ${framew}x${frameh}. Please change Colums/Rows or crop the spritesheet to ${framew*this.#inputs[0].value}x${frameh*this.#inputs[1].value}`
+    }
+    else
+    {
+      this.#errorline.style.display = "none";
     }
 
     console.log(this.#log + ` tile: ${this.#spritesheet.width / this.#inputs[0].value}x${this.#spritesheet.height / this.#inputs[1].value} px`);

@@ -62,6 +62,7 @@ class OpenTabClass extends TabClass
   {    
     try {
       const [fileHandle] = await window.showOpenFilePicker({
+        suggestedName: 'animations.xml',
         id: 'e-sheep-openfolder',
         startIn: 'downloads',
         excludeAcceptAllOption: true,

@@ -25,7 +25,7 @@ class XMLAnimationsImage extends XMLNode
     // skins can be null (default to 0 to have the same xml as the old one, in future, this value can be set to 1).
     super.addValue(
       "skins", 
-      xmlNodeGet(xml, 'skins', true)??"", 
+      xmlNodeGet(xml, 'skins', true)??"0", 
       XMLValue.Type.INT,
       {minoccurs:0, default:"0"}
     );
@@ -54,8 +54,8 @@ class XMLAnimationsImage extends XMLNode
     this.#_spritesheet.addEventListener("load", ()=>{
       console.log("spritesheet loaded");
       
-      this.#_frameWidth = this.#_spritesheet.width / this.tilesx;
-      this.#_frameHeight = this.#_spritesheet.height / this.tilesy;
+      this.#_frameWidth = parseInt(this.#_spritesheet.width / this.tilesx);
+      this.#_frameHeight = parseInt(this.#_spritesheet.height / this.tilesy);
       
       for(let j=0;j<this.tilesy;j++)
       {
@@ -95,7 +95,7 @@ class XMLAnimationsImage extends XMLNode
   set skins(value) { this.setValue("skins", value); }
   
   get png() { return this.getValue("png"); }
-  set png(value) { this.setValue("png", value); }
+  set png(value) { this.setValue("png", value); this.#convertBase64toPNG(); }
 
   get transparency() { return this.getValue("transparency"); }
   set transparency(value) { this.setValue("transparency", value); }

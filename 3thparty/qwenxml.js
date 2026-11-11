@@ -53,12 +53,34 @@ class XmlNotepad {
         const rowsOriginal = [...original.container.getElementsByClassName("np-row")];
         const rowsThis = [...this.container.getElementsByClassName("np-row")];
         let diffs = 0;
+        let offset = 0;
         rowsOriginal.forEach((ro, j) => {
-            if(j >= rowsThis.length) return;
-            if(ro.textContent != rowsThis[j].textContent)
+            const j2 = j + offset;
+            if(j2 >= rowsThis.length) {
+            }
+            else if(ro.textContent != rowsThis[j2]?.textContent)
             {
-                diffs++;
-                rowsThis[j].classList.add("error");
+                // is difference on node?
+                if(ro.querySelector(".np-cell-node").textContent != rowsThis[j2]?.querySelector(".np-cell-node").textContent)
+                {
+                    diffs++;
+                    rowsThis[j2].classList.add("error");
+                    if(ro.textContent == rowsThis[j2+1]?.textContent) 
+                    {
+                        offset++;
+                    }
+                    else 
+                    {
+                        rowsThis[j2].parentNode.parentNode.insertBefore(_CN("div", {class:"no-row", style:"line-height:18px;"}, [" -- Missing NODE -- "]), rowsThis[j2].parentNode);
+                        offset--;
+                    }
+                }
+                else // on value
+                {
+                    diffs++;
+                    rowsThis[j2].querySelector(".np-cell-value").style.backgroundColor = "#f75";
+                    rowsThis[j2].querySelector(".np-cell-value").style.color = "#ff0";
+                }
             }
         });
         [...original.container.getElementsByClassName("np-collapsed")].forEach(d=>{
