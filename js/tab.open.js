@@ -5,6 +5,7 @@ class OpenTabClass extends TabClass
   #projects = [];
   #db = null;
   #localDiv = null;
+  #webDiv = null;
 
   constructor()
   {
@@ -28,11 +29,19 @@ class OpenTabClass extends TabClass
         _CN("p", {}, ["After pressing the button, select the root folder to use for your projects."], this.#localDiv);
       }
     }, 200);
-    
+
     buttLocal.addEventListener("click", ()=>{
       this.loadLocalPath(true);
     });
 
+    this.#webDiv = _CN("div", {style:"margin:10px auto;"}, [], this.div);
+    _CN("p", {}, ["Web folder is a virtual folder on the web, stored on Supabase.co."], this.#webDiv);
+    let buttWeb = _CN("button", {style:"width:30vw;"}, ["Open Web Pet folder..."], this.#webDiv);
+    
+    buttWeb.addEventListener("click", ()=>{
+      this.loadWebPath(true);
+    });
+    
     document.body.addEventListener("menu", (ev)=>{
       if(ev?.detail?.action == "new")
       {
@@ -94,6 +103,11 @@ class OpenTabClass extends TabClass
     console.log("File opened via API:", file.name);
 
     XML.loadXML(xmlString);
+  }
+
+  async loadWebPath(clicked)
+  {
+    loadScripts(["supabase"]);
   }
 
   async loadLocalPath(clicked)
