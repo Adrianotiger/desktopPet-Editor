@@ -1,22 +1,41 @@
 let Supabase = new class
 {
   #supabase = null;
+  #user = null;
+  #scriptloaded = false;
+  #signedin = false;
+
+  #bucket = "pets";
+
+  get isSignedIn() { return this.#signedin; }
+  get isScriptLoaded() {return this.#scriptloaded; }
   
   constructor()
   {
     const s = _CN("script", {src:"https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"}, [], document.head);
+
     s.addEventListener("load", ()=>{
-      this.login();
+      const SUPABASE_KEY = "sb_publishable_p7uoGhY6Nn2GvTm-b_H9aw_cdKScCPy";
+      const SUPABASE_URL = "https://jurrsvjhvldxcbtrvdrf.supabase.co"
+      this.#supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+      this.#supabase.auth.onAuthStateChange((event, session) => {
+        if(event == "SIGNED_IN") this.#authStateChanged(session);
+      });
+
+      console.warn(this.#supabase);
+
+      this.#scriptloaded = true;
     });
   }
 
   login()
   {
-    const SUPABASE_KEY = "sb_publishable_p7uoGhY6Nn2GvTm-b_H9aw_cdKScCPy";
-    const SUPABASE_URL = "https://jurrsvjhvldxcbtrvdrf.supabase.co"
-    this.#supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    console.warn(this.#supabase);
+    if(!this.#scriptloaded)
+    {
+      setTimeout(()=>{this.login();}, 500);
+      return;
+    }
 
     this.#supabase.auth.signInWithOAuth({
       provider: 'google',
@@ -24,7 +43,70 @@ let Supabase = new class
         redirectTo: window.location.origin
       }
     }).then(r=>{
+      this.#signedin = true;
       console.warn("logged in", r);
     });
   }
+
+  #authStateChanged(session)
+  {
+    const userInfoEl = document.getElementById('user-info');
+
+    this.#signedin = true;
+
+    if(this.#user == null) this.#supabase.auth.getUser().then(ud=>{ this.#user = ud.data.user || ud.data.error; });
+    if(userInfoEl == null) return;
+
+    userInfoEl.innerHTML = "";
+        
+    if (session && session.user) 
+    {
+      const user = session.user;
+
+      if(this.#user == null) this.#user = user;
+      
+      const name = user.user_metadata?.full_name || user.email;
+      const email = user.email;
+      const avatar = user.user_metadata?.avatar_url;
+
+      _CN("img", {src:`${avatar??''}`, style:"width:32px;height:32px;border-radius:50%;vertical-align:middle;"}, [], userInfoEl);
+      _CN("span", {}, [` Hi ${name} (${email})!`], userInfoEl);
+    } 
+    else 
+    {
+      userInfoEl.textContent = 'Not logged in';
+    }
+  }
+
+  async getDirectoryFiles(path = "")
+  {
+    let storage = await this.#supabase.storage
+      .from(this.#bucket)
+      .list(this.#user.id + "/" + path);
+
+    if(storage?.data?.length == 0) // new user!
+    {
+      const { data, error } = await this.#supabase.functions.invoke('create-pet-folder', {
+        body: {"folderName":"TestPet"}
+      });
+      
+      console.log(data, error);
+
+      storage = await this.#supabase.storage
+        .from(this.#bucket)
+        .list(this.#user.id);
+    }
+
+    return storage.data || [];
+  }
+
+  async downloadFile(path = "")
+  {
+    const { data, error } = await this.#supabase.storage
+      .from(this.#bucket)
+      .download(`${this.#user.id}/${path}`);
+
+    return data;
+  }
+
 } 

@@ -60,18 +60,27 @@ function loadScripts(scriptsArray, loadAsync)
 {
   if(loadAsync)
   {
-    scriptsArray.forEach(sn=>{
-      if(loadedScripts.indexOf(sn) < 0)
-      {
-        loadedScripts.push(sn);
-        _CN("script", {src:`js/${sn}.js`}, [], document.head);
-      }
+    return new Promise(res=>{
+      let loading = scriptsArray.length;
+      scriptsArray.forEach(sn=>{
+        if(loadedScripts.indexOf(sn) < 0)
+        {
+          loadedScripts.push(sn);
+          const ns = _CN("script", {src:`js/${sn}.js`}, [], document.head);
+          ns.addEventListener("load", ()=>{
+            if(--loading <= 0) res();
+          });
+        }
+        else
+          loading--;
+      });
+      if(loading <= 0) res();
     });
   }
   else
   {
     const sn = scriptsArray.shift();
-    if(loadedScripts.indexOf(sn) < 0)
+    if(loadedScripts.indexOf(sn) < 0) // If script is not already loaded, load it now.
     {
       loadedScripts.push(sn);
       _CN("script", {src:`js/${sn}.js`}, [], document.head).addEventListener("load", ()=>{

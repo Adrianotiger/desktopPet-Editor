@@ -1,6 +1,6 @@
 class SaveTabClass extends TabClass
 { 
-	#currentFolder = 0;
+	#currentProject = 0;
   #localDiv = null;
 
   constructor()
@@ -38,9 +38,9 @@ class SaveTabClass extends TabClass
 
     this.#localDiv = _CN("div", {style:"margin:0 auto;"}, [], this.div);
 
-    if(this.#currentFolder != OpenTab.projectFolder)
+    if(this.#currentProject != OpenTab.projectFolder)
     {
-      this.#currentFolder = OpenTab.projectFolder;
+      this.#currentProject = OpenTab.projectFolder;
       // load new files
       this.showDirectory();
     }
@@ -79,19 +79,34 @@ class SaveTabClass extends TabClass
 
 	async showDirectory()
   {
-    let folderFiles = [];
-    let f2;
     this.#localDiv.innerHTML = "";
+    if(this.#currentProject != null)
+      _CN("h2", {}, [this.#currentProject.isLocal ? "Local project" : "Web project", " - ", this.#currentProject.folder.name], this.#localDiv);
+
     let div = _CN("div", {class:"aniframeeditor", style:"height:30vh;width:60vw;padding-top:30px;overflow:scroll;margin:0 auto;background:rgba(255,255,255,0.5);"}, [], this.#localDiv);
     _CN("i", {}, ["Project items"], div);
 
-    if(this.#currentFolder == null)
+    if(this.#currentProject == null)
     {
       _CN("p", {}, ["You opened or imported a single file.", _CN("br"), "Open a project to see all files on it."], div);
       return;
     }
 
-    const files = await this.#currentFolder.entries();
+    if(this.#currentProject.isLocal)
+    {
+      this.#showDirectoryLocal(div);
+    }
+    else
+    {
+      this.#showDirectoryWeb(div);
+    }
+  }
+
+  async #showDirectoryLocal(div)
+  {
+    const files = await this.#currentProject.folder.entries();
+    var f2;
+    var folderFiles = [];
     while((f2 = await files.next()))
     {
       if(f2.done) break;
@@ -132,7 +147,23 @@ class SaveTabClass extends TabClass
         this.#generateIcon();
       });
     }
+  }
 
+  #showDirectoryWeb(div)
+  {
+    const files = ["readme.md", "icon.png", "animations.xml"];
+    files.forEach(f2=>
+    {
+      let filename = "";
+      switch(f2)
+      {
+        case "animations.xml": filename = "fileanimations"; break;
+        case "readme.md": filename = "filereadme"; break;
+        case "icon.png": filename = "fileicon"; break;
+        default: filename = "fileunknown"; break;
+      }
+      _CN("span", {}, [_CN("img", {class:"icon", "data-icon":filename}), _CN("br"), f2], div);
+    });
   }
 
   saveAnimation(asCopy)
@@ -159,7 +190,7 @@ class SaveTabClass extends TabClass
   {
     try 
     {
-      let fileHandle = await this.#currentFolder.getFileHandle(filename.replace(".", `${ext}.`), { create: false });
+      let fileHandle = await this.#currentProject.folder.getFileHandle(filename.replace(".", `${ext}.`), { create: false });
       return await this.#findValidName(filename, parseInt(ext)+1); // file exists!
     } 
     catch (error) 
@@ -173,7 +204,7 @@ class SaveTabClass extends TabClass
     try {
       filename = await this.#findValidName(filename);
 
-      const fileHandle = await this.#currentFolder.getFileHandle(filename, { create: true });
+      const fileHandle = await this.#currentProject.folder.getFileHandle(filename, { create: true });
       const writable = await fileHandle.createWritable();
       await writable.write(fileContent);
       await writable.close();
@@ -188,12 +219,53 @@ class SaveTabClass extends TabClass
 
   #generateReadme()
   {
-    alert("not implemented yet");
+    const readme = `## ${XML.header.title}-Mate\n\n${XML.header.info.replace("[br]", "\n")}`;
+    const dirHandle = this.#currentProject.folder;
+
+    dirHandle.getFileHandle("README.md", { create: true }).then(async fileHandle=>{
+      // 3. Open a writable stream, write data, and save to disk
+      const writable = await fileHandle.createWritable();
+      await writable.write(readme);
+      await writable.close();
+
+      this.#currentProject.mdFile = true;
+
+      this.#currentProject = null;
+      Menu.execute("save");
+    });
   }
 
   #generateIcon()
   {
-    alert("not implemented yet");
+    const dirHandle = this.#currentProject.folder;
+    const img = new Image();
+    img.src = "data:image/x-icon;base64," + XML.header.icon;
+    const canvas = _CN("canvas", {width:48, height:48});
+    const ctx = canvas.getContext('2d');
+
+    dirHandle.getFileHandle("icon.png", { create: true }).then(async fileHandle=>{
+      await img.decode();
+      
+      ctx.drawImage(img, 0, 0, 48, 48);
+
+      // 4. Convert the canvas output into a PNG Blob
+      const pngBlob = await new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (blob) resolve(blob);
+          else reject(new Error('Failed to create PNG blob from canvas.'));
+        }, 'image/png');
+      });
+
+      this.#currentProject.icon  = pngBlob;
+      this.#currentProject.imageFile = true;
+
+      const writable = await fileHandle.createWritable();
+      await writable.write(pngBlob);
+      await writable.close();
+
+      this.#currentProject = null;
+      Menu.execute("save");
+    });
   }
   
 };

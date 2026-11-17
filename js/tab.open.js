@@ -1,11 +1,87 @@
+class ProjectClass
+{
+  folder = null;
+  files = null;
+  isLocal = null;
+
+  span = null;
+  icon = null;
+
+  xmlFile = false;
+  imageFile = false;
+  mdFile = false;
+}
+
+class OpenProjectFolderClass
+{
+  projects = [];
+  #div = null;
+
+  constructor(parentDiv, description, buttonElements, postDescription="")
+  {
+    if(this.#div != null) this.#div.innerHTML = "";
+
+    this.#div = _CN("div", {style:"margin:10px auto;border:outset 1px var(--border);border-radius:10px;"}, [], parentDiv);
+    _CN("p", {}, [description], this.#div);
+    let buttLoad = _CN("button", {style:"width:30vw;line-height:32px;"}, buttonElements, this.#div);
+    _CN("p", {}, [postDescription], this.#div);
+
+    buttLoad.addEventListener("click", ()=>{this.buttonPressed();});
+  }
+
+  get div() { return this.#div; };
+
+  buttonPressed() {}
+  async loadFolders() {}
+  loadFiles() {}
+  async getFile(project, filename) {}
+
+  showProjects(title = "Open Project") 
+  {
+    this.#div.innerHTML = "";
+    let div = _CN("div", {class:"aniframeeditor", style:"height:30vh;width:80vw;overflow:scroll;margin:0 auto;"}, [], this.#div);
+    _CN("i", {}, [title], div);
+    this.projects.forEach(async p=>{
+      p.span = _CN("span", {style:"opacity:0.2"}, [_CN("img", {class:"icon", "data-icon":"folder"}), _CN("br"), p.folder.name], div);
+    });
+
+    this.loadFiles().then(()=>{
+      this.projects.forEach(async p=>{
+        p.files.forEach(pf=>{
+          switch(pf.toLowerCase())
+          {
+            case "animations.xml": p.xml = true; break;
+            case "readme.md": p.readme = true; break;
+            case "icon.png": p.image = true; break;
+          }
+        });
+        
+        if(p.xml)
+        {
+          p.span.style.opacity = 1;
+          if(p.icon)
+          {
+            p.span.getElementsByTagName("img")[0].src = URL.createObjectURL( p.icon );
+            p.span.getElementsByTagName("img")[0].style.content = "none";
+          }
+
+          p.span.addEventListener("click", async ()=>{
+            OpenTab.setProject(p);
+            OpenTab.openFile(await this.getFile(p, "animations.xml"));
+          });
+        }
+      });
+      console.log(this.projects);
+    });
+  }
+};
+
 class OpenTabClass extends TabClass
 {  
-  #folderHandler = null;
-	#currentFolder = null;
-  #projects = [];
-  #db = null;
-  #localDiv = null;
-  #webDiv = null;
+  #localFolder = null;
+  #webFolder = null;
+
+  #currentProject = null;
 
   constructor()
   {
@@ -14,38 +90,22 @@ class OpenTabClass extends TabClass
     _CN("h1", {}, ["Open"], this.div);
     _CN("hr", {}, [], this.div);
 
-    let butt = _CN("button", {style:"width:30vw;margin:10px;"}, ["Open file..."], this.div);
+    let butt = _CN("button", {style:"width:30vw;margin:10px;line-height:32px;"}, [_CN("img", {class:"icon", "data-icon":"fileopenxml", style:"float:left;"}), "Open file..."], this.div);
     butt.addEventListener("click", ()=>{this.openFileDialog();});
 
     _CN("hr", {style:"width:80%;margin:10px auto;"}, [], this.div);
 
-    this.#localDiv = _CN("div", {style:"margin:10px auto;"}, [], this.div);
-    _CN("p", {}, ["Local folder is a folder accessible by the browser. This is the root folder, every subfolder is another animation project containing a animations.xml file."], this.#localDiv);
-    let buttLocal = _CN("button", {style:"width:30vw;"}, ["Open local Pet folder..."], this.#localDiv);
-    this.loadLocalPath(false);
-    setTimeout(()=>{
-      if(!this.#folderHandler)
-      {
-        _CN("p", {}, ["After pressing the button, select the root folder to use for your projects."], this.#localDiv);
-      }
-    }, 200);
-
-    buttLocal.addEventListener("click", ()=>{
-      this.loadLocalPath(true);
+    loadScripts(["tab.open.local", "tab.open.web"], true).then(()=>{
+      this.#localFolder = new OpenProjectFolderLocalClass(this.div);
+      this.#webFolder = new OpenProjectFolderWebClass(this.div);
     });
 
-    this.#webDiv = _CN("div", {style:"margin:10px auto;"}, [], this.div);
-    _CN("p", {}, ["Web folder is a virtual folder on the web, stored on Supabase.co."], this.#webDiv);
-    let buttWeb = _CN("button", {style:"width:30vw;"}, ["Open Web Pet folder..."], this.#webDiv);
     
-    buttWeb.addEventListener("click", ()=>{
-      this.loadWebPath(true);
-    });
-    
+    // If new was pressed, open the template xml file
     document.body.addEventListener("menu", (ev)=>{
       if(ev?.detail?.action == "new")
       {
-        this.#currentFolder = null;
+        this.#currentProject = null;
 
         fetch("template/animations.xml").then(r=>{
           return r.blob();
@@ -55,6 +115,11 @@ class OpenTabClass extends TabClass
         });
       }
     });
+  }
+
+  setProject(project)
+  {
+    this.#currentProject = project;
   }
 
   show(params)
@@ -84,7 +149,7 @@ class OpenTabClass extends TabClass
 
       const file = await fileHandle.getFile();
 
-      this.#currentFolder = null;
+      this.#currentProject = null;
 
       this.openFile(file);
 
@@ -98,197 +163,14 @@ class OpenTabClass extends TabClass
   {
     let xmlString = await file.text();
 
-    Menu.enableSubmenu(['Save', 'Export', 'XML viewer']);
+    Menu.enableSubmenu(['Save', 'Export', 'Import', 'XML viewer']);
       
     console.log("File opened via API:", file.name);
 
     XML.loadXML(xmlString);
   }
 
-  async loadWebPath(clicked)
-  {
-    loadScripts(["supabase"]);
-  }
-
-  async loadLocalPath(clicked)
-  {
-    if(!this.#folderHandler)
-		{
-			await this.#openHandlers();	
-		}
-    if(!this.#folderHandler)
-		{
-      if(!clicked) return;
-			await this.#checkFolderHandler();
-		}
-
-    if(await this.#verifyPermission(this.#folderHandler, true))
-		{
-			this.#projects = [];
-			var folders = await this.#folderHandler.entries();
-			var f, f2;
-			while((f = await folders.next()))
-			{
-				if(f.done) break;
-				
-				if(f.value[1].kind === "directory")
-				{	
-					let fqty = 0;
-					var files2 = await f.value[1].entries();
-					while((f2 = await files2.next())) 
-					{						
-						if(f2.done) break;
-						fqty++;
-					}
-					this.#projects.push({f:f.value[1], qty:fqty});
-				}
-			}
-			console.log(this.#projects);
-			
-			this.showDirectories();
-		}
-		else
-		{
-			console.log("No permission on file: ", this.#folderHandler);
-		}
-
-  }
-
-	showDirectories()
-  {
-    let f2;
-    this.#localDiv.innerHTML = "";
-    let div = _CN("div", {class:"aniframeeditor", style:"height:60vh;width:60vw;overflow:scroll;margin:0 auto;"}, [], this.#localDiv);
-    _CN("i", {}, ["Open Project"], div);
-    this.#projects.forEach(async p=>{
-      let s = _CN("span", {}, [_CN("img", {class:"icon", "data-icon":"folder"}), _CN("br"), p.f.name], div);
-      p.files = [];
-      p.xml = false;
-      p.image = false;
-      p.readme = false;
-      const files2 = await p.f.entries();
-      while((f2 = await files2.next()))
-      {
-        if(f2.done) break;
-        if(f2.value[1].kind === "file") 
-        {
-          p.files.push(f2.value[1]);
-          switch(f2.value[1].name.toLowerCase())
-          {
-            case "animations.xml": p.xml = f2.value[1]; break;
-            case "readme.md": p.readme = f2.value[1]; break;
-            case "icon.png": p.image = f2.value[1]; break;
-          }
-        }
-      }
-      if(p.xml)
-      {
-        if(p.image)
-        {
-          s.getElementsByTagName("img")[0].src = URL.createObjectURL( await p.image.getFile() );
-          s.getElementsByTagName("img")[0].style.content = "none";
-        }
-
-        s.addEventListener("click", async ()=>{
-          this.#currentFolder = p.f;
-          this.openFile(await p.xml.getFile());
-        });
-      }
-      else
-      {
-        s.style.opacity = 0.2;
-      }
-    });
-    console.log(this.#projects);
-  }
-
-
-  // File and Folder handlers can be saved only in Databases!
-  #openHandlers()
-  {
-		return new Promise((res, rej)=>{
-			let request = indexedDB.open("eventsFileHandlers", 1);
-
-			request.onupgradeneeded = (event)=> {
-				console.warn("Database upgraded: ", event);
-				this.#db = event.target.result;
-				var objStore = this.#db.createObjectStore("folder", { keyPath: "indkey" });
-				objStore.createIndex("indval", "indval", { unique: false });
-				res(event);
-			};
-			request.onsuccess = (event)=> {
-				this.#db = event.target.result;
-
-				console.log("Database loaded: ", event);
-
-				var transaction = this.#db.transaction("folder", "readonly");
-				var objectStore = transaction.objectStore("folder");
-				var request2 = objectStore.openCursor();
-				request2.onsuccess = (e) => {
-					var cursor = e.target.result;
-					if(cursor) {
-						this.#folderHandler = cursor.value.indval;
-						cursor.continue();
-					}
-					res(event);
-				};
-			};
-			request.onerror = (event)=> {
-				console.error("Database error: ", event);
-				rej(event);
-			};
-		});
-  }
-
-  // check if a handler exists
-  async #checkFolderHandler()
-  {
-    if(this.#folderHandler === null)
-    {
-      if(typeof window.showDirectoryPicker === 'undefined')
-      {
-        Msg.show({title:"Browser error", content:"You need a new browser for this! It works only on PC-based browsers", buttons:["OK"]});
-        return;
-      }
-      this.#folderHandler = await window.showDirectoryPicker();
-      console.log(this.#folderHandler);
-      if(this.#db !== null)
-      {
-        var transaction = this.#db.transaction(["folder"], "readwrite");
-        var objStore = transaction.objectStore("folder");
-        var request = objStore.get("1");
-        request.onsuccess = (e)=>{
-          var data = e.target.result;
-          if(typeof data === 'undefined')
-          {
-            objStore.add({indkey:"1", indval:this.#folderHandler});
-          }
-          else
-          {
-            data.indval = this.#folderHandler;
-            var requestUpdate = objStore.put(data);
-          }
-        };
-        request.onerror = (e)=>{
-          console.error("Unable to save to DB.");
-        };
-      }
-    }
-  }
-
-  async #verifyPermission(fileHandle, withWrite) 
-	{
-		const opts = {};
-		if (withWrite) opts.mode = "readwrite";
-		
-		if(!fileHandle) return false;
-		if ((await fileHandle.queryPermission(opts)) === "granted") return true;
-		if ((await fileHandle.requestPermission(opts)) === "granted") return true;
-
-		return false;
-	}
-
-  get projectFolder() { return this.#currentFolder; }
+  get projectFolder() { return this.#currentProject; }
   
 };
 
