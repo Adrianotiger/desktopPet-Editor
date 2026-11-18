@@ -1,31 +1,31 @@
 # DesktopPet Editor
 
-DesktopPet Editor is a browser-based tool for creating, editing, and managing XML-defined DesktopPet animations. It is designed to help users build small animated pets and characters that can be used in different desktop environments, apps, and custom projects.
+DesktopPet Editor is a browser-based application for creating and editing XML-defined DesktopPet animations. It provides a visual interface for defining animated pets that run on the DesktopPet platform.
 
-The project focuses on a simple visual workflow: open project files, edit the animation structure, adjust image/sprite data, tweak spawn and behavior settings, and save the result in a format that can be reused by compatible DesktopPet systems.
+The editor follows a straightforward workflow: open a project, edit its animation data, configure sprite images and behavior, and save the result for reuse by compatible DesktopPet applications.
 
 ## Project purpose
 
-This editor was created to make DesktopPet animation files easier to work with for developers, hobbyists, and creators who want to:
+The editor helps developers, hobbyists, and artists:
 
 - design and fine-tune animated pets
 - edit XML configuration and animation nodes visually
 - manage sprite/image assets and animation timing
 - prepare content for reuse in other projects
-- share open and editable pet definitions
+- share editable pet definitions
 
-Because the generated animation data is XML-based and open to inspection, it can be adapted and reused beyond the original project if the community chooses to do so.
+The generated XML is stored in a plain, inspectable format and can be reused by compatible DesktopPet applications.
 
 ## Main features
 
 - Open and edit DesktopPet project files
 - Save projects and individual files in the editor
-- Edit animation nodes and sequence data
-- Modify header metadata and project information
-- Manage sprite-sheet or image-based nodes
+- Edit animation sequences and frame data
+- Modify project metadata
+- Manage spritesheets and image data
 - Configure spawn behavior and placement settings
-- Use a built-in formula editor for expressions and logic
-- Work directly in the browser without requiring a local installation
+- Use formulas for dynamic values
+- Work in a browser without local installation
 
 ## Supported editor areas
 
@@ -37,13 +37,13 @@ The interface is organized around several editing sections, including:
 - Spawn editor
 - Formula editor
 - XML viewer for inspecting raw project data
-- File/project management tools
+- File and project management tools
 
-Some features are still under development or planned for later versions, such as child node editing, sound configuration, and more advanced export/test workflows.
+Some features are still in development, including child elements and advanced sound configuration.
 
 ## How it works
 
-The editor reads and writes XML-based DesktopPet definitions. These definitions describe the structure of the animated character, including:
+The editor reads and writes XML-based DesktopPet definitions. These documents describe:
 
 - metadata and headers
 - animation frames and timing
@@ -51,17 +51,19 @@ The editor reads and writes XML-based DesktopPet definitions. These definitions 
 - imagery and sprite references
 - spawn conditions and placement logic
 
-This lets users edit the animation logically while keeping the result compatible with systems that consume the same XML format.
+This visual workflow keeps the resulting XML compatible with DesktopPet applications.
 
 ## Browser requirements
 
-DesktopPet Editor is designed for modern browsers that support current web standards, especially the file-system and browser APIs needed to open local files and save project data.
+DesktopPet Editor requires a modern browser with support for the relevant web APIs.
 
 Recommended usage:
 
-- use a recent version of Chrome, Edge, Firefox, or another up-to-date browser
+- use an up-to-date browser
 - keep JavaScript enabled
 - run the project from a local web server or the GitHub Pages deployment
+
+Local project-folder access requires a browser that implements the File System Access API, such as Chrome or Edge.
 
 ## Typical workflow
 
@@ -74,6 +76,14 @@ Recommended usage:
 
 ## Project status
 
-This project is currently in preview/development and continues to evolve. The current build includes the primary editing tools needed to work with animation structures, while some advanced features are still being added or refined.
+This project is in preview and continues to evolve. The main editing tools are available, while some advanced features are still being added.
+
+## Tutorials
+
+- [Application tutorial](tutorial_app.md) — workspace and menu overview
+- [File tutorial](tutorial_editor_file.md) — opening, saving, importing, and exporting projects
+- [Animation tutorial](tutorial_editor_anim.md) — header, spritesheet, spawns, and animations
+- [XML tutorial](tutorial_xml.md) — XML structure and node fields
+- [General tutorial](tutorial3.md) — project ideas and a creation checklist
 
 

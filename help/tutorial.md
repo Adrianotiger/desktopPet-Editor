@@ -1,19 +1,23 @@
 # DesktopPet Editor Tutorials
 
-This document collects the main learning material for the editor. It is intended to help you understand both the application interface and the XML structure it edits.
+Use these guides to learn the application interface and the XML structure it edits.
 
-The editor works as a visual layer over a DesktopPet XML project. In practice, every tab in the app modifies part of the same underlying XML document, so the tabs and the XML nodes are closely related.
-
-The tutorials are organized like this:
+Each interface tab updates a corresponding section of the underlying XML document.
 
 ---
 
-## >> [Open Editor HELP](../help/tutorial_app.md)  
-![img](../icons/helptutorial.png) **Using the application and its tabs**
+## >> [Application Tutorial](./tutorial_app.md)
+![img](../icons/helptutorial.png) **Understand the menu bar and editing workflow**
 
-## >> [Open XML HELP](../help/tutorial_xml.md)
-![img](../icons/helptutorial.png) **Understanding the XML nodes and project structure**
+## >> [File Tutorial](./tutorial_editor_file.md)
+![img](../icons/helptutorial.png) **Open, save, import, and export projects**
 
-## >> [Open General HELP](../help/tutorial3.md)
-![img](../icons/helptutorial.png) **What you can do with the editor**
+## >> [Animation Tutorial](./tutorial_editor_anim.md)
+![img](../icons/helptutorial.png) **Configure project metadata, spritesheets, and animations**
+
+## >> [XML Tutorial](./tutorial_xml.md)
+![img](../icons/helptutorial.png) **Understand XML nodes and project structure**
+
+## >> [General Tutorial](./tutorial3.md)
+![img](../icons/helptutorial.png) **Explore project ideas and follow a creation checklist**
 

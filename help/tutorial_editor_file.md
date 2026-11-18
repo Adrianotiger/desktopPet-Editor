@@ -8,76 +8,73 @@ A quick, visual guide to the file menu functionality.
 - ![Export](../icons/exportani.png) [Export or test](../help/tutorial_editor_file.md#Export)
 - ![Import](../icons/importani.png) [Import XML](../help/tutorial_editor_file.md#Import)
 
-## Open  
+## Open
 ![Open](../icons/openproject.png)
 
 ![Edit Open](../help/screenshots/fileopen.webp)
 
-### Open a single xml
-You can open a single file `animations.xml` and edit it. When you finished you have to save this file or export it.
+### Open a single XML file
+Open a single `animations.xml` file for editing. Save or export the file after making changes.
 
 ### Open local project
-You can also give access to a folder.    
-If you open the `local Pet folder`, you have to give access to the entire local folder and the application can read and write any file on this folder.  
-This works on Chrome, Edge and Opera. Does not work on Firefox or Safari as they didn't implemented this standard yet.
+You can also open a local project folder. The application will request permission to read and write files in the selected folder.
+Folder access is supported in Chrome, Edge, and Opera. Firefox and Safari do not currently support this standard.
 
-Once you granted the access, you will see your folders (if icon.png is present, the image of your animation): 
-![Edit Open Local](../help/screenshots/fileopen2.webp)  
+After access is granted, DesktopPet displays the project folders. If `icon.png` is present, it is used as the project image:
+![Edit Open Local](../help/screenshots/fileopen2.webp)
 
-The folder handler will be stored in the application, so you don't need to select it on each start.  
+The folder permission is stored by the application, so you do not need to select the folder each time.
 
 ### Open web project
-Sometimes you want to test your pets and share them to your friends.  
-This editor is connected to [supabase.com](https://supabase.com/). You have to access it over an account (currently only google is implemented), and you will get a space for up to 10 animations to share.  
-It is in development, so you can just edit 1 mate (TestPet) and try the sharing link with the DesktopPet (version 2.01).  
-You can work on it, like a local project. Once you save it, you will get the sharing link.  
+The editor uses [Supabase](https://supabase.com/) to host projects for testing and sharing. Sign in with Google to create a workspace with up to ten pets.
+This feature is in development. One pet, `TestPet`, can currently be edited and shared with DesktopPet 2.01.
+Web projects use the same editing workflow as local projects. Saving a project creates a sharing link.
 
-![Edit Open Web](../help/screenshots/fileopen3.webp)  
+![Edit Open Web](../help/screenshots/fileopen3.webp)
 
-Press on a project or open the animations.xml manually to load the XML in this editor.
+Select a project or open `animations.xml` manually to load it in the editor.
 
 ## New
 ![New](../icons/filenew.png)
 
-New will load a template with just 2-3 animations. Perfect to start a new animations-project.
+New loads a template containing two or three animations. This is a suitable starting point for a new animation project.
 
 ## Save
 ![Save](../icons/filesave.png)
 
 ### Save file as...
 
-You can save the new animation with another name or you can save the animations.xml in your project folder.  
+You can save the animation with a different name or save `animations.xml` in the project folder.
 
-### Save local project 
+### Save local project
 ![Edit Save Local](../help/screenshots/filesave.webp)
-If you opened a local project, you can overwrite your `animations.xml` or save it as copy (as this editor is still in beta).  
-Selecting `Make a backup`, the current animations.xml will be saved in the trash folder with a increasing number. So you can recovery it if neccessary.  
-`icon.png` and `README.md` can be generated over this tool if they are missing in your project. Or if you need to update the icon with a new one.
+For a local project, you can overwrite `animations.xml` or save a copy.
+Selecting `Make a backup` moves the current `animations.xml` to the `.trash` folder with an incrementing backup number.
+The editor can generate `icon.png` or `README.md` when they are missing, or update `icon.png` with a new image.
 
-### Save web project  
-If you opened a web project you will see something like this:  
+### Save web project
+For a web project, the save dialog provides the following options:
 ![Edit Save Web](../help/screenshots/filesave2.webp)
 
-You can update your project, not creating any new file or so. The same rules like on GitHub.  
+You can update the project without creating additional project files. GitHub project rules apply.
 
-**Github note:**
-- to upload it to GitHub, you need a README.md, animations.xml and icon.png files.
-- README.md and icon.png can be generated from this application if they are missing in the folder.
-- animations-copy will have a number [YYMMDDXX].xml. Don't worry, they are not uploaded to GitHub!
-- backuped animations are in the `.trash`folder. They also are not uploaded to GitHub.
-- in future, it will be easy to add a pet to github, but I still need to implement this feature.
+**GitHub note:**
+- A GitHub upload requires `README.md`, `animations.xml`, and `icon.png`.
+- The application can generate `README.md` and `icon.png` if they are missing.
+- Animation backups use the `[YYMMDDXX].xml` format and are not uploaded to GitHub.
+- Backups are stored in the `.trash` folder and are not uploaded to GitHub.
+- Support for directly adding pets to GitHub is planned for a future release.
 
 ## Export
-![Export](../icons/exportani.png)  
+![Export](../icons/exportani.png)
 
-![Edit Export](../help/screenshots/fileexport.webp)  
-Once you generate the exporting files, you can drag&drop the generated animation directly to your current desktop pet.  
-So you can test and see if everything is ok.  
-You can also export the project as ZIP, ready to be uploaded to GitHub.  
+![Edit Export](../help/screenshots/fileexport.webp)
+After generating the export files, drag and drop the animation onto the running DesktopPet application to test it.
+You can also export the project as a ZIP archive ready for upload to GitHub.
 
 ## Import
-![Export](../icons/importani.png)  
-Some XML can't be uploaded. For example the web-project is generated on the server and you need to use the XML as it is. If you have loaded a XML, you can import a new XML to replace the current animation.  
-In future, you will be able to import also icons or spritesheets from other animations-files.  
+![Export](../icons/importani.png)
+Some XML files cannot be modified. For example, a server-generated web project must preserve its original XML structure. You can import an XML file to replace the currently loaded animation.
+Future releases will support importing icons and spritesheets from other animation files.
 
-At the moment, it is just used to replace your `testPet` animations-project from the web folder.
+At present, this operation replaces the `TestPet` animation project with a web folder project.

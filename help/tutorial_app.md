@@ -1,13 +1,13 @@
-# App Tutorial: Using the application
+# App Tutorial: Using the Application
 
-A quick, visual guide to the editor's tabs and the main steps for creating or updating a pet project.
+A visual guide to the editor and the main steps for creating or updating a pet project.
 
 ## A typical workflow
 
-1. **Open** an existing project, or create one from the built-in template.
+1. **Open** an existing project or create one from the built-in template.
 2. **Add project details** in Header and load a spritesheet in Image.
-3. **Build behavior** with spawns, animations, children, and sounds.
-4. **Review and save** your changes. Use XML Viewer to inspect the result.
+3. **Configure behavior** with spawns, animations, children, and sounds.
+4. **Review and save** your changes, then use XML Viewer to inspect the result.
 
 ## Use the menu bar
 
@@ -22,9 +22,9 @@ A quick, visual guide to the editor's tabs and the main steps for creating or up
 ### ![Animation icon](../icons/sheep.png) Edit Animation
 
 - ![Header](../icons/editheader.png) [Edit header](../help/tutorial_editor_anim.md#Header)
-- ![Spritesheet](../icons/editspritesheet.png) [Edit spritesheet](../help/tutorial_editor_anim.md#Image)
+- ![Spritesheet](../icons/editspritesheet.png) [Edit spritesheet](../help/tutorial_editor_anim.md#Spritesheet)
 - ![Spawn](../icons/editspawns.png) [Edit spawns](../help/tutorial_editor_anim.md#Spawns)
 - ![Animations](../icons/editanimations.png) Edit animations
-- ![Childs](../icons/editchilds.png) Edit edit childs
+- ![Children](../icons/editchilds.png) Edit children
 - ![Sounds](../icons/editsounds.png) Edit sounds
 
