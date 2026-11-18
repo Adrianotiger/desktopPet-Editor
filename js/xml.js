@@ -216,6 +216,14 @@ const XML = new class
     }
     return false;
   }
+  getTotalSpawnProbability()
+  {
+    let tot = 0;
+    this.spawns.forEach((s)=>{
+      tot += parseInt(s.probability);
+    });
+    return tot;
+  }
   getChild(id)
   {
     let ret = null;

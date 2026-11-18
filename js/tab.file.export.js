@@ -17,11 +17,13 @@ class ExportTabClass extends TabClass
     _CN("h1", {}, ["Export"], this.div);
     _CN("hr", {}, [], this.div);
 
+    _CN("p", {style:"margin:20px;"}, ["Once you generate the XML from this project, you can export the animations.xml (drag&drop) or you can save your entire project (animations.xml, README.md and icon.png) as zip."], this.div);
+
     _CN("hr", {style:"width:80%;margin:10px auto;"}, [], this.div);
 
     let exportGenerated = false;
     
-    let butt = _CN("button", {style:"width:30vw;margin:10px;"}, ["Generate.xml..."], this.div);
+    let butt = _CN("button", {style:"width:30vw;margin:10px;"}, ["Generate Export files..."], this.div);
     butt.addEventListener("click", ()=>{
       if(!exportGenerated)
       {

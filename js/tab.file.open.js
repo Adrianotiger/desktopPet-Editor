@@ -39,7 +39,7 @@ class OpenProjectFolderClass
   showProjects(title = "Open Project") 
   {
     this.#div.innerHTML = "";
-    let div = _CN("div", {class:"aniframeeditor", style:"height:30vh;width:80vw;overflow:scroll;margin:0 auto;"}, [], this.#div);
+    let div = _CN("div", {class:"aniframeeditor", style:"height:30vh;width:80vw;overflow-y:scroll;margin:0 auto;"}, [], this.#div);
     _CN("i", {}, [title], div);
     this.projects.forEach(async p=>{
       p.span = _CN("span", {style:"opacity:0.2"}, [_CN("img", {class:"icon", "data-icon":"folder"}), _CN("br"), p.folder.name], div);
@@ -95,7 +95,7 @@ class OpenTabClass extends TabClass
 
     _CN("hr", {style:"width:80%;margin:10px auto;"}, [], this.div);
 
-    loadScripts(["tab.open.local", "tab.open.web"], true).then(()=>{
+    loadScripts(["tab.file.open.local", "tab.file.open.web"], true).then(()=>{
       this.#localFolder = new OpenProjectFolderLocalClass(this.div);
       this.#webFolder = new OpenProjectFolderWebClass(this.div);
     });
@@ -116,6 +116,9 @@ class OpenTabClass extends TabClass
       }
     });
   }
+
+  get projectFolder() { return this.#currentProject; }
+  get rootFolder() { return this.#localFolder.rootFolder; }
 
   setProject(project)
   {
@@ -164,13 +167,22 @@ class OpenTabClass extends TabClass
     let xmlString = await file.text();
 
     Menu.enableSubmenu(['Save', 'Export', 'Import', 'XML viewer']);
+
+    if(this.#currentProject != null)
+    {
+      setTitle(0, this.#currentProject.isLocal ? " - [local] " : " - [web] ");
+      setTitle(1, (this.#currentProject.folder?.name??"?") + "-project");
+    }
+    else
+    {
+      setTitle(0, " - [single]");
+      setTitle(1, "animations.xml");
+    }
       
     console.log("File opened via API:", file.name);
 
     XML.loadXML(xmlString);
   }
-
-  get projectFolder() { return this.#currentProject; }
   
 };
 

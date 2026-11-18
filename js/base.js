@@ -94,6 +94,14 @@ function loadScripts(scriptsArray, loadAsync)
   }
 }
 
+function setTitle(spanIndex, text)
+{
+  let titleDiv = document.getElementById("project_detail_span");
+  let titleSpans = titleDiv.getElementsByTagName("span");
+  while(titleSpans.length <= spanIndex) _CN("span", {}, [" "], titleDiv);
+  titleSpans[spanIndex].textContent = text;
+}
+
 addEventListener("load", ()=>{
   setDayNightTheme();
 });

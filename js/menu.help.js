@@ -22,8 +22,8 @@ class HelpMenuClass extends Submenu
       info: {link:"info", title:"Info"},
       help: {link:"help", title:"Help"},
       tutorial: {link:"tutorial", title:"Tutorial"},
-      app:{link: "tutorialapp", title:"Tutorial App"},
-      xml:{link: "tutorialxml", title:"Tutorial XML"}
+      app:{link: "tutorial_app", title:"Tutorial App"},
+      xml:{link: "tutorial_xml", title:"Tutorial XML"}
     };
     document.body.addEventListener("menu", (ev)=>{
       if(Object.keys(helpPages).includes(ev?.detail?.action))

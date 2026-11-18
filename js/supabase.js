@@ -6,6 +6,7 @@ let Supabase = new class
   #signedin = false;
 
   #bucket = "pets";
+  #downloadver = 1;
 
   get isSignedIn() { return this.#signedin; }
   get isScriptLoaded() {return this.#scriptloaded; }
@@ -20,7 +21,8 @@ let Supabase = new class
       this.#supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
       this.#supabase.auth.onAuthStateChange((event, session) => {
-        if(event == "SIGNED_IN") this.#authStateChanged(session);
+        console.log("Supabase event: ", event);
+        if(event == "SIGNED_IN" || event == "TOKEN_REFRESHED") this.#authStateChanged(session);
       });
 
       console.warn(this.#supabase);
@@ -52,9 +54,10 @@ let Supabase = new class
   {
     const userInfoEl = document.getElementById('user-info');
 
-    this.#signedin = true;
-
-    if(this.#user == null) this.#supabase.auth.getUser().then(ud=>{ this.#user = ud.data.user || ud.data.error; });
+    if(this.#user == null) this.#supabase.auth.getUser().then(ud=>{ 
+      this.#user = ud.data.user || ud.data.error; 
+      if(ud.data.user) this.#signedin = true;
+    });
     if(userInfoEl == null) return;
 
     userInfoEl.innerHTML = "";
@@ -100,13 +103,28 @@ let Supabase = new class
     return storage.data || [];
   }
 
+  getPublicLink(folder)
+  {
+    console.warn(this.#supabase);
+    return `${this.#supabase.supabaseUrl}/storage/v1/object/public/${this.#bucket}/${this.#user.id}`;
+  }
+
   async downloadFile(path = "")
   {
     const { data, error } = await this.#supabase.storage
       .from(this.#bucket)
-      .download(`${this.#user.id}/${path}`);
+      .download(`${this.#user.id}/${path}`, {cacheNonce:this.#downloadver}, {cache:"no-cache"});
+
+    this.#downloadver++;
 
     return data;
+  }
+
+  saveXML(path, xml)
+  {
+    return this.#supabase.functions.invoke('replace-animations-xml', {
+      body: {content:xml, path:path}
+    });
   }
 
 } 

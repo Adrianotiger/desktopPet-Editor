@@ -8,10 +8,10 @@ The tutorials are organized like this:
 
 ---
 
-## >> [Open Editor HELP](../help/tutorialapp.md)  
+## >> [Open Editor HELP](../help/tutorial_app.md)  
 ![img](../icons/helptutorial.png) **Using the application and its tabs**
 
-## >> [Open XML HELP](../help/tutorialxml.md)
+## >> [Open XML HELP](../help/tutorial_xml.md)
 ![img](../icons/helptutorial.png) **Understanding the XML nodes and project structure**
 
 ## >> [Open General HELP](../help/tutorial3.md)

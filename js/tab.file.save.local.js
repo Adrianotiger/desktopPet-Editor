@@ -1,33 +1,26 @@
-class SaveTabClass extends TabClass
-{ 
-	#currentProject = 0;
+class SaveProjectFolderLocalClass extends SaveProjectFolderClass
+{
+  #currentProject = 0;
+  #backupOldFile = true;
   #localDiv = null;
 
-  constructor()
+  constructor(parentDiv)
   {
-    super("Save");
+    super(parentDiv);
   }
 
-  show(params)
+  show()
   {
-    super.show(params);
-
-    this.div.innerHTML = "";
-
-    _CN("h1", {}, ["Save"], this.div);
-    _CN("hr", {}, [], this.div);
-    
-    let butt = _CN("button", {style:"width:30vw;margin:10px;"}, ["Save animations.xml as..."], this.div);
-    butt.addEventListener("click", ()=>{this.saveFileDialog();});
-
-    _CN("hr", {style:"width:80%;margin:10px auto;"}, [], this.div);
-
     let buttSave = _CN("button", {style:"width:200px;"}, ["💾 Save"]);
     let buttSaveCopy = _CN("button", {style:"width:200px;"}, ["💾 Save as copy"]);
     _CN("table", {style:"margin:0 auto;padding:20px;"}, [_CN("tr", {}, [
       _CN("td", {}, [buttSave]),
       _CN("td", {}, [buttSaveCopy]),
     ])], this.div);
+
+    let checkBox = _CN("input", {type:"checkbox", style:"width:24px;height:24px;margin:10px;vertical-align:middle;"});
+    _CN("div", {}, [checkBox, ," Make a backup of the original file (you will find it in the .trash folder)"], this.div);
+    if(this.#backupOldFile) checkBox.checked = true;
     
     buttSave.addEventListener("click", ()=>{
       this.saveAnimation(false);
@@ -35,10 +28,13 @@ class SaveTabClass extends TabClass
     buttSaveCopy.addEventListener("click", ()=>{
       this.saveAnimation(true);
     });
+    checkBox.addEventListener("click", ()=>{
+      this.#backupOldFile = checkBox.checked;
+    });
 
     this.#localDiv = _CN("div", {style:"margin:0 auto;"}, [], this.div);
 
-    if(this.#currentProject != OpenTab.projectFolder)
+    //if(this.#currentProject != OpenTab.projectFolder)
     {
       this.#currentProject = OpenTab.projectFolder;
       // load new files
@@ -46,64 +42,16 @@ class SaveTabClass extends TabClass
     }
   }
 
-  hide()
-  {
-    super.hide();
-  }
-  
-  async saveFileDialog()
-  {    
-    try {
-      const fileHandle = await window.showSaveFilePicker({
-        suggestedName: 'animations.xml',
-        id: 'e-sheep-openfolder',
-        startIn: 'downloads',
-        types: [{
-          description: 'Animation file',
-          accept: { 'text/xml': ['.xml', '.xml'] }
-        }]
-      });
-
-      const xml = XML.getXml();
-      const writableStream = await fileHandle.createWritable();
-      // 3. Write data and close the stream
-      await writableStream.write(xml);
-      await writableStream.close();
-
-      Msg.show({title:"File saved", content:"File successfully saved"});
-    } catch (err) {
-      console.log("Canceled by user", err);
-      return;
-    }
-  }
-
-	async showDirectory()
+  async showDirectory()
   {
     this.#localDiv.innerHTML = "";
     if(this.#currentProject != null)
-      _CN("h2", {}, [this.#currentProject.isLocal ? "Local project" : "Web project", " - ", this.#currentProject.folder.name], this.#localDiv);
+      _CN("h2", {}, ["Local project", " - ", this.#currentProject.folder.name], this.#localDiv);
 
     let div = _CN("div", {class:"aniframeeditor", style:"height:30vh;width:60vw;padding-top:30px;overflow:scroll;margin:0 auto;background:rgba(255,255,255,0.5);"}, [], this.#localDiv);
     _CN("i", {}, ["Project items"], div);
 
-    if(this.#currentProject == null)
-    {
-      _CN("p", {}, ["You opened or imported a single file.", _CN("br"), "Open a project to see all files on it."], div);
-      return;
-    }
 
-    if(this.#currentProject.isLocal)
-    {
-      this.#showDirectoryLocal(div);
-    }
-    else
-    {
-      this.#showDirectoryWeb(div);
-    }
-  }
-
-  async #showDirectoryLocal(div)
-  {
     const files = await this.#currentProject.folder.entries();
     var f2;
     var folderFiles = [];
@@ -147,26 +95,17 @@ class SaveTabClass extends TabClass
         this.#generateIcon();
       });
     }
-  }
-
-  #showDirectoryWeb(div)
-  {
-    const files = ["readme.md", "icon.png", "animations.xml"];
-    files.forEach(f2=>
+    else
     {
-      let filename = "";
-      switch(f2)
-      {
-        case "animations.xml": filename = "fileanimations"; break;
-        case "readme.md": filename = "filereadme"; break;
-        case "icon.png": filename = "fileicon"; break;
-        default: filename = "fileunknown"; break;
-      }
-      _CN("span", {}, [_CN("img", {class:"icon", "data-icon":filename}), _CN("br"), f2], div);
-    });
+      let divIcon = _CN("div", {}, ["Re-generate icon from the xml-icon.", _CN("br")], this.div);
+      _CN("button", {}, ["Replace image.png using xml-icon"], divIcon).addEventListener("click", ()=>{
+        this.#generateIcon();
+      });
+    }
   }
 
-  saveAnimation(asCopy)
+  // Only available as local project
+  async saveAnimation(asCopy)
   {
     const xml = XML.getXml();
     if(asCopy)
@@ -177,21 +116,22 @@ class SaveTabClass extends TabClass
         hour: '2-digit', minute: '2-digit', hour12: false
       });
       const [{ value: month },,{ value: day },,{ value: year },,{ value: hour },,{ value: minute }] = formatter.formatToParts(now);
-      this.#save(`${year}${month}${day}.xml`, xml)
+      let filename = await this.#findValidName(`${year}${month}${day}.xml`);
+      this.#save(filename, xml, false)
     }
     else
     {
-      Msg.show({title:"WARNING!", content:"Are you crazy? The editor can't destroy your original XML until it works at 100%!"});
-      //this.#save("animations.xml", xml);
+      this.#save("animations.xml", xml, this.#backupOldFile);
     }
   }
 
-  async #findValidName(filename, ext="0")
+  async #findValidName(filename, ext="0", folderHandle=this.#currentProject.folder)
   {
     try 
     {
-      let fileHandle = await this.#currentProject.folder.getFileHandle(filename.replace(".", `${ext}.`), { create: false });
-      return await this.#findValidName(filename, parseInt(ext)+1); // file exists!
+      ext = ext.padStart(4, "0");
+      await folderHandle.getFileHandle(filename.replace(".", `${ext}.`), { create: false });
+      return await this.#findValidName(filename, `${parseInt(ext)+1}`, folderHandle); // file exists!
     } 
     catch (error) 
     {
@@ -199,19 +139,35 @@ class SaveTabClass extends TabClass
     }
   }
 
-  async #save(filename, fileContent)
+  async #save(filename, fileContent, old2Trash=true)
   {
     try {
-      filename = await this.#findValidName(filename);
+      if(old2Trash)
+      {
+        let filename2 = await this.#findValidName(filename);
+        if(filename2 != filename)
+        {
+          const trashHandle = await OpenTab.rootFolder.getDirectoryHandle('.trash', { create: true });
+
+          let filename3 = await this.#findValidName(filename, "0", trashHandle);
+
+          const fileHandleOld = await this.#currentProject.folder.getFileHandle(filename);
+          await fileHandleOld.move(trashHandle, filename3);
+        }
+      }
+      /*
+      else
+      {
+        filename = await this.#findValidName(filename);
+      }*/
 
       const fileHandle = await this.#currentProject.folder.getFileHandle(filename, { create: true });
       const writable = await fileHandle.createWritable();
       await writable.write(fileContent);
       await writable.close();
 
-      this.showDirectory();
-
       console.log(`Successfully saved: ${filename}`);
+      this.#resetView();
     } catch (error) {
       console.error('Error saving file:', error);
     }
@@ -230,8 +186,7 @@ class SaveTabClass extends TabClass
 
       this.#currentProject.mdFile = true;
 
-      this.#currentProject = null;
-      Menu.execute("save");
+      this.#resetView();
     });
   }
 
@@ -263,11 +218,14 @@ class SaveTabClass extends TabClass
       await writable.write(pngBlob);
       await writable.close();
 
-      this.#currentProject = null;
-      Menu.execute("save");
+      this.#resetView();
     });
   }
-  
-};
 
-const SaveTab = new SaveTabClass();
+  #resetView()
+  {
+    this.#currentProject = null;
+    Menu.execute("save");
+  }
+
+}

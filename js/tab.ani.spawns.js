@@ -90,6 +90,11 @@ class SpawnsTabClass extends TabClass
     input = _CN("input", {type:"text", value:spawn.yOriginal, placeholder:'formula', name:"y", style:"width:100%;"}, [], this.#spawnDiv);
     inputs.push(input);
 
+    _CN("div", {style:"margin-top:20px;"}, ["Probability:"], this.#spawnDiv);
+    input = _CN("input", {type:"number", value:spawn.probability, name:"probability", style:"width:50%;"}, [], this.#spawnDiv);
+    inputs.push(input);
+    let probSpan = _CN("span", {style:"margin-left:20%;opacity:0.8;"}, ["?? %"], this.#spawnDiv);
+
     const nextInfo = _CN("div", {class:"infobox aniinfobox", id:spawn.id, style:`width:100%;position:relative;`}, [_CN("h3", {}, ["Next #" + spawn.id])], this.#spawnDiv);
 
     const ne = new NextEditor(spawn, nextInfo, {goto:true, minitems:1, maxitems:1, edit:false, attributes:[]});
@@ -103,12 +108,10 @@ class SpawnsTabClass extends TabClass
         if(i.placeholder == "formula")
         {
           Formula.extendInput(i, `Spawn #${spawn.id}.${i.name}`, spawn);
-          /*
-          i.addEventListener("focus", ()=>{
-            Formula.show(i, `Spawn #${spawn.id}.${i.name}`, spawn);
-          });
-          i.setAttribute("readonly", true);
-          */
+        }
+        else if(i.name == "probability")
+        {
+          this.#calcProb(probSpan);
         }
       });
 
@@ -118,12 +121,20 @@ class SpawnsTabClass extends TabClass
           if(XML.getSpawn(this.#currentSpawn.id)?.next?.length > 0)
           {
             XML.getSpawn(this.#currentSpawn.id).next.value = node.value;
-            
           }
         }
       });
+      this.#calcProb(probSpan);
     }, 500);
+  }
 
+  #calcProb(span)
+  {
+    const tot = XML.getTotalSpawnProbability();
+    const cur = this.#currentSpawn.probability;
+    const perc = parseInt((cur / tot) * 1000) / 10;
+
+    span.textContent = `${cur}/${tot} = ${perc}%`;
   }
 
   updateNode(input)

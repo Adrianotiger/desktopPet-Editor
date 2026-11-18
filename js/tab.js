@@ -44,9 +44,9 @@ var Tabs = new class
   constructor()
   {
     // File
-    this.#tabItems = this.#tabItems.concat(["open", "save", "export"]);
+    this.#tabItems = this.#tabItems.concat(["file.open", "file.save", "file.export", "file.import"]);
     // Animations
-    this.#tabItems = this.#tabItems.concat(["header", "image", "spawns", "animations", "animation", "childs", "sounds"]);
+    this.#tabItems = this.#tabItems.concat(["ani.header", "ani.image", "ani.spawns", "ani.animations", "ani.animation", "ani.childs", "ani.sounds"]);
     // Tools
     this.#tabItems = this.#tabItems.concat(["xmlviewer"]);
     // Help

@@ -4,7 +4,6 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
   #folderHandler = null;
   #db = null;
 
-
   constructor(parentDiv)
   {
     super(
@@ -23,6 +22,8 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
       // nothing, wait for button press.
     });
   }
+
+  get rootFolder() { return this.#folderHandler; }
 
   buttonPressed()
   {

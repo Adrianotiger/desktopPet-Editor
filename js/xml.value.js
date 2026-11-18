@@ -39,6 +39,11 @@ class XMLValue
   
   constructor(str, type=XMLValue.Type.STRING, options={})
   {    
+    if(type == XMLValue.Type.STRING)
+    {
+      str = str.replace('&', "&amp;");
+    }
+
     this.#value = str;
     this.#valuetype = type;
     // Formula values keep both their source expression and a computed result.

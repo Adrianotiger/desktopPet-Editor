@@ -94,11 +94,14 @@ class OpenProjectFolderWebClass extends OpenProjectFolderClass
     }
   }
 
-  async loadFolders()
+  async loadFolders(retries = 5)
   {
-    if(!Supabase.isScriptLoaded)
+    if(!Supabase.isScriptLoaded || !Supabase.isSignedIn)
     {
-      setTimeout(()=>{this.loadFolders();}, 500);
+      if(retries > 0)
+      {
+        setTimeout(()=>{this.loadFolders(retries-1);}, 500);
+      }
       return;
     }
     let dirs = await Supabase.getDirectoryFiles();
