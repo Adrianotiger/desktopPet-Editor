@@ -11,6 +11,24 @@ It helps you open, modify, and save pet projects with a visual interface instead
 - configure header, spawn, and behavior settings
 - use a formula editor for custom logic
 - save and reuse XML-based pet definitions
+- inspect animation transitions as a Graphviz DOT graph
+
+## Exporting an animation graph
+
+After an XML project is loaded, `DotTool` can turn the current XML model into a
+graph object, produce DOT text, or download a `.dot` file:
+
+```js
+const dotTool = new DotTool(XML);
+const tree = dotTool.createTree();
+const dotText = dotTool.toDot(tree);
+dotTool.downloadDot();
+```
+
+Spawns are the starting nodes. Their arrows lead to the initial animations;
+animation arrows are labeled by their `sequence`, `border`, or `gravity`
+transition. A sample graph generated from the template is available at
+[`template/animations.dot`](../template/animations.dot).
 
 ## Why it exists
 

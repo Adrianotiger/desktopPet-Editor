@@ -166,7 +166,7 @@ class OpenTabClass extends TabClass
   {
     let xmlString = await file.text();
 
-    Menu.enableSubmenu(['Save', 'Export', 'Import', 'XML viewer']);
+    Menu.enableSubmenu(['Save', 'Export', 'Import', 'XML viewer', 'DOT viewer']);
 
     if(this.#currentProject != null)
     {

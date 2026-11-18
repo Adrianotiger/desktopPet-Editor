@@ -48,7 +48,7 @@ var Tabs = new class
     // Animations
     this.#tabItems = this.#tabItems.concat(["ani.header", "ani.image", "ani.spawns", "ani.animations", "ani.animation", "ani.childs", "ani.sounds"]);
     // Tools
-    this.#tabItems = this.#tabItems.concat(["xmlviewer"]);
+    this.#tabItems = this.#tabItems.concat(["xmlviewer", "dotviewer"]);
     // Help
     this.#tabItems = this.#tabItems.concat(["help"]);
   }

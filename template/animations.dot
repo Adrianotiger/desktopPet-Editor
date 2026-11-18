@@ -1,0 +1,13 @@
+digraph animations {
+  graph [rankdir=LR];
+  node [fontname="Arial"];
+  spawn_1 [shape=oval, label="Spawn 1 (20%)"];
+  animation_1 [shape=box, label="walk (#1)"];
+  animation_2 [shape=box, label="rotate1a (#2)"];
+  animation_3 [shape=box, label="rotate1b (#3)"];
+  spawn_1 -> animation_1 [label="start"];
+  animation_1 -> animation_1 [label="sequence (90%, only: none)"];
+  animation_1 -> animation_2 [label="border (100%, only: none)"];
+  animation_2 -> animation_3 [label="sequence (100%, only: none)"];
+  animation_3 -> animation_1 [label="sequence (100%, only: none)"];
+}

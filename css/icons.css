@@ -60,6 +60,7 @@
 .icon[data-icon="filereadme"]   { content: url("../icons/filereadme.png"); }
 .icon[data-icon="fileunknown"]   { content: url("../icons/fileunknown.png"); }
 .icon[data-icon="filexml"]   { content: url("../icons/filexml.png"); }
+.icon[data-icon="filedot"]   { content: url("../icons/filedot.png"); }
 .icon[data-icon="folderopen"]   { content: url("../icons/folderopen.png"); }
 .icon[data-icon="editheader"]   { content: url("../icons/editheader.png"); }
 .icon[data-icon="editspritesheet"]   { content: url("../icons/editspritesheet.png"); }
