@@ -95,6 +95,26 @@ class SoundsTabClass extends TabClass
       _CN("source", {src:"data:audio/mp3;base64,"+sound.base64, type:"audio/mp3"})
     ], this.#soundDiv);
 
+    let audioLoops = -1;
+    audio.addEventListener("ended", ()=>{
+      let playLoop = false;
+      if(audioLoops < 0 && inputs[1].value > 0) // loop input
+      {
+        audioLoops = inputs[1].value;
+        playLoop = true;
+      }
+      else if(audioLoops > 0)
+      {
+        playLoop = true;
+      }
+      audioLoops--;
+      if(playLoop)
+      {
+        audio.currentTime = 0;
+        audio.play();
+      }
+    });
+
     let divInfo = _CN("div", {}, [], this.#soundDiv);
     
     _CN("button", {}, ["📤 Upload MP3 📤"], this.#soundDiv).addEventListener("click", ()=>{
@@ -120,7 +140,7 @@ class SoundsTabClass extends TabClass
   {
     const node = input.name.toLowerCase();
     const value = input.value;
-    if(!XML.getSound(this.#currentSound.id)[node])
+    if(XML.getSound(this.#currentSound.id)[node] == null)
     {
       console.error(`Node '${node}' not found in the sound XML!`);
       return;

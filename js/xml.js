@@ -265,7 +265,7 @@ const XML = new class
   insertSound(id)
   {
     const newNode = new DOMParser().parseFromString(
-      `<sound animationid="${id}"><probability>50</probability><base64></base64></sound>`, 
+      `<sound animationid="${id}"><probability>50</probability><loop>0</loop><base64><![CDATA[/+MYxAAAAAAAAAAAAAAAAAAAAAAAAAAA]]></base64></sound>`, 
       "text/xml"
     ).documentElement;
     const importedNode = this.#xmlDoc.importNode(newNode, true);
