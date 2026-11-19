@@ -37,9 +37,10 @@ class TabClass
 var Tabs = new class
 {
   #div = null;
-  #tabItems = [];//"open", "save", "header", "image", "spawns", "animations", "animation", "childs"];
+  #tabItems = [];
   #tabs = [];
   index = 0;
+  #loaded = false;
   
   constructor()
   {
@@ -48,17 +49,21 @@ var Tabs = new class
     // Animations
     this.#tabItems = this.#tabItems.concat(["ani.header", "ani.image", "ani.spawns", "ani.animations", "ani.animation", "ani.childs", "ani.sounds"]);
     // Tools
-    this.#tabItems = this.#tabItems.concat(["xmlviewer", "dotviewer"]);
+    this.#tabItems = this.#tabItems.concat(["tools.xmlviewer", "tools.dotviewer"]);
     // Help
     this.#tabItems = this.#tabItems.concat(["help"]);
   }
+
+  get isLoaded() { return this.#loaded; }
   
   init()
   {
     this.#div = document.body.getElementsByClassName("tabcollection");
     let scripts2Load = [];
     this.#tabItems.forEach(sm=>scripts2Load.push(`tab.${sm}`));
-    loadScripts(scripts2Load, true);
+    loadScripts(scripts2Load, true).then(()=>{
+      this.#loaded = true;
+    });
   }
   
   addTab(tab)

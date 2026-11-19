@@ -151,4 +151,16 @@ class XMLAnimationsAnimation extends XMLNode
 
   get border() { return this.getNode("border")[0]; }
   get gravity() { return this.getNode("gravity")[0]; }
+
+  getTotalProbability(node)
+  {
+    let ret = 0;
+    if(this.getNode(node) && Array.isArray(this.getNode(node)[0]?.nodes?.next))
+    {
+      this.getNode(node)[0].nodes.next.forEach(n=>{
+        ret += n.probability;
+      });
+    }
+    return ret;
+  }
 };

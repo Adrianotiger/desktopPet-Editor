@@ -146,6 +146,6 @@ class OpenProjectFolderWebClass extends OpenProjectFolderClass
 
   #loadWebPath()
   {
-    return loadScripts(["supabase"], true);
+    return loadScripts(["extra.supabase"], true);
   }
 };

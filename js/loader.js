@@ -17,7 +17,7 @@ window.addEventListener("load", ()=>{
 
 async function loaderScripts(div, tabDiv, divMain)
 {
-  const scripts = ["message", "menu", "tab", "console", "xml"];
+  const scripts = ["extra.message", "menu", "tab", "extra.console", "xml"];
   let loadedScripts = 0;
   div.textContent = `Loading scripts (0/${scripts.length})...`;
   scripts.forEach((s)=>{
@@ -40,12 +40,18 @@ function loaderFinished(divMain, tabDiv, textDiv)
     {
       textDiv.textContent = str;
     }
+    else if(!Tabs.isLoaded)
+    {
+      textDiv.textContent = "Loading tabs...";
+    }
     else
     {
       clearInterval(loadInterval);
       textDiv.textContent = "Loaded 100%";
-      setTimeout(()=>{divMain.removeChild(tabDiv);}, 200);
-      Menu.execute("open");
+      setTimeout(()=>{
+        divMain.removeChild(tabDiv);
+        Menu.execute("open");
+      }, 200);
     }
   }, 500);
 }

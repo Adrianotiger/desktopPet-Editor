@@ -15,6 +15,7 @@ The editor was made, because many user beguns to use the eSheep application and 
 - [Showdown (Github)](https://github.com/showdownjs/showdown) converts MD-files to HTML (this help)
 - [UPNG (Github)](https://github.com/photopea/UPNG.js/) to reduce the spritesheet image size
 - [Pako (Github)](https://github.com/nodeca/pako) for UPNG and for creating zips
+- [Viz (GitHub)](https://github.com/mdaines/viz-js) for DOT generation
 - [LameJS (NPM)](https://www.npmjs.com/package/lamejs) to compress MP3 files (not used yet)
 
 
