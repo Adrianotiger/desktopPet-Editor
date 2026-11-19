@@ -80,7 +80,7 @@ class XMLAnimationNextCollection extends XMLNode
     }
   }
 
-  get next() {return this.getNode("next");}
+  get next() {return this.getNode("next")??[];}
   set next(value) {this.replaceNode("next", value);}
 }
 

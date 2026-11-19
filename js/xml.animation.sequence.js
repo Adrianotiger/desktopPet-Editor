@@ -29,9 +29,9 @@ class XMLAnimationsSequence extends XMLNode
     // action can be empty!
     super.addValue(
       "action", 
-      xmlHasNode(xml, 'action')?xmlNodeGet(xml, 'action'):"", 
+      xmlHasNode(xml, 'action')?xmlNodeGet(xml, 'action'):"none", 
       XMLValue.Type.ACTION,
-      {default:"", minoccurs:0}
+      {default:"none", minoccurs:0}
     );
     
     const nexts = [...xml.querySelectorAll('next')];

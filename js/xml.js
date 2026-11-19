@@ -167,7 +167,7 @@ const XML = new class
   insertAnimation(id)
   {
     const newNode = new DOMParser().parseFromString(
-      `<animation id="${id}"><name>newani_${id}</name><start><x>0</x><y>0</y><interval>200</interval><offsety>0</offsety><opacity>1</opacity></start><end><x>0</x><y>0</y><interval>200</interval><offsety>0</offsety><opacity>1</opacity></end><sequence repeatfrom="0" repeat="0" action="none"></sequence></animation>`, 
+      `<animation id="${id}"><name>newani_${id}</name><start><x>0</x><y>0</y><interval>200</interval><offsety>0</offsety><opacity>1</opacity></start><end><x>0</x><y>0</y><interval>200</interval><offsety>0</offsety><opacity>1</opacity></end><sequence repeatfrom="0" repeat="0" action="none"><frame>1</frame></sequence></animation>`, 
       "text/xml"
     ).documentElement;
     const importedNode = this.#xmlDoc.importNode(newNode, true);
