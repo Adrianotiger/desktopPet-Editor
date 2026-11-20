@@ -1,0 +1,74 @@
+name: Update Existing Pet
+description: Submit an update for an existing DesktopPet/eSheep pet
+title: "[Update Pet] "
+labels:
+  - pet-update
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for improving an existing DesktopPet/eSheep pet!
+
+        You may upload:
+
+        - animations.xml only
+        - icon.png only
+        - README.md only
+
+        Only the files provided will be updated.
+
+  - type: input
+    id: petname
+    attributes:
+      label: Existing Pet Name
+      description: Name of the pet to update
+      placeholder: Dancing Sheep
+    validations:
+      required: true
+
+  - type: textarea
+    id: changes
+    attributes:
+      label: What changed?
+      description: Describe your modifications
+      placeholder: |
+        Examples:
+        - Fixed walking animation
+        - Added new idle animation
+        - Improved icon quality
+        - Updated README
+    validations:
+      required: true
+
+  - type: textarea
+    id: files
+    attributes:
+      label: Files to Update
+      description: |
+        After creating this issue, attach the updated files in a comment.
+
+        You may attach:
+
+        - animations.xml
+        - icon.png
+        - README.md
+
+        Only the files you provide will be replaced.
+      placeholder: Attach updated files after submitting this issue.
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: The pet already exists in the repository
+          required: true
+        - label: I tested my changes before submitting
+          required: true
+        - label: icon.png (if updated)
+          required: false
+        - label: I am the author or have permission to submit these changes
+          required: true
