@@ -284,35 +284,6 @@ const XML = new class
     }
     return false;
   }
-
-  getAnimationReferences(id)
-  {
-    let ret = [];
-    this.animations.forEach((a, j)=>{
-      if(a.id != id) {
-        let found = false;
-        this.getAnimation(a.id).sequence.next?.forEach(an=>{
-          if(!found && an.value == id) {
-            found = true;
-            ret.push(a.id);
-          }
-        });
-        this.getAnimation(a.id).border?.next?.forEach(an=>{
-          if(!found && an.value == id) {
-            found = true;
-            ret.push(a.id);
-          }
-        });
-        this.getAnimation(a.id).gravity?.next?.forEach(an=>{
-          if(!found && an.value == id) {
-            found = true;
-            ret.push(a.id);
-          }
-        });
-      }
-    });
-    return ret;
-  }
   
   getImage(index=-1)
   {

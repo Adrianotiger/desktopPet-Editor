@@ -14,6 +14,7 @@ class NextEditor
   #onChanged = null;
   #divHeight = "";
   #subnode = "next";
+  #canvasArray = [];
 
   constructor(parent, parentDiv, options, subnode)
   {
@@ -81,7 +82,7 @@ class NextEditor
       xml.setAttribute("probability", "100");
       xml.setAttribute("only", "none");
       xml.textContent = "1";
-      let newNext = new XMLAnimationsNext(xml);
+      let newNext = new XMLAnimationsNext(xml, this.#baseNode.path);
       this.next.push(newNext);
       if(!this.#baseNode.next)
         this.#baseNode.next = [];
@@ -117,6 +118,13 @@ class NextEditor
   onChanged(func)
   {
     this.#onChanged = func;
+  }
+
+  stopAnimations()
+  {
+    this.#canvasArray.forEach(c=>{
+      try{c.updateAni(null);}catch(e){};
+    });
   }
 
   #resize(parent, resize)
@@ -211,6 +219,8 @@ class NextEditor
     while(this.#div.children.length > 3) this.#div.removeChild(this.#div.children[3]);
     this.#trash.style.opacity = 0.2;
 
+    this.#canvasArray = [];
+
     let newNexts = [];
     this.next.forEach((n, j)=>{
       const ani = XML.getAnimation(n.value ?? n); // n can be a NEXT-object or just a value
@@ -237,7 +247,10 @@ class NextEditor
       let prob = null;
       let limit = null;
       if(this.#options.attributes.includes("probability"))
-        prob = _CN("input", {type:"number", min:1, max:100, value:n.probability, style:"padding:2px;text-align:center;"});
+      {
+        prob = _CN("input", {type:"number", min:1, max:100, value:n.probability, draggable:true, style:"padding:2px;text-align:center;"});
+        prob.addEventListener("dragstart", (e)=>{e.preventDefault();});
+      }
 
       if(this.#options.attributes.includes("only"))
       {
@@ -268,10 +281,14 @@ class NextEditor
       c.animate(true);
 
       newNexts.push(n);
+      this.#canvasArray.push(c);
 
-      c.getCanvas().addEventListener("click", (e) => {
-        this.#openPicker(j, n.value);
-      });
+      if(this.#options.edit)
+      {
+        c.getCanvas().addEventListener("click", (e) => {
+          this.#openPicker(j, n.value);
+        });
+      }
 
       // remember index
       div.addEventListener("dragstart", (e) => {

@@ -3,7 +3,7 @@
 class AnimationTabClass extends TabClass
 {
   #currentAni = null;
-  #canv = null;
+  #canv = null;   // current animation canvas
   #isAnimating = true;
   // Tracks changed form controls. Frame and transition editors are checked separately
   // by comparing their serialized content with the snapshots taken when the tab opened.
@@ -12,6 +12,7 @@ class AnimationTabClass extends TabClass
   #nextKeys = ["sequence", "border", "gravity"];
   #original = {frames:""};
   #preventClosingIfChanged = true;
+  #editors = [];
 
   constructor()
   {
@@ -39,7 +40,7 @@ class AnimationTabClass extends TabClass
     }
 
     TabMenu.addIcon("editdelete", "Delete", ()=>{
-      const refs = XML.getAnimationReferences(this.#currentAni.id);
+      const refs = this.#currentAni.getAnimationReferences();
       if(refs.length > 0)
       {
         let p = _CN("p", {}, [`There ${refs.length==1?"is":"are"} ${refs.length} references to this animation!`, _CN("br"), "Remove the next animation(s) first:"]);
@@ -121,6 +122,7 @@ class AnimationTabClass extends TabClass
     }
     super.hide();
     try{this.#canv?.animate(false);}catch(e){};
+    this.#editors.forEach(ed=>{ed.stopAnimations();});
   }
 
   saveAndClose()
@@ -141,6 +143,7 @@ class AnimationTabClass extends TabClass
   #createDiv()
   {
     this.div.innerHTML = "";
+    this.#editors = [];
     /*
     // Save and close
     _CN("button", {style:"position:absolute;right:10px;top:0px;"}, [_CN("img", {class:"icon", "data-icon":"filesave"})], this.div).addEventListener("click", ()=>{
@@ -211,10 +214,11 @@ class AnimationTabClass extends TabClass
     const divw = parseInt(90 / this.#nextKeys.length) + "vw";
 
     this.#nextKeys.forEach(nk=>{
-      const nextInfo = _CN("div", {class:"infobox aniinfobox", id:nk, style:`width:${divw};position:relative;`}, [_CN("h3", {}, ["Next " + nk])], this.div);
+      const nextInfo = _CN("div", {class:"infobox aniinfobox", id:nk, style:`width:${divw};min-width:290px;position:relative;`}, [_CN("h3", {}, ["Next " + nk])], this.div);
       const nexts = ani[nk];
 
       const ne = new NextEditor(ani[nk], nextInfo , {minitems:0});
+      this.#editors.push(ne);
       if(Array.isArray(nexts.next))
       {
         // Snapshot each transition's XML; NextEditor edits the cloned nodes in place.
@@ -228,6 +232,17 @@ class AnimationTabClass extends TabClass
         });
       }
     });
+
+    const linkInfo = _CN("div", {class:"infobox aniinfobox", style:`width:350px;position:relative;filter:grayscale(0.7)`}, [_CN("h3", {}, ["Linked from:"])], this.div);
+    setTimeout(()=>{
+      const links = this.#currentAni.getAnimationReferences();
+      let nextLinks = {next:[]};
+      links.forEach(l=>{
+        nextLinks.next.push({value:l});
+      });
+      const neLink = new NextEditor(nextLinks, linkInfo , {minitems:200, maxitems:0, edit:false});
+      this.#editors.push(neLink);
+    }, 500);
 
     console.log(this.#original);
     

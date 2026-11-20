@@ -125,6 +125,8 @@ class AniCanvasClass
   
   #_animate(currentTimestamp) 
   {
+    if(!this.#ani || this.#seq?.length == 0) return;
+
     if(aniCanvasLetAnimate || this.#forceAni)
       requestAnimationFrame(this.#_animate.bind(this));
     

@@ -152,7 +152,7 @@ class XMLAnimationsAnimation extends XMLNode
   get border() { return this.getNode("border")[0]; }
   get gravity() { return this.getNode("gravity")[0]; }
 
-  getTotalProbability(node)
+  getTotalProbability(node, filter)
   {
     let ret = 0;
     if(this.getNode(node) && Array.isArray(this.getNode(node)[0]?.nodes?.next))
@@ -161,6 +161,35 @@ class XMLAnimationsAnimation extends XMLNode
         ret += n.probability;
       });
     }
+    return ret;
+  }
+
+  getAnimationReferences()
+  {
+    let ret = [];
+    XML.animations.forEach((a, j)=>{
+      if(a.id != this.id) {
+        let found = false;
+        a.sequence.next?.forEach(an=>{
+          if(!found && an.value == this.id) {
+            found = true;
+            ret.push(a.id);
+          }
+        });
+        a.border?.next?.forEach(an=>{
+          if(!found && an.value == this.id) {
+            found = true;
+            ret.push(a.id);
+          }
+        });
+        a.gravity?.next?.forEach(an=>{
+          if(!found && an.value == this.id) {
+            found = true;
+            ret.push(a.id);
+          }
+        });
+      }
+    });
     return ret;
   }
 };
