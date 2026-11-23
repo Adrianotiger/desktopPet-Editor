@@ -63,30 +63,81 @@ jobs:
         run: |
           python .github/scripts/validate_readme.py
 
+      - name: Validate XML
+        if: steps.check.outputs.valid == 'true'
+        id: validateXml
+        continue-on-error: true
+        run: |
+          python .github/scripts/validate_xml.py
+
+      - name: Read validation results
+        id: results
+        if: steps.check.outputs.valid == 'true'
+        run: |
+          {
+            echo 'logs<<EOF'
+            cat logs.txt
+            echo EOF
+          } >> $GITHUB_OUTPUT
+      
+          {
+            echo 'errors<<EOF'
+            cat submission/errors.txt
+            echo EOF
+          } >> $GITHUB_OUTPUT
+      
+          if [ -s errors.txt ]; then
+            echo "success=false" >> $GITHUB_OUTPUT
+          else
+            echo "success=true" >> $GITHUB_OUTPUT
+          fi
+          
       - name: Comment on issue
         if: steps.check.outputs.valid == 'true'
         uses: actions/github-script@v7
         with:
           script: |
             const petName = "${{ steps.pet.outputs.petname }}" || "Unknown";
-
+            const author = "${{ steps.pet.outputs.author }}" || "Unknown";
+      
+            const logs = `${{ steps.results.outputs.logs }}`;
+            const errors = `${{ steps.results.outputs.errors }}`;
+      
+            const success = "${{ steps.results.outputs.success }}" === "true";
+      
+            let status;
+            if (success) {
+              status = "✅ Validation successful";
+            } else {
+              status = "❌ Validation failed";
+            }
+      
+            let body = `${status}
+      
+            Pet Name: **${petName}**
+            Author: **${author}**
+      
+            ## Logs
+      
+            \`\`\`
+            ${logs}
+            \`\`\`
+            `;
+      
+            if (!success) {
+              body += `
+      
+            ## Errors
+      
+            \`\`\`
+            ${errors}
+            \`\`\`
+            `;
+            }
+      
             github.rest.issues.createComment({
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.issue.number,
-              body:
-              `🤖 Validation started
-
-              Pet Name: **${petName}**
-
-              Checks currently enabled:
-
-              ✅ Pet submission detected
-
-              Future checks:
-              ⬜ Download attached files
-              ⬜ Validate icon.png (48x48)
-              ⬜ Validate animations.xml
-              ⬜ Validate README.md
-              ⬜ Create Pull Request automatically`
+              body
             });
