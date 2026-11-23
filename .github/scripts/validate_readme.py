@@ -5,8 +5,8 @@ README_FILE = "submission/README.md"
 LOG_FILE = "logs.txt"
 ERROR_FILE = "errors.txt"
 
-flog = open(LOG_FILE, "w")
-ferr = open(ERROR_FILE, "w")
+flog = open(LOG_FILE, "a")
+ferr = open(ERROR_FILE, "a")
 
 # File must exist and be named exactly README.md
 if not os.path.exists(README_FILE):
