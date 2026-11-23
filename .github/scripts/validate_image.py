@@ -6,8 +6,8 @@ IMAGE_FILE = "submission/icon.png"
 LOG_FILE = "logs.txt"
 ERROR_FILE = "errors.txt"
 
-flog = open(LOG_FILE, "w")
-ferr = open(ERROR_FILE, "w")
+flog = open(LOG_FILE, "a")
+ferr = open(ERROR_FILE, "a")
 
 if not os.path.exists(IMAGE_FILE):
     flog.write("❌ Image error\n")
