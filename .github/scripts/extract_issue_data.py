@@ -1,7 +1,17 @@
 import os
 import re
+from datetime import date
 
 body = os.environ["ISSUE_BODY"]
+
+os.makedirs("submission", exist_ok=True)
+LOG_FILE = "submission/logs.txt"
+ERROR_FILE = "submission/errors.txt"
+
+# Clear at every execution
+flog = open(LOG_FILE, "w")
+ferr = open(ERROR_FILE, "w")
+
 
 fields = {
     "petname": "",
@@ -30,9 +40,26 @@ description = re.search(
 
 if pet:
     fields["petname"] = pet.group(1).strip()
+    flog.write("✅ Pet name found\n")
+else:
+    flog.write("❌ Pet name invalid\n")
 
 if author:
+    flog.write("✅ Author name found\n")
     fields["author"] = author.group(1).strip()
+else:
+    flog.write("❌ Author name invalid\n")
+
+petname = fields["petname"].strip()
+author = fields["author"].strip()
+
+if not 2 <= len(petname) <= 16:
+    ferr.write("❌ Pet Name must be between 2 and 16 characters.\n")
+if not 2 <= len(author) <= 16:
+    ferr.write("❌ Author Name must be between 2 and 16 characters.\n")
+
+if not re.fullmatch(r"[A-Za-z0-9_-]+", petname):
+    ferr.write("❌ Pet Name may only contain letters, numbers, underscores (_) and hyphens (-).\n")
 
 if description:
     fields["description"] = description.group(1).strip()
@@ -44,3 +71,6 @@ with open(os.environ["GITHUB_OUTPUT"], "a") as output:
 print("Pet Name:", fields["petname"])
 print("Author:", fields["author"])
 print("Date:", fields["date"])
+
+flog.close()
+ferr.close()
