@@ -35,19 +35,20 @@ jobs:
         id: pet
         run: |
           BODY=$(cat <<'EOF'
-          ${{ github.event.issue.body }}
-          EOF
+            ${{ github.event.issue.body }}
+            EOF
           )
           PETNAME=$(echo "$BODY" | awk '/Pet Name/ {getline; getline; print; exit}' | xargs)
           echo "petname=$PETNAME" >> $GITHUB_OUTPUT
 
-      - name: Download and validate files
+      - name: Download files
         if: steps.check.outputs.valid == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const body = context.payload.issue.body;
-            console.log(body);
+        id: download
+        continue-on-error: true
+        run: |
+          python ./github/scripts/download_files.py
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
 
       - name: Extract attachments
         if: steps.check.outputs.valid == 'true'
