@@ -46,7 +46,7 @@ jobs:
         id: download
         continue-on-error: true
         run: |
-          python ./github/scripts/download_files.py
+          python ./.github/scripts/download_files.py
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
 
