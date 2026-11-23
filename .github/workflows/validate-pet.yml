@@ -49,24 +49,12 @@ jobs:
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
 
-      - name: Validate files
+      - name: Validate image
         if: steps.check.outputs.valid == 'true'
-        id: validate
+        id: validateImage
         continue-on-error: true
         run: |
-          python .github/scripts/validate_files.py
-
-      - name: Extract attachments
-        if: steps.check.outputs.valid == 'true'
-        run: |
-          python3 << 'PY'
-          import re
-          body = r"""${{ github.event.issue.body }}"""
-          urls = re.findall(r'https://github\.com/user-attachments/[^\s")<>]+', body)
-          print("Found URLs:")
-          for url in urls:
-              print(url)
-          PY
+          python .github/scripts/validate_image.py
 
       - name: Comment on issue
         if: steps.check.outputs.valid == 'true'
