@@ -14,6 +14,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Dump issue body
+        run: |
+          cat << 'EOF'
+          ${{ github.event.issue.body }}
+          EOF
+          
       - name: Check label
         id: check
         run: |
