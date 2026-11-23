@@ -7,6 +7,7 @@ body = os.environ["ISSUE_BODY"]
 os.makedirs("submission", exist_ok=True)
 LOG_FILE = "logs.txt"
 ERROR_FILE = "errors.txt"
+PETS_DIR = "testpets"
 
 # Clear at every execution
 flog = open(LOG_FILE, "w")
@@ -71,6 +72,17 @@ with open(os.environ["GITHUB_OUTPUT"], "a") as output:
 print("Pet Name:", fields["petname"])
 print("Author:", fields["author"])
 print("Date:", fields["date"])
+
+if os.path.exists(PETS_DIR):
+    existing_pets = [
+        d for d in os.listdir(PETS_DIR)
+        if os.path.isdir(os.path.join(PETS_DIR, d))
+    ]
+
+    if petname in existing_pets:
+        ferr.write("❌ Pet {petname} is already present in the gallery.\n")
+    else:
+        flog.write("✅ Pet {petname} is a new pet (not present in gallery)\n")
 
 flog.close()
 ferr.close()
