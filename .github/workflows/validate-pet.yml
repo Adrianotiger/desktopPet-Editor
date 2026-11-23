@@ -1,0 +1,74 @@
+name: Validate Pet Submission
+
+on:
+  issues:
+    types:
+      - opened
+      - edited
+
+permissions:
+  issues: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check label
+        id: check
+        run: |
+          LABELS='${{ toJson(github.event.issue.labels.*.name) }}'
+
+          if [[ "$LABELS" == *"pet-submission"* ]]; then
+            echo "valid=true" >> $GITHUB_OUTPUT
+          else
+            echo "valid=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Skip if not pet submission
+        if: steps.check.outputs.valid != 'true'
+        run: |
+          echo "Not a pet submission"
+
+      - name: Extract pet name
+        if: steps.check.outputs.valid == 'true'
+        id: pet
+        run: |
+          BODY=$(cat <<'EOF'
+          ${{ github.event.issue.body }}
+          EOF
+          )
+
+          PETNAME=$(echo "$BODY" | awk '
+            /Pet Name/ {getline; getline; print; exit}
+          ' | xargs)
+
+          echo "petname=$PETNAME" >> $GITHUB_OUTPUT
+
+      - name: Comment on issue
+        if: steps.check.outputs.valid == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const petName = "${{ steps.pet.outputs.petname }}" || "Unknown";
+
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body:
+              `🤖 Validation started
+
+              Pet Name: **${petName}**
+
+              Checks currently enabled:
+
+              ✅ Pet submission detected
+
+              Future checks:
+              ⬜ Download attached files
+              ⬜ Validate icon.png (48x48)
+              ⬜ Validate animations.xml
+              ⬜ Validate README.md
+              ⬜ Create Pull Request automatically`
+            });
