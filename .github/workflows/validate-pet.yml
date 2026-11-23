@@ -56,6 +56,13 @@ jobs:
         run: |
           python .github/scripts/validate_image.py
 
+      - name: Validate readme
+        if: steps.check.outputs.valid == 'true'
+        id: validateReadme
+        continue-on-error: true
+        run: |
+          python .github/scripts/validate_readme.py
+
       - name: Comment on issue
         if: steps.check.outputs.valid == 'true'
         uses: actions/github-script@v7
