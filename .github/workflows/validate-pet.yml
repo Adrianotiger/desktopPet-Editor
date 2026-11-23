@@ -13,7 +13,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
 
-    steps:
+    steps:    
       - name: Check label
         id: check
         run: |
@@ -41,6 +41,8 @@ jobs:
           PETNAME=$(echo "$BODY" | awk '/Pet Name/ {getline; getline; print; exit}' | xargs)
           echo "petname=$PETNAME" >> $GITHUB_OUTPUT
 
+      - uses: actions/checkout@v4
+       
       - name: Download files
         if: steps.check.outputs.valid == 'true'
         id: download
