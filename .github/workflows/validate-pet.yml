@@ -35,8 +35,8 @@ jobs:
         id: pet
         run: |
           BODY=$(cat <<'EOF'
-            ${{ github.event.issue.body }}
-            EOF
+          ${{ github.event.issue.body }}
+          EOF
           )
           PETNAME=$(echo "$BODY" | awk '/Pet Name/ {getline; getline; print; exit}' | xargs)
           echo "petname=$PETNAME" >> $GITHUB_OUTPUT
