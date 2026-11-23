@@ -34,12 +34,9 @@ jobs:
         if: steps.check.outputs.valid == 'true'
         id: pet
         run: |
-          BODY=$(cat <<'EOF'
-          ${{ github.event.issue.body }}
-          EOF
-          )
-          PETNAME=$(echo "$BODY" | awk '/Pet Name/ {getline; getline; print; exit}' | xargs)
-          echo "petname=$PETNAME" >> $GITHUB_OUTPUT
+          python .github/scripts/extract_issue_data.py
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
 
       - uses: actions/checkout@v4
        
@@ -51,6 +48,13 @@ jobs:
           python .github/scripts/download_files.py
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
+
+      - name: Validate files
+        if: steps.check.outputs.valid == 'true'
+        id: validate
+        continue-on-error: true
+        run: |
+          python .github/scripts/validate_files.py
 
       - name: Extract attachments
         if: steps.check.outputs.valid == 'true'
