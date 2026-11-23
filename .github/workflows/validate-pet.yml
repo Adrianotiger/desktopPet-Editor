@@ -19,7 +19,9 @@ jobs:
         run: |
           LABELS='${{ toJson(github.event.issue.labels.*.name) }}'
 
-          if [[ "$LABELS" != *"pet-submission"* ]]; then
+          if [[ "$LABELS" == *"pet-submission"* ]]; then
+            echo "VALID=true" >> $GITHUB_OUTPUT
+          else
             echo "VALID=false" >> $GITHUB_OUTPUT
           fi
 
