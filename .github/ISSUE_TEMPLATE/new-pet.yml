@@ -53,9 +53,9 @@ body:
   - type: textarea
     id: installation
     attributes:
-      label: Attached Files
+      label: Submission Files
       description: |
-        Attach the files below this issue after creating it.
+        Drag and drop the files directly into the issue body or into a comment.
 
         Accepted:
 
