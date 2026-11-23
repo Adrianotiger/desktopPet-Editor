@@ -14,21 +14,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Dump issue body
-        run: |
-          cat << 'EOF'
-          ${{ github.event.issue.body }}
-          EOF
-          
       - name: Check label
         id: check
         run: |
           LABELS='${{ toJson(github.event.issue.labels.*.name) }}'
 
-          if [[ "$LABELS" == *"pet-submission"* ]]; then
-            echo "valid=true" >> $GITHUB_OUTPUT
-          else
-            echo "valid=false" >> $GITHUB_OUTPUT
+          if [[ "$LABELS" != *"pet-submission"* ]]; then
+            echo "VALID=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Skip if not pet submission
@@ -44,12 +36,28 @@ jobs:
           ${{ github.event.issue.body }}
           EOF
           )
-
-          PETNAME=$(echo "$BODY" | awk '
-            /Pet Name/ {getline; getline; print; exit}
-          ' | xargs)
-
+          PETNAME=$(echo "$BODY" | awk '/Pet Name/ {getline; getline; print; exit}' | xargs)
           echo "petname=$PETNAME" >> $GITHUB_OUTPUT
+
+      - name: Download and validate files
+        if: steps.check.outputs.valid == 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = context.payload.issue.body;
+            console.log(body);
+
+      - name: Extract attachments
+        if: steps.check.outputs.valid == 'true'
+        run: |
+          python3 << 'PY'
+          import re
+          body = r"""${{ github.event.issue.body }}"""
+          urls = re.findall(r'https://github\.com/user-attachments/[^\s")<>]+', body)
+          print("Found URLs:")
+          for url in urls:
+              print(url)
+          PY
 
       - name: Comment on issue
         if: steps.check.outputs.valid == 'true'
