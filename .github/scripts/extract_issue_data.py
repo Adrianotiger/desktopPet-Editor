@@ -5,8 +5,8 @@ from datetime import date
 body = os.environ["ISSUE_BODY"]
 
 os.makedirs("submission", exist_ok=True)
-LOG_FILE = "submission/logs.txt"
-ERROR_FILE = "submission/errors.txt"
+LOG_FILE = "logs.txt"
+ERROR_FILE = "errors.txt"
 
 # Clear at every execution
 flog = open(LOG_FILE, "w")
