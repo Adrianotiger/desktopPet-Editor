@@ -30,6 +30,8 @@ jobs:
         run: |
           echo "Not a pet submission"
 
+      - uses: actions/checkout@v4
+
       - name: Extract pet name
         if: steps.check.outputs.valid == 'true'
         id: pet
@@ -37,8 +39,6 @@ jobs:
           python .github/scripts/extract_issue_data.py
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
-
-      - uses: actions/checkout@v4
        
       - name: Download files
         if: steps.check.outputs.valid == 'true'
