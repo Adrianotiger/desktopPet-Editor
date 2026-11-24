@@ -9,6 +9,15 @@ A visual guide to the editor and the main steps for creating or updating a pet p
 3. **Configure behavior** with spawns, animations, children, and sounds.
 4. **Review and save** your changes, then use XML Viewer to inspect the result.
 
+## Before you start  
+The editor should be easy to use, but you need to know some simple rules before you start with your first pet:  
+- Every moves has only 1 direction (see intro-tutorial).
+- Every move is described as `animation` and is a sequence of frames
+- A sequence will end with a border-detection, gravity-detection or if all frames are played
+- That's all!  
+
+If it is your first pet, please read the [Intro tutorial](../help/tutorial_intro.md)
+
 ## Use the menu bar
 
 ### ![Open icon](../icons/fileopen.png) File Menu

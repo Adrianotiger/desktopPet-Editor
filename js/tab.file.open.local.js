@@ -40,24 +40,43 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
     if(this.#folderHandler == null) return;
 
     this.projects = [];
-    let folders = this.#folderHandler.entries();
+    let success = false;
 
-    var f, f2;
-    while((f = await folders.next()))
-    {
-      if(f.done) break;
-      
-      if(f.value[1].kind === "directory")
-      {	
-        const project = new ProjectClass();
-        project.folder = f.value[1];
-        project.files = [];
-        project.isLocal = true;
-
-        this.projects.push(project);
+    setTimeout(()=>{
+      if(!success)
+      {
+        onsole.error("Unable to open files - timeout");
+        this.#folderHandler = null;
       }
+    }, 2000);
+
+    try
+    {
+      let folders = this.#folderHandler.entries();
+      var f;
+
+      while((f = await folders.next()))
+      {
+        if(f.done) break;
+        
+        if(f.value[1].kind === "directory")
+        {	
+          const project = new ProjectClass();
+          project.folder = f.value[1];
+          project.files = [];
+          project.isLocal = true;
+
+          this.projects.push(project);
+        }
+      }
+      success = true;
+      this.showProjects("Open Local Project");
     }
-    this.showProjects("Open Local Project");
+    catch(ex)
+    {
+      console.error("Unable to open files", ex);
+      this.#folderHandler = null;
+    }
   }
 
   loadFiles() 
