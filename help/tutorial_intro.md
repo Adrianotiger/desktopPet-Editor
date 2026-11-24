@@ -18,7 +18,7 @@ Every animation sequence described in your project has to be in the same directi
 Normally from left to right (eSheep is from right to left, as it come from Japan).  
 To move a pet, you need to set the `X-parameter` start and end. This will move the pet for `x` pixels on each frame.  
 Check the [animation-tutorial](../help/tutorial_editor_anim.md#Animation) to find out how to edit it.
-![Intro move](screenshots/tutoria_intro.webp)  
+![Intro move](../help/screenshots/tutoria_intro.webp)  
 
 **Important: just set always a negative X (move left) or positive X (move right).**  
 Once the pet reach the end of the screen, all animations written by you will be mirrored (with `End-Action:FLIP`) by the application 
@@ -31,7 +31,7 @@ A project with 200 animations is a fantastic project! A project with just 10 ani
 
 ## 3. Sequence End
 The pet will normally walk on the windows and taskbar, or climb screen border. The limit is up to you and your fantasy.  
-![Intro positions](screenshots/tutoria_intro2.webp)  
+![Intro positions](../help/screenshots/tutoria_intro2.webp)  
 The sequence can be interrupted or ended normally:  
 - border detected: If a border is detected (pet, window or screen) you can choose the animation to play at this point. The animation will be stopped and the new animation (frame sequence will be played).  
 - gravity detected: Your animation can also check for gravity. If no window, no taskbar and no screen is detected under your pet, the gravity-animation will be played automatically.  

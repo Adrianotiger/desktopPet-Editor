@@ -16,7 +16,7 @@ The editor should be easy to use, but you need to know some simple rules before 
 - A sequence will end with a border-detection, gravity-detection or if all frames are played
 - That's all!  
 
-If it is your first pet, please read the [Intro tutorial](../help/tutorial_intro.md)
+If it is your first pet, please read the ***[Tutorial Intro](../help/tutorial_intro.md)***
 
 ## Use the menu bar
 
