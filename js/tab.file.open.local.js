@@ -40,21 +40,16 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
     if(this.#folderHandler == null) return;
 
     this.projects = [];
-    let success = false;
+    let folders = this.#folderHandler.entries();
 
     setTimeout(()=>{
-      if(!success)
-      {
-        onsole.error("Unable to open files - timeout");
-        this.#folderHandler = null;
-      }
+      console.error("Unable to open files - Timeout");
+      this.#folderHandler = null;
     }, 2000);
 
     try
     {
-      let folders = this.#folderHandler.entries();
       var f;
-
       while((f = await folders.next()))
       {
         if(f.done) break;
@@ -69,7 +64,6 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
           this.projects.push(project);
         }
       }
-      success = true;
       this.showProjects("Open Local Project");
     }
     catch(ex)
