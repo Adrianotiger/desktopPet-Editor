@@ -7,6 +7,11 @@
 
 > **Beta:** The editor's core functionality is ready to use. Resource links and a dedicated editor for pet `README.md` files are still planned.
 
+> **Todo:**
+> - `refactor` animation id, to change every linked animation with the new ID.
+> - add more features to `animation editor`, like "clone animation"
+> - create a way to upload new pets directly in the github gallery (on the editor, in the `testpets`-folder)
+
 DesktopPet Editor makes it easier to create, edit, test, and prepare pets for [DesktopPet](https://github.com/Adrianotiger/desktopPet), the Windows desktop-pet application inspired by the classic eSheep. Instead of editing the project's XML by hand, use the visual editors and save the result in the format DesktopPet uses.
 
 ## Preview
