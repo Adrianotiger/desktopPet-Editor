@@ -106,6 +106,7 @@ jobs:
           PET_NAME: ${{ steps.pet.outputs.petname }}
           PET_AUTHOR: ${{ steps.pet.outputs.author }}
           PET_DATE: ${{ steps.pet.outputs.date }}
+          ACTION: "NEW"
 
       - name: Create pull request
         if: steps.check.outputs.valid == 'true' && steps.results.outputs.success == 'true'
