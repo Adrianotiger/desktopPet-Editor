@@ -39,7 +39,7 @@ if pet_action == "NEW":
 else:
     if any(pet.get("folder") == pet_name for pet in pets):
         print("Pet folder exists")
-    else
+    else:
         raise SystemExit("Pet is not listed")
         
     shutil.copytree(submission, destination, dirs_exist_ok=True)
