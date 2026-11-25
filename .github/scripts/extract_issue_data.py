@@ -4,6 +4,8 @@ from datetime import date
 
 body = os.environ["ISSUE_BODY"]
 action = os.environ["ACTION"]
+authorName = os.environ["AUTHOR"]
+authorId = os.environ["AUTHOR_ID"]
 
 os.makedirs("submission", exist_ok=True)
 LOG_FILE = "logs.txt"
