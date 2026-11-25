@@ -13,9 +13,6 @@ PETS_DIR = "testpets"
 flog = open(LOG_FILE, "w")
 ferr = open(ERROR_FILE, "w")
 
-flog.write("Workflow for new pet (v1.0):\n")
-flog.write("============================\n\n")
-
 fields = {
     "petname": "",
     "author": "",
@@ -40,6 +37,12 @@ description = re.search(
     body,
     re.DOTALL
 )
+
+daten = fields["date"]
+flog.write("Workflow for new pet (v1.0):\n")
+flog.write("============================\n")
+flog.write(f"Action:NEW {daten}\n")
+flog.write("============================\n")
 
 if pet:
     fields["petname"] = pet.group(1).strip()
