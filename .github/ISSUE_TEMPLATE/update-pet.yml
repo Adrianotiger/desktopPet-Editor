@@ -30,8 +30,8 @@ body:
   - type: input
     id: author
     attributes:
-      label: The name of the new author
-      description: Name of the pet to update
+      label: Author
+      description: Set the same Author name
       placeholder: Dancing Sheep
     validations:
       required: true
