@@ -6,6 +6,7 @@ owner_repo = os.environ["GITHUB_REPOSITORY"]
 issue_number = os.environ["ISSUE_NUMBER"]
 pet_name = os.environ.get("PET_NAME") or "Unknown"
 author = os.environ.get("AUTHOR") or "Unknown"
+date = os.environ.get("DATE") or "Unknown"
 logs = os.environ.get("LOGS", "")
 errors = os.environ.get("ERRORS", "")
 success = os.environ.get("SUCCESS") == "true"
@@ -16,6 +17,7 @@ body = f"""{status}
 
 Pet Name: **{pet_name}**
 Author: **{author}**
+Dagte: **{date}**
 
 ## Logs  
 ```text
