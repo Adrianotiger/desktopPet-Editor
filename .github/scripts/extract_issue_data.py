@@ -13,6 +13,8 @@ PETS_DIR = "testpets"
 flog = open(LOG_FILE, "w")
 ferr = open(ERROR_FILE, "w")
 
+flog.write("Workflow for new pet (v1.0):\n")
+flog.write("============================\n\n")
 
 fields = {
     "petname": "",
