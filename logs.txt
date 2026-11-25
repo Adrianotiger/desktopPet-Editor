@@ -1,0 +1,13 @@
+✅ Pet name found
+✅ Author name found
+✅ Pet Orange is a new pet (not present in gallery)
+✅ Image found
+✅ README.md found.
+✅ animations.xml found.
+✅ animations.xml found.
+✅ animations.xml matches the animations.xsd schema.
+✅ Header icon is valid base64 containing an ICO.
+✅ Sprite-sheet image is valid base64 containing a PNG.
+✅ Found 5 spawn node(s).
+ℹ️ Found 51 animation node(s).
+ℹ️ Found 0 sound node(s).
