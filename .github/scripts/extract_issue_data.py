@@ -21,23 +21,42 @@ fields = {
     "date": date.today().strftime("%Y-%m-%d")
 }
 
-pet = re.search(
-    r'### Pet Name\s*(.*?)\s*### Author',
-    body,
-    re.DOTALL
-)
-
-author = re.search(
-    r'### Author\s*(.*?)\s*### Description',
-    body,
-    re.DOTALL
-)
-
-description = re.search(
-    r'### Description\s*(.*?)\s*###',
-    body,
-    re.DOTALL
-)
+if action == "NEW":
+    pet = re.search(
+        r'### Pet Name\s*(.*?)\s*### Author',
+        body,
+        re.DOTALL
+    )
+    
+    author = re.search(
+        r'### Author\s*(.*?)\s*### Description',
+        body,
+        re.DOTALL
+    )
+    
+    description = re.search(
+        r'### Description\s*(.*?)\s*###',
+        body,
+        re.DOTALL
+    )
+else:
+    pet = re.search(
+        r'### Existing Pet Name\s*(.*?)\s*### The name',
+        body,
+        re.DOTALL
+    )
+    
+    author = re.search(
+        r'### The name of the new author\s*(.*?)\s*### What changed',
+        body,
+        re.DOTALL
+    )
+    
+    description = re.search(
+        r'### What changed\?\s*(.*?)\s*### Files to Update',
+        body,
+        re.DOTALL
+    )
 
 daten = fields["date"]
 flog.write("===============================\n")
