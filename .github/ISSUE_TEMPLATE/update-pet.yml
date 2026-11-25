@@ -28,7 +28,7 @@ body:
       required: true
 
   - type: textarea
-    id: changes
+    id: description
     attributes:
       label: What changed?
       description: Describe your modifications
@@ -42,7 +42,7 @@ body:
       required: true
 
   - type: textarea
-    id: files
+    id: installation
     attributes:
       label: Files to Update
       description: |
