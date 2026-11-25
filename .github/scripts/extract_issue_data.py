@@ -41,13 +41,13 @@ if action == "NEW":
     )
 else:
     pet = re.search(
-        r'### Existing Pet Name\s*(.*?)\s*### The name',
+        r'### Existing Pet Name\s*(.*?)\s*### Author',
         body,
         re.DOTALL
     )
     
     author = re.search(
-        r'### The name of the new author\s*(.*?)\s*### What changed',
+        r'### Author\s*(.*?)\s*### What changed',
         body,
         re.DOTALL
     )
