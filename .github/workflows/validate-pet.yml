@@ -27,25 +27,22 @@ jobs:
 
       - name: Skip if not pet submission
         if: steps.check.outputs.valid != 'true'
-        run: |
-          echo "Not a pet submission"
+        run: echo "Not a pet submission"
 
       - uses: actions/checkout@v4
 
       - name: Extract pet name
         if: steps.check.outputs.valid == 'true'
         id: pet
-        run: |
-          python .github/scripts/extract_issue_data.py
-        env:
+        run: python .github/scripts/extract_issue_data.py
+        env: 
           ISSUE_BODY: ${{ github.event.issue.body }}
        
       - name: Download files
         if: steps.check.outputs.valid == 'true'
         id: download
         continue-on-error: true
-        run: |
-          python .github/scripts/download_files.py
+        run: python .github/scripts/download_files.py
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
 
@@ -59,44 +56,24 @@ jobs:
         if: steps.check.outputs.valid == 'true'
         id: validateImage
         continue-on-error: true
-        run: |
-          python .github/scripts/validate_image.py
+        run: python .github/scripts/validate_image.py
 
       - name: Validate readme
         if: steps.check.outputs.valid == 'true'
         id: validateReadme
         continue-on-error: true
-        run: |
-          python .github/scripts/validate_readme.py
+        run: python .github/scripts/validate_readme.py
 
       - name: Validate XML
         if: steps.check.outputs.valid == 'true'
         id: validateXml
         continue-on-error: true
-        run: |
-          python .github/scripts/validate_xml.py
+        run: python .github/scripts/validate_xml.py
 
       - name: Read validation results
         id: results
         if: steps.check.outputs.valid == 'true'
-        run: |
-          {
-            echo 'logs<<EOF'
-            cat logs.txt
-            echo EOF
-          } >> $GITHUB_OUTPUT
-      
-          {
-            echo 'errors<<EOF'
-            cat errors.txt
-            echo EOF
-          } >> $GITHUB_OUTPUT
-      
-          if [ -s errors.txt ]; then
-            echo "success=false" >> $GITHUB_OUTPUT
-          else
-            echo "success=true" >> $GITHUB_OUTPUT
-          fi
+        run: python .github/scripts/read_validation_results.py
           
       - name: Comment on issue
         if: steps.check.outputs.valid == 'true'
