@@ -77,50 +77,13 @@ jobs:
           
       - name: Comment on issue
         if: steps.check.outputs.valid == 'true'
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const petName = "${{ steps.pet.outputs.petname }}" || "Unknown";
-            const author = "${{ steps.pet.outputs.author }}" || "Unknown";
-      
-            const logs = `${{ steps.results.outputs.logs }}`;
-            const errors = `${{ steps.results.outputs.errors }}`;
-      
-            const success = "${{ steps.results.outputs.success }}" === "true";
-      
-            let status;
-            if (success) {
-              status = "✅ Validation successful";
-            } else {
-              status = "❌ Validation failed";
-            }
-      
-            let body = `${status}
-      
-            Pet Name: **${petName}**
-            Author: **${author}**
-      
-            ## Logs
-      
-            \`\`\`
-            ${logs}
-            \`\`\`
-            `;
-      
-            if (!success) {
-              body += `
-      
-            ## Errors
-      
-            \`\`\`
-            ${errors}
-            \`\`\`
-            `;
-            }
-      
-            github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body
-            });
+        run: python .github/scripts/comment_on_issue.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          PET_NAME: ${{ steps.pet.outputs.petname }}
+          AUTHOR: ${{ steps.pet.outputs.author }}
+          LOGS: ${{ steps.results.outputs.logs }}
+          ERRORS: ${{ steps.results.outputs.errors }}
+          SUCCESS: ${{ steps.results.outputs.success }}
