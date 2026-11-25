@@ -20,17 +20,22 @@ Author: **{author}**
 Dagte: **{date}**
 
 ## Logs  
+
 ```text
 {logs}
 ```
+
 """
 
 if not success:
     body += f"""
-    ## Errors
+    
+    ## Errors  
+    
     ```text
     {errors}
     ```
+    
     """
 
 url = f"https://api.github.com/repos/{owner_repo}/issues/{issue_number}/comments"
