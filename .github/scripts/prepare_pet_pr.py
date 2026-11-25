@@ -15,6 +15,8 @@ if not re.fullmatch(r"[A-Za-z0-9_-]{2,16}", pet_name):
 submission = Path("submission")
 destination = Path("testpets") / pet_name
 manifest_path = Path("testpets/pets.json")
+log_file = Path("logs.txt")
+error_file = Path("errors.txt")
 
 if not submission.is_dir() or not any(submission.iterdir()):
     raise SystemExit("No submitted files found")
@@ -30,6 +32,19 @@ if any(pet.get("folder") == pet_name for pet in pets):
 
 shutil.copytree(submission, destination)
 
+if log_file.is_file():
+    shutil.copy2(log_file, destination / "compile_logs.txt")
+
+# Remove temporary submission data and validation errors.
+shutil.rmtree(submission)
+
+if error_file.is_file():
+    error_file.unlink()
+
+if log_file.is_file():
+    log_file.unlink()
+
+pets.sort(key=lambda pet: pet["folder"].casefold())
 pets.append({
     "folder": pet_name,
     "author": author,
