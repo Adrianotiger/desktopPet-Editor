@@ -85,10 +85,17 @@ if os.path.exists(PETS_DIR):
         if os.path.isdir(os.path.join(PETS_DIR, d))
     ]
 
-    if petname in existing_pets:
-        ferr.write(f"❌ Pet {petname} is already present in the gallery.\n")
+    if action == "NEW":
+        if petname in existing_pets:
+            ferr.write(f"❌ Pet {petname} is already present in the gallery.\n")
+        else:
+            flog.write(f"✅ Pet {petname} is a new pet (not present in gallery)\n")
     else:
-        flog.write(f"✅ Pet {petname} is a new pet (not present in gallery)\n")
+        if petname in existing_pets:
+            flog.write(f"✅ Pet {petname} is present in the gallery\n")
+        else:
+            ferr.write(f"❌ Pet {petname} was not found in the gallery.\n")
+            
 
 flog.close()
 ferr.close()
