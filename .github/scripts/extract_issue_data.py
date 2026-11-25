@@ -80,9 +80,9 @@ if os.path.exists(PETS_DIR):
     ]
 
     if petname in existing_pets:
-        ferr.write("❌ Pet {petname} is already present in the gallery.\n")
+        ferr.write(f"❌ Pet {petname} is already present in the gallery.\n")
     else:
-        flog.write("✅ Pet {petname} is a new pet (not present in gallery)\n")
+        flog.write(f"✅ Pet {petname} is a new pet (not present in gallery)\n")
 
 flog.close()
 ferr.close()
