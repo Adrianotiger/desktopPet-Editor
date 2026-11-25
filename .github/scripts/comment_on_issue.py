@@ -17,7 +17,7 @@ body = f"""{status}
 
 Pet Name: **{pet_name}**
 Author: **{author}**
-Dagte: **{date}**
+Date: **{date}**
 
 ## Logs  
 
