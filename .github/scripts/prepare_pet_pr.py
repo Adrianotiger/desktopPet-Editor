@@ -38,7 +38,7 @@ if pet_action == "NEW":
         shutil.copy2(log_file, destination / "compile_logs.txt")
 else:
     if any(pet.get("folder") == pet_name for pet in pets):
-        print("Pet folder exists)
+        print("Pet folder exists")
     else
         raise SystemExit("Pet is not listed")
         
