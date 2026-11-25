@@ -76,9 +76,9 @@ body:
       options:
         - label: icon.png is valid
           required: true
-        - label: animations.xml is included (or inside the ZIP)
+        - label: animations.xml is included
           required: true
-        - label: README.md is included (or inside the ZIP)
+        - label: README.md is included
           required: true
         - label: I am the author or have permission to submit these files
           required: true
