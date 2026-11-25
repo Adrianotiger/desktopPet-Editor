@@ -22,13 +22,13 @@ error_file = Path("errors.txt")
 if not submission.is_dir() or not any(submission.iterdir()):
     raise SystemExit("No submitted files found")
 
-if destination.exists():
-    raise SystemExit("Pet folder already exists")
-
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 pets = manifest.setdefault("pets", [])
 
 if pet_action == "NEW":
+    if destination.exists():
+        raise SystemExit("Pet folder already exists")
+    
     if any(pet.get("folder") == pet_name for pet in pets):
         raise SystemExit("Pet is already listed")
 
@@ -37,6 +37,11 @@ if pet_action == "NEW":
     if log_file.is_file():
         shutil.copy2(log_file, destination / "compile_logs.txt")
 else:
+    if any(pet.get("folder") == pet_name for pet in pets):
+        print("Pet folder exists)
+    else
+        raise SystemExit("Pet is not listed")
+        
     shutil.copytree(submission, destination, dirs_exist_ok=True)
 
     if log_file.is_file():
