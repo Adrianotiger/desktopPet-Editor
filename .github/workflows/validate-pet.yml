@@ -84,6 +84,7 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           PET_NAME: ${{ steps.pet.outputs.petname }}
           AUTHOR: ${{ steps.pet.outputs.author }}
+          DATE: ${{ steps.pet.outputs.date }}
           LOGS: ${{ steps.results.outputs.logs }}
           ERRORS: ${{ steps.results.outputs.errors }}
           SUCCESS: ${{ steps.results.outputs.success }}
