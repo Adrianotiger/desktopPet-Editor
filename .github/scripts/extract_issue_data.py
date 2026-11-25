@@ -19,6 +19,8 @@ ferr = open(ERROR_FILE, "w")
 fields = {
     "petname": "",
     "author": "",
+    "authorname": authorName,
+    "authorId": authorId,
     "description": "",
     "date": date.today().strftime("%Y-%m-%d")
 }
