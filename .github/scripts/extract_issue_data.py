@@ -40,10 +40,11 @@ description = re.search(
 )
 
 daten = fields["date"]
+flog.write("===============================\n")
 flog.write("Workflow for new pet (v1.0):\n")
-flog.write("============================\n")
+flog.write("===============================\n")
 flog.write(f"Action:{action} {daten}\n")
-flog.write("============================\n")
+flog.write("-------------------------------\n\n")
 
 if pet:
     fields["petname"] = pet.group(1).strip()
