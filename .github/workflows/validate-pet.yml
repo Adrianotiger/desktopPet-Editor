@@ -40,6 +40,7 @@ jobs:
         run: python .github/scripts/extract_issue_data.py
         env: 
           ISSUE_BODY: ${{ github.event.issue.body }}
+          ACTION: "NEW"
        
       - name: Download files
         if: steps.check.outputs.valid == 'true'
