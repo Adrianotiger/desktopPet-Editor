@@ -59,11 +59,19 @@ if log_file.is_file():
     log_file.unlink()
 
 pets.sort(key=lambda pet: pet["folder"].casefold())
-pets.append({
-    "folder": pet_name,
-    "author": author,
-    "lastupdate": pet_date,
-})
+
+if pet_action == "NEW":
+    pets.append({
+        "folder": pet_name,
+        "author": author,
+        "lastupdate": pet_date,
+    })
+else:
+    pet = next((pet for pet in pets if pet.get("folder") == pet_name), None)
+    if pet is None:
+        raise SystemExit("Pet is not listed")
+    pet["lastupdate"] = pet_date
+
 
 manifest_path.write_text(
     json.dumps(manifest, indent=2, ensure_ascii=False) + "\n",
