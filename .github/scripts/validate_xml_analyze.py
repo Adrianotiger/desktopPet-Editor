@@ -50,7 +50,7 @@ def validate_icon(data: bytes) -> None:
             raise ValueError(f"expected ICO format, got {image.format}")
 
         # Decode the required icon entry, not just its directory metadata.
-        image.ico.getimage().load()
+        image.ico.getimage((48,48)).load()
 
 
 def validate_png(data: bytes) -> None:
