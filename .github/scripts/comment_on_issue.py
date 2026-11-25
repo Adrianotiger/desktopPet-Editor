@@ -23,18 +23,16 @@ Date: **{date}**
 
 ```text
 {logs}
-```
+```  
 
 """
 
 if not success:
-    body += f"""
-    
-    ## Errors  
+    body += f"""## Errors  
     
     ```text
     {errors}
-    ```
+    ```  
     
     """
 
