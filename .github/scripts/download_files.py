@@ -33,3 +33,14 @@ for url in urls:
 print("\nDownloaded files:")
 for file in os.listdir(target_dir):
     print(f"- {file}")
+
+files = {file.lower() for file in os.listdir(target_dir)}
+found = {
+    "readme": "readme.md" in files,
+    "icon": "icon.png" in files,
+    "animations": "animations.xml" in files,
+}
+
+with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+    for name, exists in found.items():
+        output.write(f"{name}={str(exists).lower()}\n")
