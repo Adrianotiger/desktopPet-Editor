@@ -10,10 +10,10 @@ body:
       value: |
         Thank you for contributing to DesktopPet/eSheep!
 
-        You can either:
+        You can:
 
-        - Attach a ZIP containing all files
         - Attach the individual files directly
+        - Drag and drop each file
 
         Required files:
 
@@ -63,9 +63,7 @@ body:
         - icon.png
         - README.md
 
-        or
-
-        - file.zip containing the 3 files.
+        - (zip files are not acceped)
 
       placeholder: After creating the issue, drag and drop files into a comment.
     validations:
