@@ -7,7 +7,10 @@ on:
       - edited
 
 permissions:
+  contents: write
   issues: write
+  pull-requests: write
+  
 
 jobs:
   validate:
@@ -94,3 +97,27 @@ jobs:
           LOGS: ${{ steps.results.outputs.logs }}
           ERRORS: ${{ steps.results.outputs.errors }}
           SUCCESS: ${{ steps.results.outputs.success }}
+
+      - name: Prepare pet files and update pets.json
+        if: steps.check.outputs.valid == 'true' && steps.results.outputs.success == 'true'
+        run: python .github/scripts/prepare_pet_pr.py
+        env:
+          PET_NAME: ${{ steps.pet.outputs.petname }}
+          PET_AUTHOR: ${{ steps.pet.outputs.author }}
+          PET_DATE: ${{ steps.pet.outputs.date }}
+
+      - name: Create pull request
+        if: steps.check.outputs.valid == 'true' && steps.results.outputs.success == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: pet-submission/issue-${{ github.event.issue.number }}
+          delete-branch: true
+          commit-message: "Add pet ${{ steps.pet.outputs.petname }} from issue #${{ github.event.issue.number }}"
+          title: "Add pet ${{ steps.pet.outputs.petname }}"
+          body: |
+            This pull request adds the validated pet submission **${{ steps.pet.outputs.petname }}** to `testpets/` and updates `testpets/pets.json`.
+
+            Submitted by: ${{ steps.pet.outputs.author }}
+            Source issue: #${{ github.event.issue.number }}
+          draft: false
