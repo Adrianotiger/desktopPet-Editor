@@ -50,25 +50,31 @@ jobs:
         if: steps.check.outputs.valid == 'true'
         run: |
           python -m pip install --upgrade pip
-          pip install pillow lxml
+          pip install pillow lxml mutagen
           
-      - name: Validate image
+      - name: Check image
         if: steps.check.outputs.valid == 'true'
         id: validateImage
         continue-on-error: true
         run: python .github/scripts/validate_image.py
 
-      - name: Validate readme
+      - name: Check readme
         if: steps.check.outputs.valid == 'true'
         id: validateReadme
         continue-on-error: true
         run: python .github/scripts/validate_readme.py
 
-      - name: Validate XML
+      - name: Check XML
         if: steps.check.outputs.valid == 'true'
         id: validateXml
         continue-on-error: true
         run: python .github/scripts/validate_xml.py
+
+      - name: Analyze XML
+        if: steps.check.outputs.valid == 'true'
+        id: checkXml
+        continue-on-error: true
+        run: python .github/scripts/validate_xml_analyze.py
 
       - name: Read validation results
         id: results
