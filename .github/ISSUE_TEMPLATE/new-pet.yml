@@ -29,7 +29,6 @@ body:
       label: Pet Name
       description: Unique name of the pet
       placeholder: Dancing Sheep
-      value: ${{ github.actor }}
     validations:
       required: true
 
