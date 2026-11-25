@@ -41,6 +41,8 @@ jobs:
         env: 
           ISSUE_BODY: ${{ github.event.issue.body }}
           ACTION: "NEW"
+          AUTHOR: ${{ github.actor }}
+          AUTHOR_ID: ${{ github.actor_id }}
        
       - name: Download files
         if: steps.check.outputs.valid == 'true'
