@@ -3,6 +3,7 @@ import re
 from datetime import date
 
 body = os.environ["ISSUE_BODY"]
+action = os.environ["ACTION"]
 
 os.makedirs("submission", exist_ok=True)
 LOG_FILE = "logs.txt"
@@ -41,7 +42,7 @@ description = re.search(
 daten = fields["date"]
 flog.write("Workflow for new pet (v1.0):\n")
 flog.write("============================\n")
-flog.write(f"Action:NEW {daten}\n")
+flog.write(f"Action:{action} {daten}\n")
 flog.write("============================\n")
 
 if pet:
