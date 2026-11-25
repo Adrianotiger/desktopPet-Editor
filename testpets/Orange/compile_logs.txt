@@ -11,3 +11,13 @@
 ✅ Found 5 spawn node(s).
 ℹ️ Found 51 animation node(s).
 ℹ️ Found 0 sound node(s).
+===============================
+Workflow for new pet (v1.0):
+===============================
+Action:UPDATE 2026-11-25
+-------------------------------
+
+✅ Pet name found
+✅ Author name found
+✅ Pet Orange is present in the gallery
+✅ README.md found.
