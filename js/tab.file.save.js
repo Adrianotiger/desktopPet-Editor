@@ -45,10 +45,11 @@ class SaveTabClass extends TabClass
       if(this.#localFolder == null) this.#localFolder = new SaveProjectFolderLocalClass(this.div);
       if(this.#webFolder == null) this.#webFolder = new SaveProjectFolderWebClass(this.div);
 
-      if(OpenTab.projectFolder != null)
+      switch(OpenTab.projectFolder.projType)
       {
-        if(OpenTab.projectFolder.isLocal) this.#localFolder.show();
-        else this.#webFolder.show();
+        case "local": this.#localFolder.show(); break;
+        case "web": this.#webFolder.show(); break;
+        case "github": /* github is readonly */;
       }
     });
 

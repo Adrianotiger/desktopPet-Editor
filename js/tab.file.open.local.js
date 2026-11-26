@@ -4,35 +4,52 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
   #folderHandler = null;
   #db = null;
 
-  constructor(parentDiv)
+  constructor(iconsDiv, infoDiv, folderDiv)
   {
     super(
-      parentDiv,
-      "Local folder is a folder accessible by the browser. This is the root folder, every subfolder is another animation project containing a animations.xml file.",
-      [
-        _CN("img", {class:"icon", "data-icon":"fileopenlocal", style:"float:left;"}), 
-        "Open local Pet folder..."
-      ],
-      "After pressing the button, select the root folder to use for your projects."
+      folderDiv
     );
 
+    let butt = _CN("button", {style:"margin:10px;line-height:32px;width:128px;"}, [
+      _CN("img", {class:"icon icon64", "data-icon":"fileopenlocal"}), 
+      _CN("br"),
+      "Open local project"
+    ], iconsDiv);
+    butt.addEventListener("click", ()=>{this.buttonPressed();});
+    butt.addEventListener("mousemove", ()=>{
+      infoDiv.textContent = "Local folder is a folder accessible by the browser. This is the root folder, every subfolder is another animation project containing a animations.xml file. After pressing the button, select the root folder to use for your projects.";
+    });
+
+    /*
     this.#getFolderHandler().then(()=>{
       this.loadFolders();
     }).catch(()=>{
       // nothing, wait for button press.
     });
+    */
   }
 
   get rootFolder() { return this.#folderHandler; }
 
   buttonPressed()
   {
-    this.#checkPermission().then(async()=>{
-      await this.loadFolders();
-    }).catch((err)=>{
-      console.error("No permission to load folder", err);
-      Msg.show({title:"Permissions error", content:"No permission to load folders from this browser. Please grant access to use this functionality."});
-    });
+    if(this.#db == null)
+    {
+      this.#getFolderHandler().then(()=>{
+        this.loadFolders();
+      }).catch(()=>{
+        // nothing, wait for button press.
+      });
+    }
+    else
+    {
+      this.#checkPermission().then(async()=>{
+        await this.loadFolders();
+      }).catch((err)=>{
+        console.error("No permission to load folder", err);
+        Msg.show({title:"Permissions error", content:"No permission to load folders from this browser. Please grant access to use this functionality."});
+      });
+    }
   }
 
   async loadFolders()
@@ -65,7 +82,7 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
           const project = new ProjectClass();
           project.folder = f.value[1];
           project.files = [];
-          project.isLocal = true;
+          project.projType = "local";
 
           this.projects.push(project);
         }

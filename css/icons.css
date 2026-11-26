@@ -52,6 +52,7 @@
 .icon[data-icon="fileopenxml"]   { content: url("../icons/fileopenxml.png"); }
 .icon[data-icon="fileopenlocal"]   { content: url("../icons/fileopenlocal.png"); }
 .icon[data-icon="fileopenweb"]   { content: url("../icons/fileopenweb.png"); }
+.icon[data-icon="fileopengithub"]   { content: url("../icons/fileopengithub.png"); }
 .icon[data-icon="filenew"]   { content: url("../icons/filenew.png"); }
 .icon[data-icon="filesave"]   { content: url("../icons/filesave.png"); }
 .icon[data-icon="filesaveas"]   { content: url("../icons/filesaveas.png"); }

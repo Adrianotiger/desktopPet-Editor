@@ -3,17 +3,21 @@ class OpenProjectFolderWebClass extends OpenProjectFolderClass
   #folderHandler = null;
   #supabasedomain = "jurrsvjhvldxcbtrvdrf";
 
-  constructor(parentDiv)
+  constructor(iconsDiv, infoDiv, folderDiv)
   {
     super(
-      parentDiv,
-      "Web folder is a virtual folder on the web, stored on Supabase.co.",
-      [
-        _CN("img", {class:"icon", "data-icon":"fileopenweb", style:"float:left;"}), 
-        "Open Web Pet folder..."
-      ],
-      "Note: Pets stored here are public and accessible to everyone. You can share the link to other users or ask to upload them to github."
+      folderDiv
     );
+
+    let butt = _CN("button", {style:"margin:10px;line-height:32px;width:128px;"}, [
+      _CN("img", {class:"icon icon64", "data-icon":"fileopenweb"}), 
+      _CN("br"),
+      "Open web project"
+    ], iconsDiv);
+    butt.addEventListener("click", ()=>{this.buttonPressed();});
+    butt.addEventListener("mousemove", ()=>{
+      infoDiv.textContent = "Web folder is a virtual folder on the web, stored on Supabase.co. Note: Pets stored here are public and accessible to everyone. You can share the link to other users or ask to upload them to github.";
+    });
 
     let token = localStorage.getItem(`sb-${this.#supabasedomain}-auth-token`);
     if(token != null)
@@ -35,7 +39,7 @@ class OpenProjectFolderWebClass extends OpenProjectFolderClass
 
     if(token != null)
     {
-      this.div.innerHTML = "Loading Web content...";
+      this.folderDiv.innerHTML = "Loading Web content...";
 
       this.#loadWebPath().then(async ()=>{
         await this.loadFolders();
@@ -46,19 +50,19 @@ class OpenProjectFolderWebClass extends OpenProjectFolderClass
     }
     else
     {
-      this.div.innerHTML = "Signing in...";
+      this.folderDiv.innerHTML = "Signing in...";
       this.#loadWebPath().then(()=>{
         let scriptTimeout = 4;
         let loginTimeout = -1;
         let timeoutInt = setInterval(async ()=>{
           if(scriptTimeout >= 0)
           {
-            this.div.innerHTML = `Load script... (${scriptTimeout})`;
+            this.folderDiv.innerHTML = `Load script... (${scriptTimeout})`;
             scriptTimeout--;
             if(scriptTimeout < 0)
             {
               clearInterval(timeoutInt);
-              this.div.innerHTML = `Unable to load Supabase script!`;
+              this.folderDiv.innerHTML = `Unable to load Supabase script!`;
               return;
             }
             else if(Supabase.isScriptLoaded)
@@ -70,12 +74,12 @@ class OpenProjectFolderWebClass extends OpenProjectFolderClass
           }
           if(loginTimeout >= 0)
           {
-            this.div.innerHTML = `Signing in... (${loginTimeout})`;
+            this.folderDiv.innerHTML = `Signing in... (${loginTimeout})`;
             loginTimeout--;
             if(loginTimeout < 0)
             {
               clearInterval(timeoutInt);
-              this.div.innerHTML = `Unable to sign in!`;
+              this.folderDiv.innerHTML = `Unable to sign in!`;
               return;
             }
             /*
@@ -111,7 +115,7 @@ class OpenProjectFolderWebClass extends OpenProjectFolderClass
         const project = new ProjectClass();
         project.folder = d;
         project.files = [];
-        project.isLocal = false;
+        project.projType = "web";
 
         this.projects.push(project);
       }

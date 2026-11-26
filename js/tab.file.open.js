@@ -2,7 +2,7 @@ class ProjectClass
 {
   folder = null;
   files = null;
-  isLocal = null;
+  projType = "";
 
   span = null;
   icon = null;
@@ -16,17 +16,11 @@ class OpenProjectFolderClass
 {
   projects = [];
   #div = null;
+  folderDiv = null;
 
-  constructor(parentDiv, description, buttonElements, postDescription="")
+  constructor(folderDiv)
   {
-    if(this.#div != null) this.#div.innerHTML = "";
-
-    this.#div = _CN("div", {style:"margin:10px auto;border:outset 1px var(--border);border-radius:10px;"}, [], parentDiv);
-    _CN("p", {}, [description], this.#div);
-    let buttLoad = _CN("button", {style:"width:30vw;line-height:32px;"}, buttonElements, this.#div);
-    _CN("p", {}, [postDescription], this.#div);
-
-    buttLoad.addEventListener("click", ()=>{this.buttonPressed();});
+    this.folderDiv = folderDiv;
   }
 
   get div() { return this.#div; };
@@ -38,43 +32,46 @@ class OpenProjectFolderClass
 
   showProjects(title = "Open Project") 
   {
-    this.#div.innerHTML = "";
-    let div = _CN("div", {class:"aniframeeditor", style:"height:30vh;width:80vw;overflow-y:scroll;margin:0 auto;"}, [], this.#div);
-    _CN("i", {}, [title], div);
-    this.projects.forEach(async p=>{
-      p.span = _CN("span", {style:"opacity:0.2"}, [_CN("img", {class:"icon", "data-icon":"folder"}), _CN("br"), p.folder.name], div);
-    });
-
-    this.loadFiles().then(()=>{
+    if(this.#div == null)
+    {
+      this.#div = _CN("div", {class:"aniframeeditor", style:"height:100%;width:80vw;overflow-y:scroll;margin:0 auto;padding-right:64px;padding-top:10px;"});
+      _CN("i", {}, [title], this.#div);
       this.projects.forEach(async p=>{
-        p.files.forEach(pf=>{
-          switch(pf.toLowerCase())
+        p.span = _CN("span", {style:"opacity:0.2;min-width:128px;"}, [_CN("img", {class:"icon", "data-icon":"folder"}), _CN("br"), p.folder.name], this.#div);
+      });
+
+      this.loadFiles().then(()=>{
+        this.projects.forEach(async p=>{
+          p.files.forEach(pf=>{
+            switch(pf.toLowerCase())
+            {
+              case "animations.xml": p.xml = true; break;
+              case "readme.md": p.readme = true; break;
+              case "icon.png": p.image = true; break;
+            }
+          });
+          
+          if(p.xml)
           {
-            case "animations.xml": p.xml = true; break;
-            case "readme.md": p.readme = true; break;
-            case "icon.png": p.image = true; break;
+            p.span.style.opacity = 1;
+            if(p.icon)
+            {
+              p.span.getElementsByTagName("img")[0].src = URL.createObjectURL( p.icon );
+              p.span.getElementsByTagName("img")[0].style.content = "none";
+            }
+
+            p.span.addEventListener("click", async ()=>{
+              OpenTab.setProject(p);
+              OpenTab.openFile(await this.getFile(p, "animations.xml"));
+            });
           }
         });
-        
-        if(p.xml)
-        {
-          p.span.style.opacity = 1;
-          if(p.icon)
-          {
-            p.span.getElementsByTagName("img")[0].src = URL.createObjectURL( p.icon );
-            p.span.getElementsByTagName("img")[0].style.content = "none";
-          }
-
-          p.span.addEventListener("click", async ()=>{
-            OpenTab.setProject(p);
-            OpenTab.openFile(await this.getFile(p, "animations.xml"));
-          });
-        }
+        console.log(this.projects);
       });
-      console.log(this.projects);
-    });
+    }
 
-    return div;
+    this.folderDiv.innerHTML = "";
+    this.folderDiv.appendChild(this.#div);
   }
 };
 
@@ -82,6 +79,7 @@ class OpenTabClass extends TabClass
 {  
   #localFolder = null;
   #webFolder = null;
+  #gitHubFolder = null;
 
   #currentProject = null;
 
@@ -92,14 +90,27 @@ class OpenTabClass extends TabClass
     _CN("h1", {}, ["Open"], this.div);
     _CN("hr", {}, [], this.div);
 
-    let butt = _CN("button", {style:"width:30vw;margin:10px;line-height:32px;"}, [_CN("img", {class:"icon", "data-icon":"fileopenxml", style:"float:left;"}), "Open file..."], this.div);
+    const iconsDiv = _CN("div", {style:"height:120px;"}, [], this.div);
+    const infoDiv = _CN("div", {style:"width:80vw;height:50px;margin:8px auto;border-radius:5px;line-height:16px;border:1px solid #66f;box-shadow:2px 2px 4px #33a;"}, ["Open a single animations.xml or a project from local PC, webfolder or GitHub."], this.div);
+    _CN("hr", {}, [], this.div);
+    const folderDiv = _CN("div", {style:"height:40vh;width:80vw;margin:0 auto;"}, [], this.div);
+
+    let butt = _CN("button", {style:"margin:10px;line-height:32px;width:128px;"}, [
+      _CN("img", {class:"icon icon64", "data-icon":"fileopenxml"}), 
+      _CN("br"),
+      "Open file..."
+    ], iconsDiv);
     butt.addEventListener("click", ()=>{this.openFileDialog();});
+    butt.addEventListener("mousemove", ()=>{
+      infoDiv.textContent = "Open a single animation.xml file from your PC.";
+    });
 
     _CN("hr", {style:"width:80%;margin:10px auto;"}, [], this.div);
 
-    loadScripts(["tab.file.open.local", "tab.file.open.web"], true).then(()=>{
-      this.#localFolder = new OpenProjectFolderLocalClass(this.div);
-      this.#webFolder = new OpenProjectFolderWebClass(this.div);
+    loadScripts(["tab.file.open.local", "tab.file.open.web", "tab.file.open.github"], true).then(()=>{
+      this.#localFolder = new OpenProjectFolderLocalClass(iconsDiv, infoDiv, folderDiv);
+      this.#webFolder = new OpenProjectFolderWebClass(iconsDiv, infoDiv, folderDiv);
+      this.#gitHubFolder = new OpenProjectFolderGitHubClass(iconsDiv, infoDiv, folderDiv);
     });
 
     
@@ -172,7 +183,7 @@ class OpenTabClass extends TabClass
 
     if(this.#currentProject != null)
     {
-      setTitle(0, this.#currentProject.isLocal ? " - [local] " : " - [web] ");
+      setTitle(0, ` - [${this.#currentProject.projType}] `);
       setTitle(1, (this.#currentProject.folder?.name??"?") + "-project");
     }
     else
