@@ -9,7 +9,7 @@ class AnimationTabClass extends TabClass
   // by comparing their serialized content with the snapshots taken when the tab opened.
   #changes = [];
   // These are the animation sections handled by the embedded frame/transition editors.
-  #nextKeys = ["sequence", "border", "gravity"];
+  #nextKeys = ["sequence", "border", "gravity", "interact"];
   #original = {frames:""};
   #preventClosingIfChanged = true;
   #editors = [];

@@ -324,7 +324,8 @@ class DotTool
       [
         ["S", animation.sequence?.next, animation.getTotalProbability("sequence")], /* Sequence */
         ["B", animation.border?.next, animation.getTotalProbability("border")],   /* Border */
-        ["G", animation.gravity?.next, animation.getTotalProbability("gravity")]   /* Gravity */
+        ["G", animation.gravity?.next, animation.getTotalProbability("gravity")],   /* Gravity */
+        ["I", animation.interact?.next, animation.getTotalProbability("interact")]   /* Interact */
       ].forEach(([type, transitions, totProb])=>{
         (transitions ?? []).forEach(next=>{
           if(next) addTransition(from, next.value, type, totProb, next);
@@ -349,9 +350,10 @@ class DotTool
       "  graph [rankdir=LR];",
       '  node [fontname="Arial"];'
     ];
-    const edgeColors = { /* Sequence, Border, Gravity */
+    const edgeColors = { /* Sequence, Border, Gravity, Interact */
       S: "#1f77b4",
       B: "#d62728",
+      I: "#c68728",
       G: "#2ca02c"
     };
     const nodesWithNext = new Set(tree.edges.map(edge=>edge.from));
@@ -376,12 +378,15 @@ class DotTool
     lines.push("subgraph cluster_legend {");
     lines.push('label = "Legend";');
     lines.push('l_special1 [shape=box, label="Animation"];');
-    lines.push('l_special2 [shape=oval, label="Spawn"];');
+    lines.push('l_special2 [shape=box, label="End Animation", style=filled, fillcolor="#fff2cc"];');
+    lines.push('l_special3 [shape=oval, label="Spawn"];');
+    lines.push('l_special3 -> l_special1 [style=invis];');
     lines.push('l_special1 -> l_special2 [style=invis];');
-    lines.push("node [shape=point, width=0, height=0, style=invis]; l_s1; l_s2; l_b1; l_b2; l_g1; l_g2;")
+    lines.push("node [shape=point, width=0, height=0, style=invis]; l_s1; l_s2; l_b1; l_b2; l_i1; l_i2; l_g1; l_g2;")
     lines.push('l_s1 -> l_s2 [label=" S (Sequence over)", color="#1f77b4", fontcolor="#1f77b4"];');
-    lines.push('l_b1 -> l_b2 [label=" B (Border detected)",   color="#d62728", fontcolor="#d62728"];');
-    lines.push('l_g1 -> l_g2 [label=" G (Gravity detected)",  color="#2ca02c", fontcolor="#2ca02c"];');
+    lines.push('l_b1 -> l_b2 [label=" B (Border detected)", color="#d62728", fontcolor="#d62728"];');
+    lines.push('l_i1 -> l_i2 [label=" I (Interact detected)", color="#c68728", fontcolor="#c68728"];');
+    lines.push('l_g1 -> l_g2 [label=" G (Gravity detected)", color="#2ca02c", fontcolor="#2ca02c"];');
     lines.push("}");
     //lines.push('{ rank=same; l_special1; l_special2; l_s1; l_b1; l_g1 }');
     // end legend

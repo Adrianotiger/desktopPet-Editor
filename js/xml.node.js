@@ -157,7 +157,15 @@ class XMLNode
       }
       else
       {
-        console.error(`Undefined value ${xsdKey} on Node`, this);
+        let canBeMissing = false;
+        this.xsd.children.forEach(xsdc=>{
+          if(xsdc.name == xsdKey && xsdc.minOccurs == 0) canBeMissing = true;
+        });
+
+        if(!canBeMissing)
+        {
+          console.error(`Undefined value ${xsdKey} on Node`, this);
+        }
       }
     });
     

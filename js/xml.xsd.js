@@ -15,7 +15,7 @@ class XsdNode {
     for(let j=0;j<this.children.length;j++) if(this.children[j].name == key) return this.children[j];
     // not found? try on choices
     for(let j=0;j<this.choices.length;j++) {
-      for(let k=0;j<this.choices[j].options.length;k++) {
+      for(let k=0;k<this.choices[j].options.length;k++) {
         if(this.choices[j].options[k].name == key) return this.choices[j].options[k];
       }
     }
@@ -45,6 +45,7 @@ const XSD = new class
   #xsdDoc = null;
   #elements = [];
   #groups = {};
+  #complexTypes = {};
 
   constructor()
   {
@@ -62,12 +63,21 @@ const XSD = new class
 
     this.#elements = [];
     this.#groups = {};
+    this.#complexTypes = {};
 
+    // before parsing, get groups and complextypes
     for (const node of schema.children) {
       if(node.localName == "group")
       {
         const name = node.getAttribute("name");
         if(name) this.#groups[name] = node;
+      }
+    }
+
+    for (const node of schema.children) {
+      if (this.isElement(node, "complexType")) {
+        const name = node.getAttribute("name");
+        if(name) this.#complexTypes[name] = node;
       }
     }
 
@@ -107,7 +117,7 @@ const XSD = new class
       node2 = "sequence";
     }
     let retNode = this.xsdNode(path, node1);
-    if(retNode == null) // not found by children, try choice
+    if(retNode == null/* && node1.choices.length > 0*/) // not found by children, try choice
     {
       console.log("A");
       for(let j=0;j<node1.choices[0].options.length;j++)
@@ -132,12 +142,17 @@ const XSD = new class
     result.type = elementNode.getAttribute("type") || "";
     result.documentation = this.getDocumentation(elementNode);
 
-    const complexType = Array
+    const inlineComplexType = Array
         .from(elementNode.children)
         .find(x => x.localName === "complexType");
 
-    if (complexType) {
-        this.parseComplexType(complexType, result);
+    if (inlineComplexType) {
+        this.parseComplexType(inlineComplexType, result);
+    }
+    // Named complexType
+    else if(result.type && this.#complexTypes[result.type])
+    {
+        this.parseComplexType(this.#complexTypes[result.type], result);
     }
 
     return result;
@@ -178,6 +193,10 @@ const XSD = new class
         case "simpleContent":
           this.parseSimpleContent(child, target);
           break;
+
+        case "annotation":
+          // don't parse annotations
+          break;
         
         default:
           console.error(`Error on XSD: ${child.localName} not defined`);
@@ -207,9 +226,13 @@ const XSD = new class
     {
       if (child.localName === "element")
       {
-        parent.children.push(
-            this.parseElement(child)
-        );
+        const node = this.parseElement(child);
+        node.minOccurs =
+            Number(child.getAttribute("minOccurs") || 1);
+        node.maxOccurs =
+            child.getAttribute("maxOccurs") || 1;
+
+        parent.children.push(node);
       }
     }
   }
@@ -224,11 +247,26 @@ const XSD = new class
 
     for (const child of choiceNode.children)
     {
+      console.log(
+        "CHOICE CHILD:",
+        child.localName,
+        child.getAttribute("name"),
+        child.getAttribute("ref")
+    );
+
       if (child.localName === "element")
       {
         choice.options.push(
             this.parseElement(child)
         );
+      }
+      else if (child.localName === "sequence")
+      {
+        const sequenceNode = new XsdNode();
+        sequenceNode.name = "next"; // we have only 'next' but this can change in future...
+
+        this.parseSequence(child, sequenceNode);
+        choice.options.push(sequenceNode);
       }
     }
     parent.choices.push(choice);

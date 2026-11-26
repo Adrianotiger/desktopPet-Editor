@@ -123,17 +123,21 @@ class XMLAnimationsAnimation extends XMLNode
       new XMLAnimationsSequence(xml.querySelector('sequence'), path)
     );
 
-    // Border and gravity are not simple scalar values; they are collections of <next>
+    // Border, gravity and interact are not simple scalar values; they are collections of <next>
     // transitions that may lead to different follow-up animations.
     super.addNode(
       "border",
       new XMLAnimationNextCollection(xml.querySelector('border')??XML.createElement("border"), "border", path)
     );
 
-    
     super.addNode(
       "gravity",
       new XMLAnimationNextCollection(xml.querySelector('gravity')??XML.createElement("gravity"), "gravity", path)
+    );
+
+    super.addNode(
+      "interact",
+      new XMLAnimationNextCollection(xml.querySelector('interact')??XML.createElement("interact"), "interact", path)
     );
   }
 
@@ -151,6 +155,7 @@ class XMLAnimationsAnimation extends XMLNode
 
   get border() { return this.getNode("border")[0]; }
   get gravity() { return this.getNode("gravity")[0]; }
+  get interact() { return this.getNode("interact")[0]; }
 
   getTotalProbability(node, filter)
   {

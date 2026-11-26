@@ -24,7 +24,7 @@
     <spawn id="1" probability="20">
       <x>screenW+10</x>
       <y>areaH-imageH</y>
-      <next probability="100">1</next>
+      <next>1</next>
     </spawn>
   </spawns>
   <animations>
@@ -48,7 +48,6 @@
         <frame>2</frame>
         <frame>3</frame>
         <next probability="90" only="none">1</next>
-        <action>none</action>
       </sequence>
       <border>
         <next probability="100" only="none">2</next>
@@ -74,8 +73,8 @@
         <frame>3</frame>
         <frame>9</frame>
         <frame>10</frame>
-        <next probability="100">3</next>
         <action>flip</action>
+        <next probability="100" only="none">3</next>
       </sequence>
     </animation>
     <animation id="3">
@@ -99,9 +98,9 @@
         <frame>9</frame>
         <frame>3</frame>
         <next probability="100" only="none">1</next>
-        <action>none</action>
       </sequence>
     </animation>
   </animations>
   <childs />
+  <sounds />
 </animations>

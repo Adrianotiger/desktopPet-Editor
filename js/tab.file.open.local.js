@@ -42,9 +42,14 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
     this.projects = [];
     let folders = this.#folderHandler.entries();
 
+    let folderHandlerValid = false;
+
     setTimeout(()=>{
-      console.error("Unable to open files - Timeout");
-      this.#folderHandler = null;
+      if(!folderHandlerValid)
+      {
+        console.error("Unable to open files - Timeout");
+        this.#folderHandler = null;
+      }
     }, 2000);
 
     try
@@ -52,6 +57,7 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
       var f;
       while((f = await folders.next()))
       {
+        folderHandlerValid = true;
         if(f.done) break;
         
         if(f.value[1].kind === "directory")
@@ -64,7 +70,10 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
           this.projects.push(project);
         }
       }
-      this.showProjects("Open Local Project");
+      const div = this.showProjects("Open Local Project");
+      _CN("div", {class:"aniframeeditoradd", title:"New Project"}, ["＋ "], div).addEventListener("click", ()=>{
+        this.#createNewProject();
+      });
     }
     catch(ex)
     {
@@ -107,6 +116,29 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
       }
     }
     return null;
+  }
+
+  #createNewProject()
+  {
+    let form = _CN("div");
+    _CN("p", {}, ["Create new pet. Please give the name of the pet (folder name):"], form);
+    let inp1 = _CN("input", {type:"text", value:"", placeholder:"petname"}, [], form);
+
+    Msg.show({content:form, title:"New Pet", buttons:["Create"]}, async ()=>{
+      const newFolderHandle = await this.#folderHandler.getDirectoryHandle(inp1.value, {create: true});
+      fetch("../template/animations.xml").then(res=>{
+        return res.text();
+      }).then(async (txt)=>{
+        const destFileHandle = await newFolderHandle.getFileHandle("animations.xml", {create: true});
+        const writable = await destFileHandle.createWritable();
+        await writable.write(txt);
+        await writable.close();
+
+        await this.loadFolders();
+      }).catch(e=>{
+        console.error("Unable to create project", e);
+      });
+    });
   }
 
   #getFolderHandler()

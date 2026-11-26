@@ -29,7 +29,11 @@ class NextEditor
     ], parentDiv);
     this.next = [];
 
-    this.#options.attributes = (options?.attributes ?? ["only", "probability"]);
+    let xsdAttr = []; 
+    parent.xsd?.children[0]?.attributes?.forEach(ca=>{xsdAttr.push(ca.name);});
+    if(xsdAttr.length == 0) parent.xsd?.choices[0]?.options[2]?.children[0].attributes?.forEach(ca=>{xsdAttr.push(ca.name);});
+
+    this.#options.attributes = (options?.attributes ?? xsdAttr);
     this.#options.goto       = (options?.goto ?? true);
     this.#options.maxitems   = (options?.maxitems ?? 99);
     this.#options.minitems   = (options?.minitems ?? 1);
@@ -135,15 +139,14 @@ class NextEditor
 
       parent.style.position = "absolute";
       parent.style.top = "10px";
-      parent.style.left = "50%";
-      parent.style.transform = "translate(-35%, 0px)";
-      parent.style.width = "60vw";
-      parent.style.maxWidth = "600px";
-      parent.style.height = "70vh";
+      parent.style.right = "20px";
+      parent.style.width = "calc(80vw - 300px)";
+      parent.style.maxWidth = "80vw";
+      parent.style.height = "76vh";
       parent.style.backgroundColor = "var(--tab-bg)";
       parent.style.zIndex = 100;
       if(resize)resize.textContent = "🗗";
-      this.#div.style.height = "60vh";
+      this.#div.style.height = "71vh";
     }
     else
     {
@@ -159,7 +162,7 @@ class NextEditor
     }
   }
 
-  #openPicker(nextIndex, aniIndex)
+  #openPicker(nextIndex, aniIndex, key)
   {
     const div = _CN("div", {class:"anispritesheetselector"});
     let canvs = [];
@@ -180,7 +183,7 @@ class NextEditor
       
       b.addEventListener("click", ()=>{
         canvs.forEach(c=>{c.animate(false);});
-        if(this.next[nextIndex].value) this.next[nextIndex].value = ani.id;
+        if(this.next[nextIndex][key]) this.next[nextIndex][key] = ani.id;
         else this.next[nextIndex] = ani.id;
         Msg.close();
 
@@ -225,7 +228,21 @@ class NextEditor
     this.next.forEach((n, j)=>{
       const ani = XML.getAnimation(n.value ?? n); // n can be a NEXT-object or just a value
       const c = new AniCanvasClass(ani, XML.getImage().getFrameWidth(), XML.getImage().getFrameHeight());
-      const div = _CN("div", {class:"aninextitem", draggable:"true", "data-index":j}, [c.getCanvas()], this.#div);
+      let trigger = null;
+      let div = null;
+
+      if(this.#options.attributes.includes("trigger"))
+      {
+        trigger = new AniCanvasClass(XML.getAnimation(n.trigger), XML.getImage().getFrameWidth(), XML.getImage().getFrameHeight());
+        div = _CN("div", {class:"aninextitem", draggable:"true", "data-index":j}, [
+          _CN("span", {style:"grid-row-end:1;"}, ["＋", trigger.getCanvas(), "=", c.getCanvas()])
+        ], this.#div);
+      }
+      else
+      {
+        div = _CN("div", {class:"aninextitem", draggable:"true", "data-index":j}, [c.getCanvas()], this.#div);
+      }
+      
       
       const editAni = _CN("a", {}, ["✏️(Edit) "]);
       editAni.addEventListener("click", (e)=>{
@@ -246,15 +263,21 @@ class NextEditor
       
       let prob = null;
       let limit = null;
+      
+      let direction = null;
+      let hasManyOptions = this.#options.attributes.includes("direction");
+
       if(this.#options.attributes.includes("probability"))
       {
         prob = _CN("input", {type:"number", min:1, max:100, value:n.probability, draggable:true, style:"padding:2px;text-align:center;"});
+        if(hasManyOptions) prob.style.maxWidth = "50px";
         prob.addEventListener("dragstart", (e)=>{e.preventDefault();});
       }
 
       if(this.#options.attributes.includes("only"))
       {
         limit = _CN("select", {style:"padding:2px;"}, []);
+        if(hasManyOptions) limit.style.maxWidth = "100px";
 
         Object.entries(XMLValue.Only).forEach(([okey, oval]) => {
           const so = _CN("option", {value:oval}, [okey], limit);
@@ -262,23 +285,40 @@ class NextEditor
         });
       }
 
+      if(this.#options.attributes.includes("direction"))
+      {
+        direction = _CN("select", {style:"padding:2px;max-width:100px;"}, []);
+
+        Object.entries(XMLValue.Direction).forEach(([dkey, dval]) => {
+          const so = _CN("option", {value:dval}, [dkey], direction);
+          if(n.direction == so.value) {so.selected = true; direction.value=so.value; }
+        });
+      }
+
       prob?.addEventListener("click", (e)=>{e.preventDefault();e.stopPropagation();});
       limit?.addEventListener("click", (e)=>{e.preventDefault();e.stopPropagation();});
+      direction?.addEventListener("click", (e)=>{e.preventDefault();e.stopPropagation();});
 
       prob?.addEventListener("change", ()=>{n.probability = prob.value;});
       limit?.addEventListener("change", ()=>{n.only = limit.value;});
+      direction?.addEventListener("change", ()=>{n.only = direction.value;});
 
       _CN("span", {class:"spanSmall"}, [
         this.#options.edit ? editAni : " ", openAni ?? " "
       ], div);
       _CN("span", {class:"spanBig"}, [
         "Prob.: ", prob ?? "-", " - ",
-        "Limit: ", limit ?? "-"
+        "Limit: ", limit ?? "-" , 
+        "Dir.: ", direction ?? "-"
       ], div);
       
-      _CN("span", {style:"text-align:right;"}, [`[${ani?.id??"-"}] ${ani?.name??"-"} `], div);
+      if(trigger)
+        _CN("span", {style:"text-align:center;grid-column:2"}, ["＋", `[${n.trigger}] ${XML.getAnimation(n.trigger).name??"-"} `, '=', `[${ani?.id??"-"}] ${ani?.name??"-"} `], div);
+      else
+        _CN("span", {style:"text-align:center;grid-column:2"}, [`[${ani?.id??"-"}] ${ani?.name??"-"} `], div);
 
       c.animate(true);
+      trigger?.animate(true);
 
       newNexts.push(n);
       this.#canvasArray.push(c);
@@ -286,7 +326,11 @@ class NextEditor
       if(this.#options.edit)
       {
         c.getCanvas().addEventListener("click", (e) => {
-          this.#openPicker(j, n.value);
+          this.#openPicker(j, n.value, "value");
+        });
+
+        trigger?.getCanvas().addEventListener("click", (e) => {
+          this.#openPicker(j, n.trigger, "trigger");
         });
       }
 

@@ -83,7 +83,7 @@ class ChildsTabClass extends TabClass
     _CN("h2", {}, [`Parent #${child.id}`, _CN("br")], this.#childDiv);
 
     const parentInfo = _CN("div", {class:"infobox aniinfobox", id:child.id, style:`width:100%;position:relative;`}, [_CN("h3", {}, ["Next #" + child.id])], this.#childDiv);
-    const neParent = new NextEditor(child, parentInfo, {goto:true, minitems:1, maxitems:1, attributes:[], edit:false}, "animationid");
+    const neParent = new NextEditor(child, parentInfo, {goto:true, minitems:1, maxitems:1, edit:false}, "animationid");
 
     _CN("div", {style:"margin-top:20px;"}, ["Child X:"], this.#childDiv);
     input = _CN("input", {type:"text", value:child.xOriginal, placeholder:'formula', name:"x", style:"width:100%;"}, [], this.#childDiv);
@@ -95,7 +95,7 @@ class ChildsTabClass extends TabClass
 
     const nextInfo = _CN("div", {class:"infobox aniinfobox", id:child.id, style:`width:100%;position:relative;`}, [_CN("h3", {}, ["Next #" + child.id])], this.#childDiv);
 
-    const ne = new NextEditor(child, nextInfo, {goto:true, minitems:1, maxitems:1, attributes:[], edit:false});
+    const ne = new NextEditor(child, nextInfo, {goto:true, minitems:1, maxitems:1, edit:false});
 
     setTimeout(()=>{
       inputs.forEach((i)=>{

@@ -7,6 +7,7 @@ class XMLValue
   #valuetype;
   #default;
   #minoccurs;
+  #maxoccurs;
   
   // These types control how XML text is interpreted and validated by the editor.
   static Type = Object.freeze({
@@ -36,6 +37,13 @@ class XMLValue
     VERTICAL_PET: "petSide",
     VERTICAL_ALL: "vertical+"
   });
+
+  // `direction` restricts collision direction.
+  static Direction = Object.freeze({
+    ANY: "any",
+    INFRONT: "infront",
+    BEHIND: "behind"
+  });
   
   constructor(str, type=XMLValue.Type.STRING, options={})
   {    
@@ -51,6 +59,7 @@ class XMLValue
 
     this.#default = options.default ?? null;
     this.#minoccurs = options.minoccurs ?? 0;
+    this.#maxoccurs = options.maxoccurs ?? 9999;
     
     if(this.#valuetype == XMLValue.Type.FORMULA) this.#calculateFormula();
   }

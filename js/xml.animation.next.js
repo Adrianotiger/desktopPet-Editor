@@ -4,20 +4,44 @@ class XMLAnimationsNext extends XMLNode
   {    
     path += ".next";
     super(xml, path);
+    let onlyAttr = "";
 
-    super.addAttribute(
-      "probability", 
-      xmlAttrGet(xml, 'probability')??0, 
-      XMLValue.Type.INT
-    );
-
-    const onlyAttr = xmlAttrGet(xml, 'only');
-    super.addAttribute(
-      "only", 
-      xmlHasAttribute(xml, 'only')?onlyAttr:"none", 
-      XMLValue.Type.STRING,
-    );
-
+    (this.xsd.children.length > 0 ? this.xsd.children[0].attributes : this.xsd.attributes).forEach(ca=>{
+      switch(ca.name)
+      {
+        case 'probability':
+          super.addAttribute(
+            ca.name, 
+            xmlAttrGet(xml, ca.name)??0, 
+            XMLValue.Type.INT
+          );
+          break;
+        case 'only':
+          onlyAttr = xmlAttrGet(xml, ca.name);
+          super.addAttribute(
+            ca.name, 
+            xmlHasAttribute(xml, ca.name) ? onlyAttr:"none", 
+            XMLValue.Type.STRING,
+          );
+          break;
+        case 'direction':
+          const dirAttr = xmlAttrGet(xml, ca.name);
+          super.addAttribute(
+            ca.name, 
+            xmlHasAttribute(xml, ca.name) ? dirAttr:"any", 
+            XMLValue.Type.STRING,
+          );
+          break;
+        case 'trigger':
+          super.addAttribute(
+            ca.name, 
+            xmlAttrGet(xml, ca.name)??1, 
+            XMLValue.Type.INT
+          );
+          break;
+      }
+    });
+    
     super.addValue(
       "_", 
       xml.textContent, 
@@ -41,5 +65,11 @@ class XMLAnimationsNext extends XMLNode
   
   get value() { return this.getValue("_"); }
   set value(value) { this.setValue("_", value); }
+
+  get trigger() { return this.getValue("trigger"); }
+  set trigger(value) { this.setValue("trigger", value); }
+
+  get direction() { return this.getValue("direction"); }
+  set direction(value) { this.setValue("direction", value); }
   
 };

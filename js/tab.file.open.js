@@ -73,6 +73,8 @@ class OpenProjectFolderClass
       });
       console.log(this.projects);
     });
+
+    return div;
   }
 };
 
