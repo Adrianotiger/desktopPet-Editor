@@ -1,5 +1,9 @@
 {
-    "pets" : [
-        
-    ]
+  "pets": [
+    {
+      "folder": "Orange",
+      "author": "Adriano",
+      "lastupdate": "2026-11-25"
+    }
+  ]
 }

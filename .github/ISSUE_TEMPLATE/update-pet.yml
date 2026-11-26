@@ -27,8 +27,17 @@ body:
     validations:
       required: true
 
+  - type: input
+    id: author
+    attributes:
+      label: Author
+      description: Set the same Author name
+      placeholder: Dancing Sheep
+    validations:
+      required: true
+
   - type: textarea
-    id: changes
+    id: description
     attributes:
       label: What changed?
       description: Describe your modifications
@@ -42,7 +51,7 @@ body:
       required: true
 
   - type: textarea
-    id: files
+    id: installation
     attributes:
       label: Files to Update
       description: |

@@ -7,7 +7,10 @@ on:
       - edited
 
 permissions:
+  contents: write
   issues: write
+  pull-requests: write
+  
 
 jobs:
   validate:
@@ -27,25 +30,25 @@ jobs:
 
       - name: Skip if not pet submission
         if: steps.check.outputs.valid != 'true'
-        run: |
-          echo "Not a pet submission"
+        run: echo "Not a pet submission"
 
       - uses: actions/checkout@v4
 
       - name: Extract pet name
         if: steps.check.outputs.valid == 'true'
         id: pet
-        run: |
-          python .github/scripts/extract_issue_data.py
-        env:
+        run: python .github/scripts/extract_issue_data.py
+        env: 
           ISSUE_BODY: ${{ github.event.issue.body }}
+          ACTION: "NEW"
+          AUTHOR: ${{ github.actor }}
+          AUTHOR_ID: ${{ github.actor_id }}
        
       - name: Download files
         if: steps.check.outputs.valid == 'true'
         id: download
         continue-on-error: true
-        run: |
-          python .github/scripts/download_files.py
+        run: python .github/scripts/download_files.py
         env:
           ISSUE_BODY: ${{ github.event.issue.body }}
 
@@ -53,97 +56,72 @@ jobs:
         if: steps.check.outputs.valid == 'true'
         run: |
           python -m pip install --upgrade pip
-          pip install pillow
+          pip install pillow lxml mutagen
           
-      - name: Validate image
+      - name: Check image
         if: steps.check.outputs.valid == 'true'
         id: validateImage
         continue-on-error: true
-        run: |
-          python .github/scripts/validate_image.py
+        run: python .github/scripts/validate_image.py
 
-      - name: Validate readme
+      - name: Check readme
         if: steps.check.outputs.valid == 'true'
         id: validateReadme
         continue-on-error: true
-        run: |
-          python .github/scripts/validate_readme.py
+        run: python .github/scripts/validate_readme.py
 
-      - name: Validate XML
+      - name: Check XML
         if: steps.check.outputs.valid == 'true'
         id: validateXml
         continue-on-error: true
-        run: |
-          python .github/scripts/validate_xml.py
+        run: python .github/scripts/validate_xml.py
+
+      - name: Analyze XML
+        if: steps.check.outputs.valid == 'true'
+        id: checkXml
+        continue-on-error: true
+        run: python .github/scripts/validate_xml_analyze.py
 
       - name: Read validation results
         id: results
         if: steps.check.outputs.valid == 'true'
-        run: |
-          {
-            echo 'logs<<EOF'
-            cat logs.txt
-            echo EOF
-          } >> $GITHUB_OUTPUT
-      
-          {
-            echo 'errors<<EOF'
-            cat errors.txt
-            echo EOF
-          } >> $GITHUB_OUTPUT
-      
-          if [ -s errors.txt ]; then
-            echo "success=false" >> $GITHUB_OUTPUT
-          else
-            echo "success=true" >> $GITHUB_OUTPUT
-          fi
+        run: python .github/scripts/read_validation_results.py
           
       - name: Comment on issue
         if: steps.check.outputs.valid == 'true'
-        uses: actions/github-script@v7
+        run: python .github/scripts/comment_on_issue.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          PET_NAME: ${{ steps.pet.outputs.petname }}
+          AUTHOR: ${{ steps.pet.outputs.author }}
+          DATE: ${{ steps.pet.outputs.date }}
+          LOGS: ${{ steps.results.outputs.logs }}
+          ERRORS: ${{ steps.results.outputs.errors }}
+          SUCCESS: ${{ steps.results.outputs.success }}
+
+      - name: Prepare pet files and update pets.json
+        if: steps.check.outputs.valid == 'true' && steps.results.outputs.success == 'true'
+        run: python .github/scripts/prepare_pet_pr.py
+        env:
+          PET_NAME: ${{ steps.pet.outputs.petname }}
+          PET_AUTHOR: ${{ steps.pet.outputs.author }}
+          PET_DATE: ${{ steps.pet.outputs.date }}
+          ACTION: "NEW"
+
+      - name: Create pull request
+        if: steps.check.outputs.valid == 'true' && steps.results.outputs.success == 'true'
+        uses: peter-evans/create-pull-request@v7
         with:
-          script: |
-            const petName = "${{ steps.pet.outputs.petname }}" || "Unknown";
-            const author = "${{ steps.pet.outputs.author }}" || "Unknown";
-      
-            const logs = `${{ steps.results.outputs.logs }}`;
-            const errors = `${{ steps.results.outputs.errors }}`;
-      
-            const success = "${{ steps.results.outputs.success }}" === "true";
-      
-            let status;
-            if (success) {
-              status = "✅ Validation successful";
-            } else {
-              status = "❌ Validation failed";
-            }
-      
-            let body = `${status}
-      
-            Pet Name: **${petName}**
-            Author: **${author}**
-      
-            ## Logs
-      
-            \`\`\`
-            ${logs}
-            \`\`\`
-            `;
-      
-            if (!success) {
-              body += `
-      
-            ## Errors
-      
-            \`\`\`
-            ${errors}
-            \`\`\`
-            `;
-            }
-      
-            github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.issue.number,
-              body
-            });
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: pet-submission/issue-${{ github.event.issue.number }}
+          delete-branch: true
+          commit-message: "Add pet ${{ steps.pet.outputs.petname }} from issue #${{ github.event.issue.number }}"
+          title: "Add pet ${{ steps.pet.outputs.petname }}"
+          body: |
+            This pull request adds the validated pet submission **${{ steps.pet.outputs.petname }}** to `testpets/` and updates `testpets/pets.json`.
+
+            Submitted by: ${{ steps.pet.outputs.author }}
+            Source issue: #${{ github.event.issue.number }}
+          draft: false

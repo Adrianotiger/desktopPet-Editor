@@ -3,6 +3,9 @@ import re
 from datetime import date
 
 body = os.environ["ISSUE_BODY"]
+action = os.environ["ACTION"]
+authorName = os.environ["AUTHOR"]
+authorId = os.environ["AUTHOR_ID"]
 
 os.makedirs("submission", exist_ok=True)
 LOG_FILE = "logs.txt"
@@ -13,31 +16,58 @@ PETS_DIR = "testpets"
 flog = open(LOG_FILE, "w")
 ferr = open(ERROR_FILE, "w")
 
-
 fields = {
     "petname": "",
     "author": "",
+    "authorname": authorName,
+    "authorId": authorId,
     "description": "",
     "date": date.today().strftime("%Y-%m-%d")
 }
 
-pet = re.search(
-    r'### Pet Name\s*(.*?)\s*### Author',
-    body,
-    re.DOTALL
-)
+if action == "NEW":
+    pet = re.search(
+        r'### Pet Name\s*(.*?)\s*### Author',
+        body,
+        re.DOTALL
+    )
+    
+    author = re.search(
+        r'### Author\s*(.*?)\s*### Description',
+        body,
+        re.DOTALL
+    )
+    
+    description = re.search(
+        r'### Description\s*(.*?)\s*###',
+        body,
+        re.DOTALL
+    )
+else:
+    pet = re.search(
+        r'### Existing Pet Name\s*(.*?)\s*### Author',
+        body,
+        re.DOTALL
+    )
+    
+    author = re.search(
+        r'### Author\s*(.*?)\s*### What changed',
+        body,
+        re.DOTALL
+    )
+    
+    description = re.search(
+        r'### What changed\?\s*(.*?)\s*### Files to Update',
+        body,
+        re.DOTALL
+    )
 
-author = re.search(
-    r'### Author\s*(.*?)\s*### Description',
-    body,
-    re.DOTALL
-)
-
-description = re.search(
-    r'### Description\s*(.*?)\s*###',
-    body,
-    re.DOTALL
-)
+daten = fields["date"]
+flog.write("===================================\n")
+flog.write("Workflow for pet submission (v1.0):\n")
+flog.write("===================================\n")
+flog.write(f"Action:{action} {daten}\n")
+flog.write("-----------------------------------\n\n")
 
 if pet:
     fields["petname"] = pet.group(1).strip()
@@ -79,10 +109,17 @@ if os.path.exists(PETS_DIR):
         if os.path.isdir(os.path.join(PETS_DIR, d))
     ]
 
-    if petname in existing_pets:
-        ferr.write("❌ Pet {petname} is already present in the gallery.\n")
+    if action == "NEW":
+        if petname in existing_pets:
+            ferr.write(f"❌ Pet {petname} is already present in the gallery.\n")
+        else:
+            flog.write(f"✅ Pet {petname} is a new pet (not present in gallery)\n")
     else:
-        flog.write("✅ Pet {petname} is a new pet (not present in gallery)\n")
+        if petname in existing_pets:
+            flog.write(f"✅ Pet {petname} is present in the gallery\n")
+        else:
+            ferr.write(f"❌ Pet {petname} was not found in the gallery.\n")
+            
 
 flog.close()
 ferr.close()
