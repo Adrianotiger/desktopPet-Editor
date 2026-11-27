@@ -2,6 +2,7 @@
 class OpenProjectFolderLocalClass extends OpenProjectFolderClass
 {
   #folderHandler = null;
+  #newProject = null;
   #db = null;
 
   constructor(iconsDiv, infoDiv, folderDiv)
@@ -20,13 +21,6 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
       infoDiv.textContent = "Local folder is a folder accessible by the browser. This is the root folder, every subfolder is another animation project containing a animations.xml file. After pressing the button, select the root folder to use for your projects.";
     });
 
-    /*
-    this.#getFolderHandler().then(()=>{
-      this.loadFolders();
-    }).catch(()=>{
-      // nothing, wait for button press.
-    });
-    */
   }
 
   get rootFolder() { return this.#folderHandler; }
@@ -87,10 +81,14 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
           this.projects.push(project);
         }
       }
-      const div = this.showProjects("Open Local Project");
-      _CN("div", {class:"aniframeeditoradd", title:"New Project"}, ["＋ "], div).addEventListener("click", ()=>{
-        this.#createNewProject();
-      });
+      this.showProjects("Open Local Project");
+      if(!this.#newProject)
+      {
+        this.#newProject = _CN("div", {class:"aniframeeditoradd", title:"New Project"}, ["＋ "], this.folderDiv.childNodes[0]);
+        this.#newProject.addEventListener("click", ()=>{
+          this.#createNewProject();
+        });
+      }
     }
     catch(ex)
     {
@@ -141,7 +139,7 @@ class OpenProjectFolderLocalClass extends OpenProjectFolderClass
     _CN("p", {}, ["Create new pet. Please give the name of the pet (folder name):"], form);
     let inp1 = _CN("input", {type:"text", value:"", placeholder:"petname"}, [], form);
 
-    Msg.show({content:form, title:"New Pet", buttons:["Create"]}, async ()=>{
+    Msg.show({content:form, title:"New Pet", buttons:["Create", "Cancel"]}, async ()=>{
       const newFolderHandle = await this.#folderHandler.getDirectoryHandle(inp1.value, {create: true});
       fetch("../template/animations.xml").then(res=>{
         return res.text();

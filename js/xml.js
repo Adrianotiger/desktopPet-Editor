@@ -96,7 +96,7 @@ const XML = new class
     const spawnsElement = xmlNodeGetNode(this.#xmlDoc, 'spawns');
     const animationsElement = xmlNodeGetNode(this.#xmlDoc, 'animations');
     const childsElement = xmlNodeGetNode(this.#xmlDoc, 'childs');
-    const soundsElement = xmlNodeGetNode(this.#xmlDoc, 'sounds');
+    const soundsElement = xmlHasNode(this.#xmlDoc, 'sounds') ? xmlNodeGetNode(this.#xmlDoc, 'sounds') : null;
     
     // These are required for a valid pet definition; the editor will refuse to continue if
     // a file is missing the essential structure.

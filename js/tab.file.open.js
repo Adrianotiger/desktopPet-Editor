@@ -91,11 +91,10 @@ class OpenTabClass extends TabClass
     _CN("hr", {}, [], this.div);
 
     const iconsDiv = _CN("div", {style:"height:120px;"}, [], this.div);
-    const infoDiv = _CN("div", {style:"width:80vw;height:50px;margin:8px auto;border-radius:5px;line-height:16px;border:1px solid #66f;box-shadow:2px 2px 4px #33a;"}, ["Open a single animations.xml or a project from local PC, webfolder or GitHub."], this.div);
-    _CN("hr", {}, [], this.div);
+    const infoDiv = _CN("div", {style:"width:80vw;height:50px;margin:12px auto;border-radius:5px;line-height:16px;border:1px solid #66f;box-shadow:2px 2px 4px #33a;opacity:0.8;"}, ["Open a single animations.xml or a project from local PC, webfolder or GitHub."], this.div);
     const folderDiv = _CN("div", {style:"height:40vh;width:80vw;margin:0 auto;"}, [], this.div);
 
-    let butt = _CN("button", {style:"margin:10px;line-height:32px;width:128px;"}, [
+    let butt = _CN("button", {style:"margin:10px;line-height:32px;width:96px;"}, [
       _CN("img", {class:"icon icon64", "data-icon":"fileopenxml"}), 
       _CN("br"),
       "Open file..."
@@ -104,8 +103,6 @@ class OpenTabClass extends TabClass
     butt.addEventListener("mousemove", ()=>{
       infoDiv.textContent = "Open a single animation.xml file from your PC.";
     });
-
-    _CN("hr", {style:"width:80%;margin:10px auto;"}, [], this.div);
 
     loadScripts(["tab.file.open.local", "tab.file.open.web", "tab.file.open.github"], true).then(()=>{
       this.#localFolder = new OpenProjectFolderLocalClass(iconsDiv, infoDiv, folderDiv);

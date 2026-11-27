@@ -24,8 +24,15 @@ class ImportTabClass extends TabClass
     butt.addEventListener("click", ()=>{
       this.loadXml();
     });
-
+    
     this.#divOptions = _CN("div", {}, [], this.div);
+
+    _CN("b", {}, ["Coming next => Importers:"], this.div);
+    _CN("ul", {}, [
+      _CN("li", {}, ["Import single XML (all, only spritesheet, only xml)"]),
+      _CN("li", {}, ["Import Minecraft spritesheet"]),
+      _CN("li", {}, ["Import OpenPet zip"])
+    ], this.div);
   }
 
   hide()

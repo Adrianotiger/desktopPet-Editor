@@ -45,9 +45,11 @@ class XMLAnimationsAnimationPos extends XMLNode
   
   get x() { return this.getValue("x"); }
   set x(value) { this.setValue("x", value); }
+  get xOriginal() { return this.values["x"].original; }
 
   get y() { return this.getValue("y"); }
   set y(value) { this.setValue("y", value); }
+  get yOriginal() { return this.values["y"].original; }
 
   get offsety() { return this.getValue("offsety"); }
   set offsety(value) { this.setValue("offsety", value); }
@@ -57,6 +59,7 @@ class XMLAnimationsAnimationPos extends XMLNode
 
   get interval() { return this.getValue("interval"); }
   set interval(value) { this.setValue("interval", value); }
+  get intervalOriginal() { return this.values["interval"].original; }
 }
 
 // Some animation branches contain multiple <next> transitions (for example, a border

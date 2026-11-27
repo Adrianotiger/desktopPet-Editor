@@ -148,7 +148,7 @@ class OpenProjectFolderGitHubClass extends OpenProjectFolderClass
     ], iconsDiv);
     butt.addEventListener("click", ()=>{this.buttonPressed();});
     butt.addEventListener("mousemove", ()=>{
-      infoDiv.textContent = "GitHub gallery: the pets of a GitHub repository. Paste the link of the repository, of a folder or of a single pet. The editor reads the pets.json of the repository (in Pets/ or at the root). Without it, it lists every folder with an animations.xml.";
+      infoDiv.textContent = "GitHub gallery: the pets of a GitHub repository. Paste the link of the repository, of a folder or of a single pet.";
     });
   }
 
@@ -168,6 +168,7 @@ class OpenProjectFolderGitHubClass extends OpenProjectFolderClass
       _CN("button", {}, ["Search"], this.folderDiv).addEventListener("click", ()=>{
         this.buttonPressed(this.#input.value);
       })
+      _CN("p", {}, ["The editor reads the pets.json of the repository (in Pets/ or at the root). Without it, it lists every folder with an animations.xml."], this.folderDiv);
     }
     else
     {

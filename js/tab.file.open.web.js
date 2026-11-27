@@ -1,6 +1,7 @@
 class OpenProjectFolderWebClass extends OpenProjectFolderClass
 {
   #folderHandler = null;
+  #webContentLoaded = false;
   #supabasedomain = "jurrsvjhvldxcbtrvdrf";
 
   constructor(iconsDiv, infoDiv, folderDiv)
@@ -39,14 +40,20 @@ class OpenProjectFolderWebClass extends OpenProjectFolderClass
 
     if(token != null)
     {
-      this.folderDiv.innerHTML = "Loading Web content...";
-
-      this.#loadWebPath().then(async ()=>{
-        await this.loadFolders();
-      }).catch(err=>{
-        console.error(err);
-        Msg.show({title:"Error loading Supabase", content:"Unable to load webcontent"});
-      });
+      if(this.#webContentLoaded)
+      {
+        this.showProjects();
+      }
+      else
+      {
+        this.folderDiv.innerHTML = "Loading Web content...";
+        this.#loadWebPath().then(async ()=>{
+          await this.loadFolders();
+        }).catch(err=>{
+          console.error(err);
+          Msg.show({title:"Error loading Supabase", content:"Unable to load webcontent"});
+        });
+      }
     }
     else
     {
@@ -121,6 +128,7 @@ class OpenProjectFolderWebClass extends OpenProjectFolderClass
       }
     });
 
+    this.#webContentLoaded = true;
     this.showProjects("Open Web Project");
   }
 

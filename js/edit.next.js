@@ -304,7 +304,7 @@ class NextEditor
       direction?.addEventListener("change", ()=>{n.only = direction.value;});
 
       _CN("span", {class:"spanSmall"}, [
-        this.#options.edit ? editAni : " ", openAni ?? " "
+        this.#options.edit && this.#options.attributes.length > 0 ? editAni : " ", openAni ?? " "
       ], div);
       _CN("span", {class:"spanBig"}, [
         "Prob.: ", prob ?? "-", " - ",

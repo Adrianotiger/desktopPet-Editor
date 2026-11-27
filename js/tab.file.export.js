@@ -33,6 +33,14 @@ class ExportTabClass extends TabClass
         butt.style.opacity = 0.5;
       }
     });
+
+    _CN("b", {}, ["Coming next => Exporters:"], this.div);
+    _CN("ul", {}, [
+      _CN("li", {}, ["Export single XML (drag&drop)"]),
+      _CN("li", {}, ["Export single XML (save as)"]),
+      _CN("li", {}, ["Export zip package (xml, README.md, icon)"]),
+      _CN("li", {}, ["Directly to Github"]),
+    ], this.div);
   }
 
   hide()
