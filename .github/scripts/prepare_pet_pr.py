@@ -4,7 +4,7 @@ import re
 import shutil
 from pathlib import Path
 
-
+pets_dir = Path(os.environ["PETS_DIR"])
 pet_name = os.environ["PET_NAME"].strip()
 author = os.environ["PET_AUTHOR"].strip()
 pet_date = os.environ["PET_DATE"].strip()
@@ -14,8 +14,8 @@ if not re.fullmatch(r"[A-Za-z0-9_-]{2,16}", pet_name):
     raise SystemExit("Invalid pet name")
 
 submission = Path("submission")
-destination = Path("testpets") / pet_name
-manifest_path = Path("testpets/pets.json")
+destination = pets_dir / pet_name
+manifest_path = pets_dir / "pets.json"
 log_file = Path("logs.txt")
 error_file = Path("errors.txt")
 
