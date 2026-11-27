@@ -73,7 +73,7 @@ try:
         flog.write("❌ Author does not matches to the original animation.\n")
         ferr.write(f"❌ (Author '{current_author}' expected, '{submitted_author}' submitted).")
     else:
-        flog.write("✅ Submitted header/author matches the current pet author.")
+        flog.write("✅ Author is the same ({current_author}).")
 
     submitted_parts = parse_version(submitted_version, "Submitted")
     current_parts = parse_version(current_version, "Current")
@@ -82,7 +82,7 @@ try:
         flog.write("❌ Version must be bigger than the original.\n")
         ferr.write(f"❌ version ({current_version}); submitted version is {submitted_version}")
     else:
-        flog.write("✅ Submitted header/version is higher than the current ")
+        flog.write("✅ Version updated {current_version} => {submitted_version}")
       
 except (OSError, etree.XMLSyntaxError, ValueError) as exc:
     ferr.write(f"❌ Could not compare pet XML metadata: {exc}")
