@@ -10,7 +10,9 @@ permissions:
   contents: write
   issues: write
   pull-requests: write
-  
+
+env:
+  PETS_DIR: testpets
 
 jobs:
   validate:
