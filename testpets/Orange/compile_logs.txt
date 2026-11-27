@@ -21,3 +21,13 @@ Action:UPDATE 2026-11-25
 ✅ Author name found
 ✅ Pet Orange is present in the gallery
 ✅ README.md found.
+===================================
+Workflow for pet submission (v1.0):
+===================================
+Action:UPDATE 2026-11-27
+-----------------------------------
+
+✅ Pet name found
+✅ Author name found
+✅ Pet Orange is present in the gallery
+✅ README.md found.
