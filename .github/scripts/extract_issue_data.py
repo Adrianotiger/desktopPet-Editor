@@ -10,7 +10,7 @@ authorId = os.environ["AUTHOR_ID"]
 os.makedirs("submission", exist_ok=True)
 LOG_FILE = "logs.txt"
 ERROR_FILE = "errors.txt"
-PETS_DIR = "testpets"
+PETS_DIR = os.environ["PETS_DIR"]
 
 # Clear at every execution
 flog = open(LOG_FILE, "w")
