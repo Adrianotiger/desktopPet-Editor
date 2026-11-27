@@ -1,0 +1,19 @@
+===================================
+Workflow for pet submission (v1.0):
+===================================
+Action:NEW 2026-11-27
+-----------------------------------
+
+✅ Pet name found
+✅ Author name found
+✅ Pet eSheep is a new pet (not present in gallery)
+✅ Image found
+✅ README.md found.
+✅ animations.xml found.
+✅ animations.xml found.
+✅ animations.xml matches the animations.xsd schema.
+✅ Header icon is valid base64 containing an ICO.
+✅ Sprite-sheet image is valid base64 containing a PNG.
+✅ Found 4 spawn node(s).
+ℹ️ Found 56 animation node(s).
+ℹ️ Found 0 sound node(s).
