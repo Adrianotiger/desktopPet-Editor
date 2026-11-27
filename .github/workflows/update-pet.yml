@@ -84,6 +84,13 @@ jobs:
         continue-on-error: true
         run: python .github/scripts/validate_xml_analyze.py
 
+      - name: Compare XML metadata
+        if: steps.check.outputs.valid == 'true' && steps.download.outputs.animations == 'true'
+        continue-on-error: true
+        run: python .github/scripts/validate_update_xml.py
+        env:
+          PET_NAME: ${{ steps.pet.outputs.petname }}
+
       - name: Read validation results
         id: results
         if: steps.check.outputs.valid == 'true'
